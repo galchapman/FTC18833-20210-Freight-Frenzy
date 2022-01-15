@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants.LiftConstants;
 
@@ -31,6 +30,13 @@ public class LiftSubsystem extends SubsystemBase {
     public double getHeight() {
         return LiftConstants.distance_per_revolution * m_liftMotor.getCurrentPosition();
     }
+
+    public void setLiftHeight(double height) {
+            m_liftMotor.setTargetPosition((int)(height/ LiftConstants.distance_per_tick));
+    }
+
+
+    public void setRunMode(DcMotor.RunMode mode) {m_liftMotor.setMode(mode);}
 
     public void setPower(double power) {
         m_liftMotor.setPower(power);
