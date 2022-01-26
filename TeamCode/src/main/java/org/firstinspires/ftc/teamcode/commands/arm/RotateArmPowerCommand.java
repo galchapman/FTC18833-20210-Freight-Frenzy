@@ -32,7 +32,7 @@ public class RotateArmPowerCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         m_armSubsystem.stop();
-        m_armSubsystem.setTargetPosition(m_armSubsystem.getCurrentPosition());
-        m_armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        m_armSubsystem.setTargetPosition(m_armSubsystem.getCurrentPosition());
+//        m_armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands.arm;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -18,14 +20,19 @@ public class RotateArmToPositionCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        //m_ArmSubsystem.setTargetPosition(m_ArmSubsystem.getCurrentPosition() + m_rotation);
         m_ArmSubsystem.setAngle(m_angle);
+        m_ArmSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         m_ArmSubsystem.setPower(m_power);
     }
 
     @Override
+    public void end(boolean interrupted) {
+        m_ArmSubsystem.stop();
+    }
+
+    @Override
     public boolean isFinished() {
-        return m_ArmSubsystem.isBusy();
+        return m_ArmSubsystem.isBusy() && Math.abs(m_ArmSubsystem.AngleError()) < 3;
     }
 
 }

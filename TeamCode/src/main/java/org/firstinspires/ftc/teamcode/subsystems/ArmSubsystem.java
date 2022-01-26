@@ -22,12 +22,13 @@ public class ArmSubsystem extends SubsystemBase {
 		m_leftServo = hardwareMap.servo.get("LeftIntakeArmServo");
 		m_rightServo = hardwareMap.servo.get("RightIntakeArmServo");
 		m_motor.setDirection(DcMotorSimple.Direction.REVERSE);
+		m_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		m_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		m_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		m_motor.setPower(0);
 		m_motor.setTargetPosition(0);
-		m_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		m_rightServo.setDirection(Servo.Direction.REVERSE);
+//		m_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		m_leftServo.setDirection(Servo.Direction.REVERSE);
 	}
 
 	public void setRunMode(DcMotor.RunMode mode) {
@@ -77,6 +78,10 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public boolean isBusy() {
 		return m_motor.isBusy();
+	}
+
+	public double AngleError() {
+		return getAngle() - getTargetAngle();
 	}
 
 	public int getTargetPosition() {
