@@ -28,6 +28,7 @@ public class SetLiftHeightCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        m_liftSubsystem.stop();
         m_liftSubsystem.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
