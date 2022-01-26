@@ -47,9 +47,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     private final BNO055IMU imu;
 
-    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(2, 0, 0);
-    public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(7, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0);
+    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(1, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.1, 0, 0);
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -61,7 +61,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     public boolean trajectories = true;
 
     public DriveTrainSubsystem() {
-        super(DriveTrainConstants.kV, DriveTrainConstants.kA, DriveTrainConstants.kStatic, 0.259, 1);
+        super(DriveTrainConstants.kV, DriveTrainConstants.kA, DriveTrainConstants.kStatic, 0.259);
         m_FrontLeftMotor  =  hardwareMap.dcMotor.get("FrontLeftDriveMotor");
         m_RearLeftMotor   =  hardwareMap.dcMotor.get("RearLeftDriveMotor");
         m_FrontRightMotor =  hardwareMap.dcMotor.get("FrontRightDriveMotor");
@@ -100,6 +100,8 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         if (trajectoryControlled && trajectories) {
             DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
             if (signal != null) setDriveSignal(signal);
+        } else {
+            trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         }
     }
 

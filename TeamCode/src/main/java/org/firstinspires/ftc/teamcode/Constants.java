@@ -33,9 +33,9 @@ public final class Constants {
         public final static DoubleFunction<Integer> m_to_ticks = (double m) -> (int)(m / WheelDiameter / Math.PI * ticks_per_revolution);
         public final static IntFunction<Double> ticks_to_m = (int ticks) -> ticks * WheelDiameter * Math.PI / ticks_per_revolution;
 
-        public final static double kV = 0.60152;
-        public final static double kStatic = 0.07691;
-        public final static double kA = 0.0585;
+        public final static double kV = 0.68149;
+        public final static double kStatic = 0.095605;
+        public final static double kA = 0.00421;
     }
 
     public static final class LiftConstants {
@@ -49,7 +49,7 @@ public final class Constants {
     }
 
     public static final class ArmConstants {
-        public static final int gear = 3 * 3 * 5;
+        public static final int gear = 70;
         public static final int motorGear = MotorConstants.RevHDHexMotor.ticks_per_revolution;
     }
 }

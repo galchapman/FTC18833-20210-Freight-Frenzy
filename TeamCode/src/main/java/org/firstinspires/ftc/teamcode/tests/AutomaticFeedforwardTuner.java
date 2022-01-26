@@ -28,7 +28,7 @@ import java.util.List;
  *      regression.
  */
 @Config
-@Disabled
+//@Disabled
 @Autonomous(group = "tests")
 public class AutomaticFeedforwardTuner extends LinearOpModeWithCommands {
     public static double MAX_POWER = 1;
