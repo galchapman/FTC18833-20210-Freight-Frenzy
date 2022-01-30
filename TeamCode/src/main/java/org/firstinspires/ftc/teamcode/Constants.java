@@ -29,6 +29,7 @@ public final class Constants {
         );
 
         public final static double WheelDiameter = 0.096;
+        public final static double HorizontalOdometryWheelDiameter = 0.06;
 
         public final static DoubleFunction<Integer> m_to_ticks = (double m) -> (int)(m / WheelDiameter / Math.PI * ticks_per_revolution);
         public final static IntFunction<Double> ticks_to_m = (int ticks) -> ticks * WheelDiameter * Math.PI / ticks_per_revolution;
