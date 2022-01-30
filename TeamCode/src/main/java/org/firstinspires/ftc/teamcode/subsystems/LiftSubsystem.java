@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants.LiftConstants;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
@@ -10,14 +12,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LiftSubsystem extends SubsystemBase {
     private final DcMotor m_liftMotor;
+    private final DistanceSensor m_heightSensor;
+    private final int m_encoderOffset;
 
-        public LiftSubsystem() {
+    public LiftSubsystem() {
         m_liftMotor = hardwareMap.dcMotor.get("LiftMotor");
+        m_heightSensor = hardwareMap.get(DistanceSensor.class, "LiftHeightSensor");
         m_liftMotor.setPower(0);
         m_liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m_liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_liftMotor.setTargetPosition(0);
         m_liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        m_encoderOffset = 0;
+    }
+
+    public double getSensorHeight() {
+        return m_heightSensor.getDistance(DistanceUnit.METER);
     }
 
     public int getCurrentPosition() {
@@ -28,11 +39,19 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public double getHeight() {
-        return LiftConstants.distance_per_revolution * m_liftMotor.getCurrentPosition();
+        return ticks2meters(m_liftMotor.getCurrentPosition() - m_encoderOffset);
     }
 
     public void setLiftHeight(double height) {
-            m_liftMotor.setTargetPosition((int)(height/ LiftConstants.distance_per_tick));
+            m_liftMotor.setTargetPosition(meters2ticks(height) + m_encoderOffset);
+    }
+
+    static public int meters2ticks(double height) {
+        return (int)(height/ LiftConstants.distance_per_tick);
+    }
+
+    static public double ticks2meters(int ticks) {
+        return ticks * LiftConstants.distance_per_tick;
     }
 
 
@@ -52,5 +71,9 @@ public class LiftSubsystem extends SubsystemBase {
 
     public boolean isBusy() {
         return m_liftMotor.isBusy();
+    }
+
+    public int getEncoderOffset() {
+        return m_encoderOffset;
     }
 }

@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RotateArmToPositionCommand extends CommandBase {
     public final ArmSubsystem m_ArmSubsystem;
-    private final int m_angle;
+    private final double m_angle;
     private final double m_power;
 
-    public RotateArmToPositionCommand(ArmSubsystem armSubsystem, int angle ,double power) {
+    public RotateArmToPositionCommand(ArmSubsystem armSubsystem, double angle ,double power) {
         m_ArmSubsystem = armSubsystem;
         m_angle = angle;
         m_power = power;

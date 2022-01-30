@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.commandftc.opModes.CommandBasedTeleOp;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.IndexDuckCommand;
+import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmPowerCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmToPositionCommand;
@@ -48,11 +50,7 @@ public class Drive extends CommandBasedTeleOp
     RaiseLiftCommand raiseLiftCommand;
     SetLiftHeightCommand resetLiftCommand;
     // Arm commands
-    RotateArmCommand rotateArmCommand;
     RotateArmPowerCommand rotateArmContinuouslyCommand;
-    Command rotateArmLeftCommand;
-    Command rotateArmRightCommand;
-    Command centerArmCommand;
     RotateArmToPositionCommand rotateArmToMiddleCommand;
     SetIntakeArmPositionCommand resetIntakeArmPositionCommand;
     // intake commands
@@ -61,6 +59,7 @@ public class Drive extends CommandBasedTeleOp
     SequentialCommandGroup indexDuckCommand;
     //Multiple subsystem commands
     Command GoToIntakePositionCommand;
+    SetRobotArmsPosition GoToScoringPositionCommand;
 
     private double getDriveSpeed() {
         if (gamepad1.left_trigger > 0)          return 0.5;
@@ -76,8 +75,13 @@ public class Drive extends CommandBasedTeleOp
         else                                                                return 0;
     }
 
-    public boolean canLowerArm() {
+    private boolean canLowerArm() {
         return (-30 < armSubsystem.getAngle() && armSubsystem.getAngle() < 30) || liftSubsystem.getHeight() > 0.3;
+    }
+
+    public void saveArmsLocation() {
+        if (Math.abs(armSubsystem.getAngle()) > 20)
+            GoToScoringPositionCommand.setTarget(liftSubsystem.getHeight(), armSubsystem.getAngle(), armSubsystem.getVerticalPosition());
     }
 
     @Override
@@ -98,10 +102,6 @@ public class Drive extends CommandBasedTeleOp
         raiseLiftCommand = new RaiseLiftCommand(liftSubsystem, () -> -gamepad2.left_stick_y);
         resetLiftCommand = new SetLiftHeightCommand(liftSubsystem,0, 0.7);
 
-//        rotateArmCommand = new RotateArmCommand(armSubsystem, 1, 2, new double[]{-85, -45, 0, 45, 85});
-//        rotateArmLeftCommand = new InstantCommand(rotateArmCommand::decState);
-//        rotateArmRightCommand = new InstantCommand(rotateArmCommand::incState);
-//        centerArmCommand = new InstantCommand(() -> rotateArmCommand.setState(2));
         rotateArmContinuouslyCommand = new RotateArmPowerCommand(armSubsystem, this::getArmRotationPower);
         rotateArmToMiddleCommand = new RotateArmToPositionCommand(armSubsystem,0,1);
         resetIntakeArmPositionCommand = new SetIntakeArmPositionCommand(armSubsystem,0);
@@ -110,23 +110,10 @@ public class Drive extends CommandBasedTeleOp
 
         indexDuckCommand = new IndexDuckCommand(ducksSubsystem,1000,1).andThen(new WaitCommand(2));
 
-//        GoToIntakePositionCommand = new SetIntakeArmPositionCommand(armSubsystem, 1)
-//                .andThen(new WaitCommand(0.3))
-//                .andThen(rotateArmToMiddleCommand.alongWith(
-//                        resetLiftCommand,
-//                        new InstantCommand(() -> armSubsystem.setAngle(1))))
-//                .andThen(resetIntakeArmPositionCommand);
-
-        GoToIntakePositionCommand = new SequentialCommandGroup(
-                new InstantCommand(() -> armSubsystem.setVerticalPosition(1)),
-                new WaitCommand(0.5),
-                new ParallelCommandGroup(
-                        rotateArmToMiddleCommand,
-                        resetLiftCommand,
-                        new InstantCommand(() -> armSubsystem.setAngle(1))
-                ),
-                new InstantCommand(() -> armSubsystem.setVerticalPosition(0))
-        );
+        GoToIntakePositionCommand = new InstantCommand(
+                () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Closed); })
+                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0, 1, 0, 1, 0));
+        GoToScoringPositionCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0, 1, 50, 0.6, 0.5);
 
         // DriveTrain commands
         driveTrain.setDefaultCommand(tankDriveCommand);
@@ -140,12 +127,6 @@ public class Drive extends CommandBasedTeleOp
         // Arm command
         armSubsystem.setDefaultCommand(rotateArmContinuouslyCommand);
 
-//        gp2.dpad_left().whenPressed(rotateArmLeftCommand);
-//        gp2.dpad_right().whenPressed(rotateArmRightCommand);
-//        gp2.dpad_down().whenPressed(centerArmCommand);
-
-//        new Trigger(() -> gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1).whileActiveOnce(rotateArmContinuouslyCommand);
-
         gp2.left_bumper().whileHeld(() -> armSubsystem.setVerticalPosition(Math.min(armSubsystem.getVerticalPosition()+0.015, 0.65)));
         gp2.right_bumper().whileHeld(() -> armSubsystem.setVerticalPosition(Math.max(armSubsystem.getVerticalPosition()-0.015, 0)));
 
@@ -155,20 +136,10 @@ public class Drive extends CommandBasedTeleOp
         //gp2.y().whenActive(() -> armSubsystem.setVerticalPosition(0.4), armSubsystem);
 
         gp2.right_stick_button().whenPressed(GoToIntakePositionCommand);
-
-        gp2.left_stick_button().whenPressed(
-                new SequentialCommandGroup(
-                        new InstantCommand(() -> armSubsystem.setVerticalPosition(1)),
-                        new WaitCommand(0.3),
-                        new ParallelCommandGroup(
-                            new SetLiftHeightCommand(liftSubsystem, 0.15, 1),
-                            new RotateArmToPositionCommand(armSubsystem, 70, 0.4)
-                        ),
-                        new InstantCommand(() -> armSubsystem.setVerticalPosition(0.4))
-                )
-        );
+        gp2.left_stick_button().whenPressed(GoToScoringPositionCommand);
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
+        gp2.y().whenPressed(() -> intakeSubsystem.toggleDoor());
         // Duck commands
         //gp2.y().whileHeld(indexDuckCommand);
 
@@ -179,6 +150,8 @@ public class Drive extends CommandBasedTeleOp
         telemetry.addData("dt(s)", this::dt);
         telemetry.addData("angle", armSubsystem::getAngle);
         telemetry.addData("lift height", liftSubsystem::getHeight);
+        telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
+        telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
         telemetry.update();
 
         TelemetryPacket init_telemetry_packet = new TelemetryPacket();
