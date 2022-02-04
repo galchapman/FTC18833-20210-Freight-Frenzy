@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import java.util.function.DoubleFunction;
-import java.util.function.IntFunction;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics;
+import java.util.function.DoubleFunction;
 
 public final class Constants {
     public static final class MotorConstants {
@@ -21,22 +19,30 @@ public final class Constants {
         public final static double ticks_per_revolution =
                 MotorConstants.REVThroughBoreEncoder.ticks_per_revolution;
 
-        public final static MecanumDriveKinematics kinematics = new MecanumDriveKinematics(
-                new Translation2d(0.28, 0.34),
-                new Translation2d(0.28, -0.34),
-                new Translation2d(-0.28, 0.34),
-                new Translation2d(-0.28, -0.34)
-        );
-
         public final static double WheelDiameter = 0.096;
         public final static double HorizontalOdometryWheelDiameter = 0.06;
 
-        public final static DoubleFunction<Integer> m_to_ticks = (double m) -> (int)(m / WheelDiameter / Math.PI * ticks_per_revolution);
-        public final static IntFunction<Double> ticks_to_m = (int ticks) -> ticks * WheelDiameter * Math.PI / ticks_per_revolution;
+        public final static double odometry_wheel_ticks_to_meters = HorizontalOdometryWheelDiameter * Math.PI / ticks_per_revolution;
 
-        public final static double kV = 0.68149;
-        public final static double kStatic = 0.095605;
-        public final static double kA = 0.00421;
+        public final static DoubleFunction<Integer> m_to_ticks = (double m) -> (int)(m / WheelDiameter / Math.PI * ticks_per_revolution);
+        public final static DoubleFunction<Double> ticks_to_m = (double ticks) -> ticks * WheelDiameter * Math.PI / ticks_per_revolution;
+
+        public final static double kV = 0.55;
+        public final static double kStatic = 0.114;
+        public final static double kA = 0.056;
+
+        public final static class OdometryConstants {
+            public static final double kMecanum = 2.3384020421638465;
+
+            public static final Pose2d frontLeftWheelPosition = new Pose2d(0.16357, 0.1346);
+            public static final Pose2d rearLeftWheelPosition = new Pose2d(-0.16357, 0.1346);
+            public static final Pose2d frontRightWheelPosition = new Pose2d(0.16357, -0.1346);
+            public static final Pose2d rearRightWheelPosition = new Pose2d(-0.16357, -0.1346);
+
+            public final static Pose2d horizontalWheelPosition = new Pose2d(-0.15152, 0, Math.toRadians(-90));
+            public final static Pose2d virtualLeftWheelPosition = new Pose2d(0, 0.1346 * kMecanum);
+            public final static Pose2d virtualRightWheelPosition = new Pose2d(0, -0.1346 * kMecanum);
+        }
     }
 
     public static final class LiftConstants {

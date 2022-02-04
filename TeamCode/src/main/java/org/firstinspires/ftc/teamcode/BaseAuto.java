@@ -27,6 +27,8 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem = new ArmSubsystem();
         armSubsystem.setVerticalPosition(0);
 
+        driveTrain.setOdometryPosition(0);
+
         initialize();
 
         TelemetryPacket packet = new TelemetryPacket();
@@ -52,7 +54,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     }
 
     protected Command turn(double angle) {
-        return new TurnCommand(driveTrain, angle).andThen(new WaitCommand(1));
+        return new TurnCommand(driveTrain, Math.toRadians(angle)).andThen(new WaitCommand(1));
     }
 
 }

@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
-import com.acmerobotics.roadrunner.followers.TankPIDVAFollower;
+import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -18,12 +18,16 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.commandftc.opModes.CommandBasedTeleOp;
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
 import org.firstinspires.ftc.teamcode.lib.drive.ArcadeDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.HorizontalDrive;
+import org.firstinspires.ftc.teamcode.lib.drive.Odometry;
 import org.firstinspires.ftc.teamcode.lib.drive.TankDrive;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequenceBuilder;
@@ -33,23 +37,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
 import static org.commandftc.RobotUniversal.opMode;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.odometry_wheel_ticks_to_meters;
 
 public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, ArcadeDrive, HorizontalDrive {
-    private final DcMotor m_FrontLeftMotor;
-    private final DcMotor m_RearLeftMotor;
-    private final DcMotor m_FrontRightMotor;
-    private final DcMotor m_RearRightMotor;
+    private final DcMotorEx m_FrontLeftMotor;
+    private final DcMotorEx m_RearLeftMotor;
+    private final DcMotorEx m_FrontRightMotor;
+    private final DcMotorEx m_RearRightMotor;
+
+    private final DcMotorEx m_horizontalEncoder;
+    private final Servo m_odometryServo;
 
     private final BNO055IMU imu;
 
-    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(1, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.1, 0, 0);
+    public static PIDCoefficients FORWARD_PID = new PIDCoefficients(2, 0, 0);
+    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(7, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0);
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -61,19 +70,21 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     public boolean trajectories = true;
 
     public DriveTrainSubsystem() {
-        super(DriveTrainConstants.kV, DriveTrainConstants.kA, DriveTrainConstants.kStatic, 0.259);
-        m_FrontLeftMotor  =  hardwareMap.dcMotor.get("FrontLeftDriveMotor");
-        m_RearLeftMotor   =  hardwareMap.dcMotor.get("RearLeftDriveMotor");
-        m_FrontRightMotor =  hardwareMap.dcMotor.get("FrontRightDriveMotor");
-        m_RearRightMotor  =  hardwareMap.dcMotor.get("RearRightDriveMotor");
+        super(DriveTrainConstants.kV, DriveTrainConstants.kA, DriveTrainConstants.kStatic, 0.259, 1);
+        // Hardware
+        m_FrontLeftMotor  = (DcMotorEx) hardwareMap.dcMotor.get("FrontLeftDriveMotor");
+        m_RearLeftMotor   = (DcMotorEx) hardwareMap.dcMotor.get("RearLeftDriveMotor");
+        m_FrontRightMotor = (DcMotorEx) hardwareMap.dcMotor.get("FrontRightDriveMotor");
+        m_RearRightMotor  = (DcMotorEx) hardwareMap.dcMotor.get("RearRightDriveMotor");
+        m_horizontalEncoder = (DcMotorEx) hardwareMap.dcMotor.get("IntakeMotor");
+        m_odometryServo = hardwareMap.servo.get("OdometryServo");
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-
+        // IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
-
+        // Initialize drive motors
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // Default drive type
         setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -82,16 +93,35 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_FrontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         m_RearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        TrajectoryFollower follower = new TankPIDVAFollower(AXIAL_PID, CROSS_TRACK_PID,
-                new Pose2d(0.1, 0.1, Math.toRadians(0.5)), 0.5);
+//        setDrivePIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
+//                new PIDFCoefficients(-0.691699604743083, 0, 0, 0, MotorControlAlgorithm.LegacyPID));
 
+        m_horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_horizontalEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        setTargetPositions(0, 0, 0, 0);
+
+        // Odometry
+        setOdometryPosition(1);
+        setLocalizer(new Odometry(
+                new DoubleSupplier[]{
+                        this::getLeftPositionsAvg,
+                        this::getRightPositionsAvg,
+                        this::getHorizontalPosition},
+                new Pose2d[]{
+                        DriveTrainConstants.OdometryConstants.virtualLeftWheelPosition,
+                        DriveTrainConstants.OdometryConstants.virtualRightWheelPosition,
+                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
+                })
+        );
+
+        TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
+                new Pose2d(0.1, 0.1, Math.toRadians(0.5)), 0.5);
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
-        // check if Opmode is autonomous
-        trajectoryControlled = !CommandBasedTeleOp.class.isAssignableFrom(opMode.getClass());
+        trajectoryControlled = !CommandBasedTeleOp.class.isAssignableFrom(opMode.getClass()); // check if Opmode is autonomous
 
-        // Because we aren't extending SubsystemBase
-        CommandScheduler.getInstance().registerSubsystem(this);
+        CommandScheduler.getInstance().registerSubsystem(this); // Because we aren't extending SubsystemBase
     }
 
     @Override
@@ -103,6 +133,10 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         } else {
             trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         }
+    }
+
+    public void setOdometryPosition(double position) {
+        m_odometryServo.setPosition(position);
     }
 
     public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
@@ -121,6 +155,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_RearLeftMotor.setMode(mode);
         m_FrontRightMotor.setMode(mode);
         m_RearRightMotor.setMode(mode);
+    }
+
+    public void setDrivePIDFCoefficients(DcMotor.RunMode mode, PIDFCoefficients pidfCoefficients) {
+        m_FrontLeftMotor.setPIDFCoefficients(mode, pidfCoefficients);
+        m_RearLeftMotor.setPIDFCoefficients(mode, pidfCoefficients);
+        m_FrontRightMotor.setPIDFCoefficients(mode, pidfCoefficients);
+        m_RearRightMotor.setPIDFCoefficients(mode, pidfCoefficients);
     }
 
     public DcMotor.RunMode getDriveMode() {
@@ -197,6 +238,22 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         return m_RearRightMotor.getCurrentPosition();
     }
 
+    public int getFrontLeftEncoderTarget() {
+        return m_FrontLeftMotor.getTargetPosition();
+    }
+
+    public int getRearLeftEncoderTarget() {
+        return m_RearLeftMotor.getTargetPosition();
+    }
+
+    public int getFrontRightEncoderTarget() {
+        return m_FrontRightMotor.getTargetPosition();
+    }
+
+    public int getRearRightEncoderTarget() {
+        return m_RearRightMotor.getTargetPosition();
+    }
+
     public int getLeftEncodersAvg() {
         return (getFrontLeftEncoder() + getRearLeftEncoder()) / 2;
     }
@@ -210,15 +267,15 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public double getRearLeftPosition() {
-        return DriveTrainConstants.ticks_to_m.apply(m_RearLeftMotor.getCurrentPosition());
+        return DriveTrainConstants.ticks_to_m.apply(getRearLeftEncoder());
     }
 
     public double getFrontRightPosition() {
-        return DriveTrainConstants.ticks_to_m.apply(m_FrontRightMotor.getCurrentPosition());
+        return DriveTrainConstants.ticks_to_m.apply(getFrontRightEncoder());
     }
 
     public double getRearRightPosition() {
-        return DriveTrainConstants.ticks_to_m.apply(m_RearRightMotor.getCurrentPosition());
+        return DriveTrainConstants.ticks_to_m.apply(getRearRightEncoder());
     }
 
     public double getLeftPositionsAvg() {
@@ -227,6 +284,49 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public double getRightPositionsAvg() {
         return (getFrontRightPosition() + getRearRightPosition()) / 2;
+    }
+
+    public double getFrontLeftVelocity() {
+        return DriveTrainConstants.ticks_to_m.apply(m_FrontLeftMotor.getVelocity());
+    }
+
+    public double getRearLeftVelocity() {
+        return DriveTrainConstants.ticks_to_m.apply(m_RearLeftMotor.getVelocity());
+    }
+
+    public double getFrontRightVelocity() {
+        return DriveTrainConstants.ticks_to_m.apply(m_FrontRightMotor.getVelocity());
+    }
+
+    public double getRearRightVelocity() {
+        return DriveTrainConstants.ticks_to_m.apply(m_RearRightMotor.getVelocity());
+    }
+
+    public double getLeftVelocity() {
+        return (getFrontLeftVelocity() + getRearLeftVelocity()) / 2;
+    }
+
+    public double getRightVelocity() {
+        return (getFrontRightVelocity() + getRearRightVelocity()) / 2;
+    }
+
+    public int getHorizontalEncoder() {
+        return m_horizontalEncoder.getCurrentPosition();
+    }
+
+    public double getHorizontalPosition() {
+        return m_horizontalEncoder.getCurrentPosition() * odometry_wheel_ticks_to_meters;
+    }
+
+    public double getHorizontalVelocity() {
+        return m_horizontalEncoder.getVelocity() * odometry_wheel_ticks_to_meters;
+    }
+
+    public void setTargetPositions(int fl, int rl, int fr, int rr) {
+        m_FrontLeftMotor.setTargetPosition(fl);
+        m_RearLeftMotor.setTargetPosition(rl);
+        m_FrontRightMotor.setTargetPosition(fr);
+        m_RearRightMotor.setTargetPosition(rr);
     }
 
     public double getHeading() {
@@ -314,5 +414,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public boolean isBusy() {
         return trajectorySequenceRunner.isBusy();
+    }
+
+    public boolean areDriveMotorsBusy() {
+        return m_FrontLeftMotor.isBusy() || m_RearLeftMotor.isBusy() || m_FrontRightMotor.isBusy() || m_RearRightMotor.isBusy();
     }
 }
