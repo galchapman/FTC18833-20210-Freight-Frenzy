@@ -154,5 +154,7 @@ public class Drive extends CommandBasedTeleOp
         TelemetryPacket init_telemetry_packet = new TelemetryPacket();
         DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
         FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
+
+        driveTrain.setOdometryPosition(0.45);
     }
 }

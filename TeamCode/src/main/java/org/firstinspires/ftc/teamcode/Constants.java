@@ -32,16 +32,11 @@ public final class Constants {
         public final static double kA = 0.056;
 
         public final static class OdometryConstants {
-            public static final double kMecanum = 2.3384020421638465;
 
-            public static final Pose2d frontLeftWheelPosition = new Pose2d(0.16357, 0.1346);
-            public static final Pose2d rearLeftWheelPosition = new Pose2d(-0.16357, 0.1346);
-            public static final Pose2d frontRightWheelPosition = new Pose2d(0.16357, -0.1346);
-            public static final Pose2d rearRightWheelPosition = new Pose2d(-0.16357, -0.1346);
+            public static final Pose2d frontLeftWheelPosition = new Pose2d(0.16357, 0.055);
+            public static final Pose2d frontRightWheelPosition = new Pose2d(0.16357, -0.055);
 
             public final static Pose2d horizontalWheelPosition = new Pose2d(-0.15152, 0, Math.toRadians(-90));
-            public final static Pose2d virtualLeftWheelPosition = new Pose2d(0, 0.1346 * kMecanum);
-            public final static Pose2d virtualRightWheelPosition = new Pose2d(0, -0.1346 * kMecanum);
         }
     }
 
