@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import org.commandftc.opModes.CommandBasedAuto;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectorySequenceCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.StrafeCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.TurnCommand;
 import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
@@ -55,6 +56,10 @@ public abstract class BaseAuto extends CommandBasedAuto {
 
     protected Command turn(double angle) {
         return new TurnCommand(driveTrain, Math.toRadians(angle)).andThen(new WaitCommand(1));
+    }
+
+    protected Command strafe(double distance) {
+        return new StrafeCommand(driveTrain, distance);
     }
 
 }
