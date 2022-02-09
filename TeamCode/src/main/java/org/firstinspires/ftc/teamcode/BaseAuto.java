@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -21,14 +22,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public abstract class BaseAuto extends CommandBasedAuto {
     protected DriveTrainSubsystem driveTrain;
     protected ArmSubsystem armSubsystem;
+    protected IntakeSubsystem intakeSubsystem;
 
     @Override
     public void plan() {
         driveTrain = new DriveTrainSubsystem();
         armSubsystem = new ArmSubsystem();
-        armSubsystem.setVerticalPosition(0);
+        intakeSubsystem = new IntakeSubsystem();
 
-        driveTrain.setOdometryPosition(0);
+        driveTrain.setOdometryPosition(0.45);
 
         initialize();
 
@@ -61,5 +63,4 @@ public abstract class BaseAuto extends CommandBasedAuto {
     protected Command strafe(double distance) {
         return new StrafeCommand(driveTrain, distance);
     }
-
 }

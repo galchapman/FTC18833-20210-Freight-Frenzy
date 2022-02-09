@@ -2,11 +2,13 @@ package edu.megiddo.lions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
+import edu.megiddo.lions.tokens.TokenFormatException;
 import edu.megiddo.lions.tokens.ValueToken;
 
 public class Environment {
@@ -61,22 +63,22 @@ public class Environment {
             return true;
         if (name.equalsIgnoreCase("False"))
             return false;
-        return booleanVariablesRead.get(name).getAsBoolean();
+        return Objects.requireNonNull(booleanVariablesRead.get(name)).getAsBoolean();
     }
 
     public double getDoubleVariable(String name) {
-        return doubleVariablesRead.get(name).getAsDouble();
+        return Objects.requireNonNull(doubleVariablesRead.get(name)).getAsDouble();
     }
 
     public void setBooleanVariable(String name, boolean value) {
-        booleanVariablesWrite.get(name).accept(value);
+        Objects.requireNonNull(booleanVariablesWrite.get(name)).accept(value);
     }
 
     public void setDoubleVariable(String name, double value) {
-        doubleVariablesWrite.get(name).accept(value);
+        Objects.requireNonNull(doubleVariablesWrite.get(name)).accept(value);
     }
 
-    public double parseValueToken(String token) {
+    public double parseValueToken(Tokenizer.Token token) throws TokenFormatException {
         return valueTokenParser.parseDouble(token);
     }
 }

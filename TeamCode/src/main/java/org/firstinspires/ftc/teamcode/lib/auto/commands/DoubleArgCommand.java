@@ -5,7 +5,9 @@ import java.util.List;
 import edu.megiddo.lions.Environment;
 import edu.megiddo.lions.TokenType;
 import edu.megiddo.lions.Tokenizer;
-import edu.megiddo.lions.tokens.TokenException;
+import edu.megiddo.lions.execption.FunctionException;
+import edu.megiddo.lions.execption.ObjectNotFoundException;
+import edu.megiddo.lions.tokens.TokenFormatException;
 import edu.wpi.first.wpilibj2.command.Command;
 import kotlin.jvm.functions.Function2;
 
@@ -17,9 +19,9 @@ public class DoubleArgCommand implements edu.megiddo.lions.commands.Command<Comm
     }
 
     @Override
-    public Command run(Environment env, List<Tokenizer.Token> args) throws TokenException {
+    public Command run(Environment env, Tokenizer.Token token, List<Tokenizer.Token> args) throws FunctionException, ObjectNotFoundException, TokenFormatException {
         if (args.size() != 2) {
-            throw new TokenException("Invalid arg amount");
+            throw new FunctionException("Invalid arg amount", token);
         }
 
         double[] func_args = new double[2];
@@ -29,12 +31,12 @@ public class DoubleArgCommand implements edu.megiddo.lions.commands.Command<Comm
                 if (env.hasDoubleVarRead(args.get(i).value)) {
                     func_args[i] = env.getDoubleVariable(args.get(i).value);
                 } else {
-                    throw new TokenException("Arg name isn't defined");
+                    throw new ObjectNotFoundException(args.get(i));
                 }
             } else if (args.get(0).type == TokenType.Value) {
-                func_args[i] = env.parseValueToken(args.get(i).value);
+                func_args[i] = env.parseValueToken(args.get(i));
             } else {
-                throw new TokenException("Arg must be value or variable");
+                throw new FunctionException("Arg must be value or variable", token);
             }
         }
 

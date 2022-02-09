@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.lib.auto.commands;
 
-import android.content.pm.PackageManager;
-
 import java.util.List;
 
 import edu.megiddo.lions.Environment;
 import edu.megiddo.lions.TokenType;
 import edu.megiddo.lions.Tokenizer;
 import edu.megiddo.lions.commands.Command;
-import edu.megiddo.lions.tokens.TokenException;
+import edu.megiddo.lions.execption.ObjectNotFoundException;
+import edu.megiddo.lions.tokens.TokenFormatException;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class SetCommand implements Command<edu.wpi.first.wpilibj2.command.Command> {
 
     @Override
-    public edu.wpi.first.wpilibj2.command.Command run(Environment env, List<Tokenizer.Token> args) throws PackageManager.NameNotFoundException, TokenException {
+    public edu.wpi.first.wpilibj2.command.Command run(Environment env, Tokenizer.Token token, List<Tokenizer.Token> args) throws TokenFormatException, ObjectNotFoundException {
         StringBuilder name = new StringBuilder();
         // Join names
         for (int i = 0; i < args.size() - 1; i++) {
@@ -27,9 +26,13 @@ public class SetCommand implements Command<edu.wpi.first.wpilibj2.command.Comman
         Tokenizer.Token value = args.get(args.size()-1);
         if (value.type == TokenType.Value) {
             if (!env.hasDoubleVarWrite(name.toString()))
-                throw new PackageManager.NameNotFoundException("name: `" + name + "` not found");
+                throw new ObjectNotFoundException(value);
             return new InstantCommand(
-                    () -> env.setDoubleVariable(name.toString(), env.parseValueToken(value.value))
+                    () -> {
+                        try {
+                            env.setDoubleVariable(name.toString(), env.parseValueToken(value));
+                        } catch(Exception ignored) {}
+                    }
             );
         } else {
             if (env.hasBooleanVarRead(value.value) && env.hasBooleanVarWrite(name.toString())) {
@@ -41,7 +44,7 @@ public class SetCommand implements Command<edu.wpi.first.wpilibj2.command.Comman
                         () -> env.setDoubleVariable(name.toString(), env.getDoubleVariable(value.value))
                 );
             } else {
-                throw new PackageManager.NameNotFoundException("name: `" + name + "` not found");
+                throw new ObjectNotFoundException(value);
             }
         }
     }

@@ -1,6 +1,7 @@
 package org.commandftc.opModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.commandftc.RobotUniversal;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,13 +24,17 @@ public abstract class CommandBasedAuto extends OpMode {
 
     @Override
     public final void start() {
-        autonomousCommand = getAutonomousCommand();
-        autonomousCommand.schedule();
+        try {
+            autonomousCommand = getAutonomousCommand();
+            autonomousCommand.schedule();
+        } catch (Exception e) {
+            telemetry.addLine(e.getMessage());
+        }
     }
 
     public abstract void plan();
 
-    public abstract Command getAutonomousCommand();
+    public abstract Command getAutonomousCommand() throws Exception;
 
     @Override
     public final void loop() {
