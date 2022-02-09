@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
@@ -45,7 +46,10 @@ import static org.commandftc.RobotUniversal.hardwareMap;
 import static org.commandftc.RobotUniversal.opMode;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.odometry_wheel_ticks_to_meters;
 
+@Config
 public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, ArcadeDrive, HorizontalDrive {
+    public static double X_MUL = 1;
+    public static double Y_MUL = 1;
     private final DcMotorEx m_FrontLeftMotor;
     private final DcMotorEx m_RearLeftMotor;
     private final DcMotorEx m_FrontRightMotor;
@@ -62,7 +66,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(6, Math.toRadians(165), 0.259);
+    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(6, Math.toRadians(165), 0.149);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(0.4);
 
     private final boolean trajectoryControlled;
@@ -70,7 +74,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     public boolean trajectories = true;
 
     public DriveTrainSubsystem() {
-        super(DriveTrainConstants.kV, DriveTrainConstants.kA, DriveTrainConstants.kStatic, 0.259, 1);
+        super(DriveTrainConstants.kV, DriveTrainConstants.kA, DriveTrainConstants.kStatic, 0.149, 1);
         // Hardware
         m_FrontLeftMotor  = (DcMotorEx) hardwareMap.dcMotor.get("FrontLeftDriveMotor");
         m_RearLeftMotor   = (DcMotorEx) hardwareMap.dcMotor.get("RearLeftDriveMotor");
@@ -263,7 +267,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public double getFrontLeftPosition() {
-        return DriveTrainConstants.ticks_to_m.apply(getFrontLeftEncoder());
+        return getFrontLeftEncoder() * odometry_wheel_ticks_to_meters * X_MUL;
     }
 
     public double getRearLeftPosition() {
@@ -271,7 +275,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public double getFrontRightPosition() {
-        return DriveTrainConstants.ticks_to_m.apply(getFrontRightEncoder());
+        return getFrontRightEncoder() * odometry_wheel_ticks_to_meters * X_MUL;
     }
 
     public double getRearRightPosition() {
@@ -315,7 +319,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public double getHorizontalPosition() {
-        return m_horizontalEncoder.getCurrentPosition() * odometry_wheel_ticks_to_meters;
+        return m_horizontalEncoder.getCurrentPosition() * odometry_wheel_ticks_to_meters * Y_MUL;
     }
 
     public double getHorizontalVelocity() {

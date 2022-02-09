@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import java.util.function.DoubleFunction;
@@ -31,12 +32,12 @@ public final class Constants {
         public final static double kStatic = 0.114;
         public final static double kA = 0.056;
 
+        @Config
         public final static class OdometryConstants {
+            public static Pose2d frontLeftWheelPosition = new Pose2d(0.16357, 0.0745);
+            public static Pose2d frontRightWheelPosition = new Pose2d(0.16357, -0.0745);
 
-            public static final Pose2d frontLeftWheelPosition = new Pose2d(0.16357, 0.055);
-            public static final Pose2d frontRightWheelPosition = new Pose2d(0.16357, -0.055);
-
-            public final static Pose2d horizontalWheelPosition = new Pose2d(-0.15152, 0, Math.toRadians(-90));
+            public static Pose2d horizontalWheelPosition = new Pose2d(-0.15152, 0, Math.toRadians(-90));
         }
     }
 

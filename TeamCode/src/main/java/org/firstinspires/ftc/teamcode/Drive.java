@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.commands.arm.RotateArmPowerCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmToPositionCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.SetIntakeArmPositionCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
-import org.firstinspires.ftc.teamcode.commands.drive.DriveLeftCommand;
-import org.firstinspires.ftc.teamcode.commands.drive.DriveRightCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.GeneralDriveLeftCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.GeneralDriveRightCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.TankDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand;
 import org.firstinspires.ftc.teamcode.commands.lift.RaiseLiftCommand;
@@ -41,8 +41,8 @@ public class Drive extends CommandBasedTeleOp
     // Drive Commands
     TankDriveCommand tankDriveCommand;
     ArcadeDriveCommand arcadeDriveCommand;
-    DriveLeftCommand driveLeftCommand;
-    DriveRightCommand driveRightCommand;
+    GeneralDriveLeftCommand driveLeftCommand;
+    GeneralDriveRightCommand driveRightCommand;
     // Lift Commands
     RaiseLiftCommand raiseLiftCommand;
     SetLiftHeightCommand resetLiftCommand;
@@ -93,8 +93,8 @@ public class Drive extends CommandBasedTeleOp
 
         tankDriveCommand = new TankDriveCommand(driveTrain, () -> -gamepad1.left_stick_y * getDriveSpeed(), () -> -gamepad1.right_stick_y * getDriveSpeed());
         arcadeDriveCommand = new ArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_x, () -> -gamepad1.left_stick_y, () -> gamepad1.right_stick_x);
-        driveLeftCommand = new DriveLeftCommand(driveTrain, this::getDriveSpeed);
-        driveRightCommand = new DriveRightCommand(driveTrain, this::getDriveSpeed);
+        driveLeftCommand = new GeneralDriveLeftCommand(driveTrain, () -> -gamepad1.left_stick_y);
+        driveRightCommand = new GeneralDriveRightCommand(driveTrain, () -> -gamepad1.right_stick_y);
 
         raiseLiftCommand = new RaiseLiftCommand(liftSubsystem, () -> -gamepad2.left_stick_y);
         resetLiftCommand = new SetLiftHeightCommand(liftSubsystem,0, 0.7);
@@ -140,7 +140,6 @@ public class Drive extends CommandBasedTeleOp
         // Duck commands
         //gp2.y().whileHeld(indexDuckCommand);
 
-
         // Telemetry
         // No need for anything but update in loop because use of suppliers
         telemetry.addData("Runtime", this::getRuntime);
@@ -155,6 +154,12 @@ public class Drive extends CommandBasedTeleOp
         DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
         FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
 
-        driveTrain.setOdometryPosition(0.45);
+        driveTrain.setOdometryPosition(0.5);
+        armSubsystem.setVerticalPosition(1);
+
+        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
+        telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
+        telemetry.addData("r pos", driveTrain::getFrontRightPosition);
+        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
     }
 }
