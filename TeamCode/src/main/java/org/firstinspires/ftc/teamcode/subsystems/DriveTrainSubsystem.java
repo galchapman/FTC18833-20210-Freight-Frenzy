@@ -170,22 +170,22 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         updatePoseEstimate();
 
         TelemetryPacket packet = new TelemetryPacket();
-        packet.put("l", Math.abs(getFrontLeftPosition()));
-        packet.put("r", Math.abs(getFrontRightPosition()));
-        packet.put("rl", Math.abs(getRearLeftPosition()));
-        packet.put("rr", Math.abs(getRearRightPosition()));
-        packet.put("d", Math.abs(getFrontLeftPosition()) - Math.abs(getFrontRightPosition()));
-        packet.put("h", getHorizontalEncoder());
-        packet.put("external heading (deg)", Math.toDegrees(getRawExternalHeading()));
-
-        packet.put("FLp", m_FrontLeftMotor.getPower());
-        packet.put("RLp", m_RearLeftMotor.getPower());
-        packet.put("FRp", m_FrontRightMotor.getPower());
-        packet.put("RRp", m_RearRightMotor.getPower());
-        packet.put("FLv", getFrontLeftVelocity());
-        packet.put("RLv", getRearLeftVelocity());
-        packet.put("FRv", getFrontRightVelocity());
-        packet.put("RRv", getRearRightVelocity());
+//        packet.put("l", Math.abs(getFrontLeftPosition()));
+//        packet.put("r", Math.abs(getFrontRightPosition()));
+//        packet.put("rl", Math.abs(getRearLeftPosition()));
+//        packet.put("rr", Math.abs(getRearRightPosition()));
+//        packet.put("d", Math.abs(getFrontLeftPosition()) - Math.abs(getFrontRightPosition()));
+//        packet.put("h", getHorizontalEncoder());
+//        packet.put("external heading (deg)", Math.toDegrees(getRawExternalHeading()));
+//
+//        packet.put("FLp", m_FrontLeftMotor.getPower());
+//        packet.put("RLp", m_RearLeftMotor.getPower());
+//        packet.put("FRp", m_FrontRightMotor.getPower());
+//        packet.put("RRp", m_RearRightMotor.getPower());
+//        packet.put("FLv", getFrontLeftVelocity());
+//        packet.put("RLv", getRearLeftVelocity());
+//        packet.put("FRv", getFrontRightVelocity());
+//        packet.put("RRv", getRearRightVelocity());
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity(), packet);
 
         if (writer != null) {

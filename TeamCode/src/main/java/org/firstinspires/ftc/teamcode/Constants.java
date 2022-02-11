@@ -55,4 +55,8 @@ public final class Constants {
         public static final int gear = 70;
         public static final int motorGear = MotorConstants.RevHDHexMotor.ticks_per_revolution;
     }
+
+    public static final class IntakeConstants {
+        public static final double intakeThreshold = 0.05;
+    }
 }

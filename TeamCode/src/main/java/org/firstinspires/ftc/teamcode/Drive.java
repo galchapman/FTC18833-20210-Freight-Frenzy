@@ -146,7 +146,8 @@ public class Drive extends CommandBasedTeleOp
         telemetry.addData("dt(s)", this::dt);
         telemetry.addData("angle", armSubsystem::getAngle);
         telemetry.addData("lift height", liftSubsystem::getHeight);
-        telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
+//        telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
+        telemetry.addData("has freight", intakeSubsystem::hasFreight);
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
         telemetry.update();
 
@@ -154,12 +155,14 @@ public class Drive extends CommandBasedTeleOp
         DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
         FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
 
+        new Trigger(intakeSubsystem::hasFreight).whenActive(() -> {gamepad2.rumble(500); gamepad1.rumble(500);});
+
 //        driveTrain.setOdometryPosition(0.5);
 //        armSubsystem.setVerticalPosition(1);
 
-        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
-        telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
-        telemetry.addData("r pos", driveTrain::getFrontRightPosition);
-        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
+//        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
+//        telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
+//        telemetry.addData("r pos", driveTrain::getFrontRightPosition);
+//        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
     }
 }

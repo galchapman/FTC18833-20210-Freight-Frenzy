@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import java.io.Serializable;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -12,6 +15,7 @@ import static org.commandftc.RobotUniversal.hardwareMap;
 public class IntakeSubsystem extends SubsystemBase {
     private final DcMotor m_intakeMotor;
     private final Servo m_doorServo;
+    private final DistanceSensor m_distanceSensor;
 
     public enum DoorState {
         Open(0),
@@ -26,6 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public IntakeSubsystem() {
         m_intakeMotor = hardwareMap.dcMotor.get("IntakeMotor");
         m_doorServo = hardwareMap.servo.get("IntakeDoorServo");
+        m_distanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "IntakeSensor");
 
         m_intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -51,5 +56,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void toggleDoor() {
         m_doorServo.setPosition((DoorState.Closed.servoPosition + DoorState.Open.servoPosition) - m_doorServo.getPosition());
+    }
+
+    public double getDistance() {
+        return m_distanceSensor.getDistance(DistanceUnit.METER);
+    }
+
+    public boolean hasFreight() {
+        return getDistance() < IntakeConstants.intakeThreshold;
     }
 }
