@@ -37,10 +37,6 @@ import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequenceRunner;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -146,24 +142,24 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
         CommandScheduler.getInstance().registerSubsystem(this); // Because we aren't extending SubsystemBase
 
-        log = new File("/sdcard/FIRST/logs/" + System.nanoTime() + ".csv");
-        try {
-            writer = new FileWriter(log);
-        } catch (Exception e) {
-            writer = null;
-        }
-
-        if (writer != null) {
-            try {
-                writer.write("t,l,r,rl,rr\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        log = new File("/sdcard/FIRST/logs/" + System.nanoTime() + ".csv");
+//        try {
+//            writer = new FileWriter(log);
+//        } catch (Exception e) {
+//            writer = null;
+//        }
+//
+//        if (writer != null) {
+//            try {
+//                writer.write("t,l,r,rl,rr\n");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
-    File log;
-    Writer writer;
+//    File log;
+//    Writer writer;
 
     @Override
     public void periodic() {
@@ -188,13 +184,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 //        packet.put("RRv", getRearRightVelocity());
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity(), packet);
 
-        if (writer != null) {
-            try {
-                writer.write(opMode.getRuntime() + ',' + getFrontLeftPosition() + "," + getFrontRightPosition() + "," + getRearLeftPosition() + ','  + getRearRightPosition() + '\n');
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (writer != null) {
+//            try {
+//                writer.write(opMode.getRuntime() + ',' + getFrontLeftPosition() + "," + getFrontRightPosition() + "," + getRearLeftPosition() + ','  + getRearRightPosition() + '\n');
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         if (trajectoryControlled && trajectories && signal != null) {
             setDriveSignal(signal);
