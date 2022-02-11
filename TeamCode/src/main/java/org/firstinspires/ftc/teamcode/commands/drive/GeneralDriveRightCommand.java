@@ -22,9 +22,9 @@ public class GeneralDriveRightCommand extends CommandBase {
         double power = m_verticalSupplier.getAsDouble();
         if (Math.abs(power) > 0.5) {
             if (power > 0) {
-                m_driveTrain.setPowers(-1, 0, 0, -1);
-            } else {
                 m_driveTrain.setPowers(1, 0, 0, 1);
+            } else {
+                m_driveTrain.setPowers(0, -1, -1, 0);
             }
         } else {
             m_driveTrain.driveRight(1);

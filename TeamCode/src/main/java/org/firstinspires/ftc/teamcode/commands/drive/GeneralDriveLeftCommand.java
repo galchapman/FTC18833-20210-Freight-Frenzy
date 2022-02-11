@@ -23,7 +23,7 @@ public class GeneralDriveLeftCommand extends CommandBase {
             if (m_verticalSupplier.getAsDouble() > 0) {
                 m_driveTrain.setPowers(0, 1, 1, 0);
             } else {
-                m_driveTrain.setPowers(0, -1, -1, 0);
+                m_driveTrain.setPowers(-1, 0, 0, -1);
             }
         } else {
             m_driveTrain.driveLeft(1);
