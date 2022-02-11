@@ -4,13 +4,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.commandftc.RobotUniversal;
+import org.firstinspires.ftc.teamcode.Constants.ArmConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
-
-import org.firstinspires.ftc.teamcode.Constants.ArmConstants;
 
 public class ArmSubsystem extends SubsystemBase {
 	private final DcMotor m_motor;

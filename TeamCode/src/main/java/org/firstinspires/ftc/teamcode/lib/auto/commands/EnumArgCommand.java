@@ -8,20 +8,19 @@ import edu.megiddo.lions.Environment;
 import edu.megiddo.lions.Tokenizer;
 import edu.megiddo.lions.execption.FunctionException;
 import edu.megiddo.lions.execption.ObjectNotFoundException;
-import edu.wpi.first.wpilibj2.command.Command;
 
-public class EnumArgCommand<T extends Enum<T>> implements edu.megiddo.lions.commands.Command<Command> {
+public class EnumArgCommand<T extends Enum<T>, F> implements edu.megiddo.lions.commands.Command<F> {
     private final Class<T> enumType;
-    private final Function<T, Command> function;
+    private final Function<T, F> function;
 
-    public EnumArgCommand(Class<T> enumType, Function<T, Command> function) {
+    public EnumArgCommand(Class<T> enumType, Function<T, F> function) {
         this.enumType = enumType;
         this.function = function;
     }
 
 
     @Override
-    public Command run(Environment env, Tokenizer.Token token, List<Tokenizer.Token> args) throws FunctionException, ObjectNotFoundException {
+    public F run(Environment env, Tokenizer.Token token, List<Tokenizer.Token> args) throws FunctionException, ObjectNotFoundException {
         if (args.size() != 1)
             throw new FunctionException("enum command require only one args.", token);
 

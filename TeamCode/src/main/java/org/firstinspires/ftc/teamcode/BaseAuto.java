@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.commandftc.opModes.CommandBasedAuto;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
@@ -19,6 +20,8 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+import static org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem.OdometryPosition.Down;
+
 public abstract class BaseAuto extends CommandBasedAuto {
     protected DriveTrainSubsystem driveTrain;
     protected ArmSubsystem armSubsystem;
@@ -30,7 +33,11 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
 
-        driveTrain.setOdometryPosition(0.45);
+        driveTrain.setOdometryPosition(Down);
+        armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armSubsystem.setPower(1);
+
+        armSubsystem.setVerticalPosition(1);
 
         initialize();
 

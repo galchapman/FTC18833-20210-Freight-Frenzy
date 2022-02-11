@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants.LiftConstants;
 
-import static org.commandftc.RobotUniversal.hardwareMap;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import static org.commandftc.RobotUniversal.hardwareMap;
 
 public class LiftSubsystem extends SubsystemBase {
     private final DcMotor m_liftMotor;
@@ -24,7 +24,10 @@ public class LiftSubsystem extends SubsystemBase {
         m_liftMotor.setTargetPosition(0);
         m_liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        m_encoderOffset = 0;
+        m_encoderOffset = meters2ticks(getSensorHeight() - 0.080);
+
+        System.out.println("Some random print Height: " +  m_encoderOffset);
+        System.out.println("Some random print Height: " +  ticks2meters(m_encoderOffset));
     }
 
     public double getSensorHeight() {
@@ -39,11 +42,11 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public double getHeight() {
-        return ticks2meters(m_liftMotor.getCurrentPosition() - m_encoderOffset);
+        return ticks2meters(m_liftMotor.getCurrentPosition() + m_encoderOffset);
     }
 
     public void setLiftHeight(double height) {
-            m_liftMotor.setTargetPosition(meters2ticks(height) + m_encoderOffset);
+            m_liftMotor.setTargetPosition(meters2ticks(height) - m_encoderOffset);
     }
 
     static public int meters2ticks(double height) {

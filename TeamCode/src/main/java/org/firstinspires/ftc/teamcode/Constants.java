@@ -34,16 +34,16 @@ public final class Constants {
 
         @Config
         public final static class OdometryConstants {
-            public static Pose2d frontLeftWheelPosition = new Pose2d(0.16357, 0.0745);
-            public static Pose2d frontRightWheelPosition = new Pose2d(0.16357, -0.0745);
+            public static Pose2d frontLeftWheelPosition = new Pose2d(0.16357, 0.078);
+            public static Pose2d frontRightWheelPosition = new Pose2d(0.16357, -0.078);
 
             public static Pose2d horizontalWheelPosition = new Pose2d(-0.15152, 0, Math.toRadians(-90));
         }
     }
 
     public static final class LiftConstants {
-        public static final int inverse_motor_gear = 4 * 4 * 3;
-        public static final int ticks_per_motor_revolution = 10 * inverse_motor_gear;
+        public static final int inverse_motor_gear = 80;
+        public static final int ticks_per_motor_revolution = MotorConstants.RevHDHexMotor.ticks_per_revolution * inverse_motor_gear;
         public static final double gear = 15f / 10f;
         public static final int ticks_per_revolution = (int)(ticks_per_motor_revolution / gear);
         public static final double gear_radios = 0.0205;

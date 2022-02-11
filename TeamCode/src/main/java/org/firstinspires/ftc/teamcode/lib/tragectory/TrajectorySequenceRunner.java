@@ -77,10 +77,14 @@ public class TrajectorySequenceRunner {
 
     public @Nullable
     DriveSignal update(Pose2d poseEstimate, Pose2d poseVelocity) {
+        return update(poseEstimate, poseVelocity, new TelemetryPacket());
+    }
+
+    public @Nullable
+    DriveSignal update(Pose2d poseEstimate, Pose2d poseVelocity, TelemetryPacket packet) {
         Pose2d targetPose = null;
         DriveSignal driveSignal = null;
 
-        TelemetryPacket packet = new TelemetryPacket();
         Canvas fieldOverlay = packet.fieldOverlay();
 
         SequenceSegment currentSegment = null;

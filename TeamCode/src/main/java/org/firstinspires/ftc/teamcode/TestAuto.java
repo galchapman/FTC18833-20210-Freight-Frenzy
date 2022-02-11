@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous
+@Autonomous(name = "0. TestAuto")
 public class TestAuto extends LoadedAuto {
     @SuppressLint("SdCardPath")
     public TestAuto() {

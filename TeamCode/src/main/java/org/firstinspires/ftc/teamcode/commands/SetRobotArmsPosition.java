@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.commandftc.RobotUniversal;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
@@ -87,8 +86,6 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
         m_setLiftHeightCommand = new SetLiftHeightCommand(liftSubsystem, liftHeight, liftPower);
 
         m_targetIntakePosition = intakePosition;
-
-        RobotUniversal.telemetry.addData("arm target", () -> m_rotateArmCommand.m_angle);
 
         addCommands(
                 new InstantCommand(() -> armSubsystem.setVerticalPosition(1)),

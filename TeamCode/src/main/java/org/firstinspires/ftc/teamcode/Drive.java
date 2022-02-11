@@ -154,8 +154,8 @@ public class Drive extends CommandBasedTeleOp
         DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
         FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
 
-        driveTrain.setOdometryPosition(0.5);
-        armSubsystem.setVerticalPosition(1);
+//        driveTrain.setOdometryPosition(0.5);
+//        armSubsystem.setVerticalPosition(1);
 
         telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
         telemetry.addData("l pos", driveTrain::getFrontLeftPosition);

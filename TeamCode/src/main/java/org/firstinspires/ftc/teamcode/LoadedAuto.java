@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.commands.drive.TurnCommand;
 import org.firstinspires.ftc.teamcode.lib.auto.AutoLoader;
 import org.firstinspires.ftc.teamcode.lib.auto.commands.EnumArgCommand;
@@ -30,6 +32,8 @@ public abstract class LoadedAuto extends BaseAuto {
         autoLoader.interpreter.registerCommand("wait", new SingleArgCommand(WaitCommand::new));
         autoLoader.interpreter.registerCommand("turn", new SingleArgCommand((angle) -> new TurnCommand(driveTrain, angle)));
         autoLoader.interpreter.registerCommand("set", new SetCommand());
+        autoLoader.interpreter.registerCommand("arm.mode", new EnumArgCommand<>(DcMotor.RunMode.class,
+                (mode) -> new InstantCommand(() -> armSubsystem.setRunMode(mode))));
 
         autoLoader.interpreter.env.addVariable("intake.height", (double value) -> armSubsystem.setVerticalPosition(value));
 
