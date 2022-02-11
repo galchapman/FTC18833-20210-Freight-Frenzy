@@ -49,6 +49,9 @@ public final class Constants {
         public static final double gear_radios = 0.0205;
         public static final double distance_per_revolution = 2 * Math.PI * gear_radios;
         public static final double distance_per_tick = distance_per_revolution / ticks_per_revolution;
+
+        public static final double lower_plate_height = 0.165;
+        public static final double sensor_height = 0.087;
     }
 
     public static final class ArmConstants {

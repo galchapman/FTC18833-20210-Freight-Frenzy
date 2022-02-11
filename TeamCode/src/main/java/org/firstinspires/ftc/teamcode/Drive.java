@@ -105,12 +105,12 @@ public class Drive extends CommandBasedTeleOp
 
         intakeCommand = new IntakeCommand(intakeSubsystem, () -> gamepad2.right_stick_y);
 
-        indexDuckCommand = new IndexDuckCommand(ducksSubsystem,1000,1).andThen(new WaitCommand(2));
+        indexDuckCommand = new IndexDuckCommand(ducksSubsystem,5000,1).andThen(new WaitCommand(2));
 
         GoToIntakePositionCommand = new InstantCommand(
                 () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Closed); })
-                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0, 1, 0, 1, 0));
-        GoToScoringPositionCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0, 1, 50, 0.6, 0.5);
+                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height + 0.005, 1, 0, 1, 0));
+        GoToScoringPositionCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.20, 1, 50, 0.6, 0.5);
 
         // DriveTrain commands
         driveTrain.setDefaultCommand(tankDriveCommand);
@@ -130,15 +130,15 @@ public class Drive extends CommandBasedTeleOp
         gp2.b().whenActive(() -> armSubsystem.setVerticalPosition(1), armSubsystem);
         gp2.a().and(new Trigger(this::canLowerArm)).whenActive(() -> armSubsystem.setVerticalPosition(0), armSubsystem);
         gp2.x().whenActive(() -> armSubsystem.setVerticalPosition(0.4), armSubsystem);
-        //gp2.y().whenActive(() -> armSubsystem.setVerticalPosition(0.4), armSubsystem);
 
         gp2.right_stick_button().whenPressed(GoToIntakePositionCommand);
         gp2.left_stick_button().whenPressed(GoToScoringPositionCommand);
+        gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1));
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
-        gp2.y().whenPressed(() -> intakeSubsystem.toggleDoor());
+        gp2.y().whenPressed(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new WaitCommand(0.1)).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.1)));
         // Duck commands
-        //gp2.y().whileHeld(indexDuckCommand);
+        gp1.y().whileHeld(indexDuckCommand);
 
         // Telemetry
         // No need for anything but update in loop because use of suppliers
@@ -146,7 +146,7 @@ public class Drive extends CommandBasedTeleOp
         telemetry.addData("dt(s)", this::dt);
         telemetry.addData("angle", armSubsystem::getAngle);
         telemetry.addData("lift height", liftSubsystem::getHeight);
-//        telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
+        telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
         telemetry.addData("has freight", intakeSubsystem::hasFreight);
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
         telemetry.update();
@@ -155,7 +155,7 @@ public class Drive extends CommandBasedTeleOp
         DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
         FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
 
-        new Trigger(intakeSubsystem::hasFreight).whenActive(() -> {gamepad2.rumble(500); gamepad1.rumble(500);});
+        new Trigger(intakeSubsystem::hasFreight).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
 
 //        driveTrain.setOdometryPosition(0.5);
 //        armSubsystem.setVerticalPosition(1);

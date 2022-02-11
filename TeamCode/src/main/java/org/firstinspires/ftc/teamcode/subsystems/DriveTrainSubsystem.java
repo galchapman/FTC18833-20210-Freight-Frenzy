@@ -163,9 +163,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public void periodic() {
-        updatePoseEstimate();
-
-        TelemetryPacket packet = new TelemetryPacket();
 //        packet.put("l", Math.abs(getFrontLeftPosition()));
 //        packet.put("r", Math.abs(getFrontRightPosition()));
 //        packet.put("rl", Math.abs(getRearLeftPosition()));
@@ -182,7 +179,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 //        packet.put("RLv", getRearLeftVelocity());
 //        packet.put("FRv", getFrontRightVelocity());
 //        packet.put("RRv", getRearRightVelocity());
-        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity(), packet);
 
 //        if (writer != null) {
 //            try {
@@ -192,8 +188,12 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 //            }
 //        }
 
-        if (trajectoryControlled && trajectories && signal != null) {
-            setDriveSignal(signal);
+        if (trajectoryControlled && trajectories) {
+            updatePoseEstimate();
+            TelemetryPacket packet = new TelemetryPacket();
+            DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity(), packet);
+            if (signal != null)
+                setDriveSignal(signal);
         }
     }
 

@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Constants.LiftConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
+import static org.firstinspires.ftc.teamcode.Constants.LiftConstants.sensor_height;
 
 public class LiftSubsystem extends SubsystemBase {
     private final DcMotor m_liftMotor;
@@ -24,10 +25,10 @@ public class LiftSubsystem extends SubsystemBase {
         m_liftMotor.setTargetPosition(0);
         m_liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        m_encoderOffset = meters2ticks(getSensorHeight() - 0.080);
+        m_encoderOffset = meters2ticks(getSensorHeight() + sensor_height);
 
-        System.out.println("Some random print Height: " +  m_encoderOffset);
-        System.out.println("Some random print Height: " +  ticks2meters(m_encoderOffset));
+//        System.out.println("Some random print Height: " +  m_encoderOffset);
+//        System.out.println("Some random print Height: " +  ticks2meters(m_encoderOffset));
     }
 
     public double getSensorHeight() {
@@ -56,7 +57,6 @@ public class LiftSubsystem extends SubsystemBase {
     static public double ticks2meters(int ticks) {
         return ticks * LiftConstants.distance_per_tick;
     }
-
 
     public void setRunMode(DcMotor.RunMode mode) {m_liftMotor.setMode(mode);}
 
