@@ -8,7 +8,7 @@ import edu.megiddo.lions.DistanceUnit;
 import edu.megiddo.lions.Tokenizer;
 
 public class ValueToken implements TokenParser {
-    private static final Pattern pattern = Pattern.compile("(-?\\d+)(m|cm|mm|in|ft|deg|rad)?");
+    private static final Pattern pattern = Pattern.compile("(-?\\d+\\.?\\d*)(m|cm|mm|in|ft|deg|rad)?");
     private final DistanceUnit TargetUnit;
 
     public ValueToken(DistanceUnit targetUnit) {

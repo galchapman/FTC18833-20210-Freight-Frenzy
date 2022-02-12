@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.commandftc.opModes.CommandBasedTeleOp;
@@ -17,7 +15,6 @@ import org.firstinspires.ftc.teamcode.commands.drive.TankDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand;
 import org.firstinspires.ftc.teamcode.commands.lift.RaiseLiftCommand;
 import org.firstinspires.ftc.teamcode.commands.lift.SetLiftHeightCommand;
-import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DucksSubsystem;
@@ -151,18 +148,19 @@ public class Drive extends CommandBasedTeleOp
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
         telemetry.update();
 
-        TelemetryPacket init_telemetry_packet = new TelemetryPacket();
-        DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
-        FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
+//        TelemetryPacket init_telemetry_packet = new TelemetryPacket();
+//        DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
+//        FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
 
         new Trigger(intakeSubsystem::hasFreight).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
 
-//        driveTrain.setOdometryPosition(0.5);
-//        armSubsystem.setVerticalPosition(1);
+        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
+
+        armSubsystem.setVerticalPosition(1);
 
 //        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
-//        telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
-//        telemetry.addData("r pos", driveTrain::getFrontRightPosition);
+        telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
+        telemetry.addData("r pos", driveTrain::getFrontRightPosition);
 //        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
     }
 }

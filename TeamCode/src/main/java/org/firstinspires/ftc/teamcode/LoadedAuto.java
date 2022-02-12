@@ -30,7 +30,8 @@ public abstract class LoadedAuto extends BaseAuto {
                         (doorState) -> new InstantCommand(
                                 () -> intakeSubsystem.setDoorState(doorState))));
         autoLoader.interpreter.registerCommand("wait", new SingleArgCommand(WaitCommand::new));
-        autoLoader.interpreter.registerCommand("turn", new SingleArgCommand((angle) -> new TurnGyroCommand(driveTrain, driveTrain::getExternalHeading, angle, 1)));
+        autoLoader.interpreter.registerCommand("turn", new SingleArgCommand((angle) -> new TurnGyroCommand(driveTrain, driveTrain::getHeading, angle, 1)));
+        autoLoader.interpreter.registerCommand("forward", new SingleArgCommand(this::forward));
         autoLoader.interpreter.registerCommand("set", new SetCommand());
         autoLoader.interpreter.registerCommand("arm.mode", new EnumArgCommand<>(DcMotor.RunMode.class,
                 (mode) -> new InstantCommand(() -> armSubsystem.setRunMode(mode))));

@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
@@ -30,7 +31,6 @@ import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
 import org.firstinspires.ftc.teamcode.lib.Util;
 import org.firstinspires.ftc.teamcode.lib.drive.ArcadeDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.HorizontalDrive;
-import org.firstinspires.ftc.teamcode.lib.drive.Odometry;
 import org.firstinspires.ftc.teamcode.lib.drive.TankDrive;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequenceBuilder;
@@ -40,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -118,22 +117,38 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
         // Odometry
         setOdometryPosition(OdometryPosition.Up);
-        setLocalizer(new Odometry(
-                new DoubleSupplier[]{
-                        this::getFrontLeftPosition,
-                        this::getFrontRightPosition,
-                        this::getHorizontalPosition},
-                new Pose2d[]{
-                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
+//        setLocalizer(new Odometry(
+//                new DoubleSupplier[]{
+//                        this::getFrontLeftPosition,
+//                        this::getFrontRightPosition,
+//                        this::getHorizontalPosition},
+//                new Pose2d[]{
+//                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
+//                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
+//                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
+//                },
+//                new DoubleSupplier[]{
+//                        this::getFrontLeftVelocity,
+//                        this::getFrontRightVelocity,
+//                        this::getHorizontalVelocity
+//                })
+//        );
+        setLocalizer(new TwoTrackingWheelLocalizer(
+                Arrays.asList(
                         DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
                         DriveTrainConstants.OdometryConstants.horizontalWheelPosition
-                },
-                new DoubleSupplier[]{
-                        this::getFrontLeftVelocity,
-                        this::getFrontRightVelocity,
-                        this::getHorizontalVelocity
-                })
-        );
+                )) {
+            @NonNull
+            @Override
+            public List<Double> getWheelPositions() {
+                return Arrays.asList(getFrontRightPosition(), getHorizontalPosition());
+            }
+
+            @Override
+            public double getHeading() {
+                return DriveTrainSubsystem.this.getHeading();
+            }
+        });
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
                 new Pose2d(0.1, 0.1, Math.toRadians(5)), 0.5);
@@ -182,12 +197,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 //            }
 //        }
 
-        if (trajectoryControlled && trajectories) {
+        if (trajectoryControlled && trajectories || true) {
             updatePoseEstimate();
             TelemetryPacket packet = new TelemetryPacket();
 
             packet.put("l", getFrontLeftPosition());
-            packet.put("r", -getFrontRightPosition());
+            packet.put("r", getFrontRightPosition());
+            packet.put("p", m_FrontLeftMotor.getPower());
             packet.put("rl", Math.abs(getRearLeftPosition()));
             packet.put("rr", Math.abs(getRearRightPosition()));
             packet.put("d", Math.abs(getFrontLeftPosition()) - Math.abs(getFrontRightPosition()));
@@ -251,9 +267,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     @Override
     public void tankDrive(double left, double right) {
         m_FrontLeftMotor.setPower(left);
-        m_RearLeftMotor.setPower(left);
+        m_RearLeftMotor.setPower(left * ratio);
         m_FrontRightMotor.setPower(right);
-        m_RearRightMotor.setPower(right);
+        m_RearRightMotor.setPower(right * ratio);
     }
 
     @Override
@@ -288,7 +304,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public int getFrontLeftEncoder() {
-        return m_FrontLeftMotor.getCurrentPosition();
+        return -m_FrontLeftMotor.getCurrentPosition();
     }
 
     public int getRearLeftEncoder() {
@@ -296,7 +312,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public int getFrontRightEncoder() {
-        return m_FrontRightMotor.getCurrentPosition();
+        return -m_FrontRightMotor.getCurrentPosition();
     }
 
     public int getRearRightEncoder() {

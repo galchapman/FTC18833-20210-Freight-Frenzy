@@ -8,4 +8,12 @@ public final class Util {
     public static double clamp(double bound, double value) {
         return clamp(-bound, bound, value);
     }
+
+    public static double minAbs(double a, double b) {
+        return Math.abs(a) < Math.abs(b) ? a : b;
+    }
+
+    public static double maxAbs(double a, double b) {
+        return Math.abs(a) > Math.abs(b) ? a : b;
+    }
 }

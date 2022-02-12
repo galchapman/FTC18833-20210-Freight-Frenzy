@@ -29,6 +29,7 @@ public abstract class CommandBasedAuto extends OpMode {
             autonomousCommand.schedule();
         } catch (Exception e) {
             telemetry.addLine(e.getMessage());
+            telemetry.update();
         }
     }
 

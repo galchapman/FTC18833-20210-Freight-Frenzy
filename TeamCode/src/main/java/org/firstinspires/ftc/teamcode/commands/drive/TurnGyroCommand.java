@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands.drive;
 
+import org.firstinspires.ftc.teamcode.lib.Util;
 import org.firstinspires.ftc.teamcode.lib.drive.TankDrive;
 
 import java.util.function.DoubleSupplier;
@@ -12,8 +13,10 @@ public class TurnGyroCommand extends CommandBase {
     private final double m_target;
     private final double m_power;
     private double lastAngle;
+    private double lastRawAngle;
     private int spinCount;
     private double error;
+    private double target;
 
     public TurnGyroCommand(TankDrive drive, DoubleSupplier angleSupplier, double target, double power) {
         m_drive = drive;
@@ -24,27 +27,47 @@ public class TurnGyroCommand extends CommandBase {
         addRequirements(drive);
     }
 
+    public double getError() {
+        return error;
+    }
+
+    public int getSpinCount() {
+        return spinCount;
+    }
+
+    public double lastAngle() {
+        return lastAngle;
+    }
+
     private void spin(double power) {
-        m_drive.tankDrive(power, -power);
+        m_drive.tankDrive(-power, power);
     }
 
     @Override
     public void initialize() {
-        lastAngle = m_angleSupplier.getAsDouble();
+        lastRawAngle = m_angleSupplier.getAsDouble();
         spinCount = 0;
+        target = lastRawAngle + m_target;
     }
+
+    public double delta = 0;
 
     @Override
     public void execute() {
         double angle = m_angleSupplier.getAsDouble();
-        if (Math.abs(angle - lastAngle) > Math.PI ) {
+        delta = angle - lastRawAngle;
+        lastRawAngle = angle;
+
+        if (delta > Math.PI / 2) {
+            spinCount--;
+        } else if (delta < -Math.PI / 2) {
             spinCount++;
         }
         angle += spinCount * 2 * Math.PI;
 
         error = m_target - angle;
 
-        spin(error);
+        spin(Math.abs(error) > 0.05 ? m_power * Util.clamp(-1, 1, error * 2) : 0.4);
 
         lastAngle = angle;
     }
@@ -56,6 +79,6 @@ public class TurnGyroCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(error) < 0.05;
+        return Math.abs(error) < 0.03 && Math.abs(delta) < 0.025;
     }
 }

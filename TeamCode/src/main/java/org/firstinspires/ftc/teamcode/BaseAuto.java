@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.commandftc.opModes.CommandBasedAuto;
+import org.firstinspires.ftc.teamcode.commands.drive.DriveForwardCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.StrafeCommand;
@@ -55,10 +55,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     }
 
     protected Command forward(double distance) {
-        return new FollowTrajectoryCommand(
-                driveTrain,
-                driveTrain.trajectoryBuilder(new Pose2d(0, 0, 0)).forward(distance).build()
-        );
+        return new DriveForwardCommand(driveTrain, driveTrain::getFrontLeftPosition, driveTrain::getFrontRightPosition, distance);
     }
 
     protected Command turn(double angle) {
