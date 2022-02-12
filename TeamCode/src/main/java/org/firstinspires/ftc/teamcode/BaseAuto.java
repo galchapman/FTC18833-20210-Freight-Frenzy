@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,18 +26,23 @@ public abstract class BaseAuto extends CommandBasedAuto {
     protected DriveTrainSubsystem driveTrain;
     protected ArmSubsystem armSubsystem;
     protected IntakeSubsystem intakeSubsystem;
+    protected LiftSubsystem liftSubsystem;
 
     @Override
     public void plan() {
         driveTrain = new DriveTrainSubsystem();
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
+        liftSubsystem = new LiftSubsystem();
 
         driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
         armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         armSubsystem.setPower(1);
 
         armSubsystem.setVerticalPosition(1);
+
+        liftSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftSubsystem.setPower(1);
 
         initialize();
 
@@ -60,7 +66,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     }
 
     protected Command turn(double angle) {
-        return new TurnCommand(driveTrain, Math.toRadians(angle)).andThen(new WaitCommand(1));
+        return new TurnCommand(driveTrain, angle).andThen(new WaitCommand(1));
     }
 
     protected Command strafe(double distance) {

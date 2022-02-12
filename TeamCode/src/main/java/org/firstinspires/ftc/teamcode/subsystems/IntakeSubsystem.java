@@ -19,7 +19,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public enum DoorState {
         Open(0),
-        Closed(1);
+        Close(1),
+        LowerPlacement(0.2);
 
         public double servoPosition;
         DoorState(double servoPosition) {
@@ -35,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
         m_intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        setDoorState(DoorState.Closed);
+        setDoorState(DoorState.Close);
     }
 
     public void intake(double power) {
@@ -55,7 +56,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void toggleDoor() {
-        m_doorServo.setPosition((DoorState.Closed.servoPosition + DoorState.Open.servoPosition) - m_doorServo.getPosition());
+        m_doorServo.setPosition((DoorState.Close.servoPosition + DoorState.Open.servoPosition) - m_doorServo.getPosition());
     }
 
     public double getDistance() {

@@ -106,7 +106,7 @@ public class Drive extends CommandBasedTeleOp
         indexDuckCommand = new IndexDuckCommand(ducksSubsystem,5000,1).andThen(new WaitCommand(2));
 
         GoToIntakePositionCommand = new InstantCommand(
-                () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Closed); })
+                () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Close); })
                 .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height + 0.005, 1, 0, 1, 0));
         GoToScoringPositionCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.20, 1, 50, 0.6, 0.5);
 

@@ -4,7 +4,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.commands.drive.TurnGyroCommand;
 import org.firstinspires.ftc.teamcode.lib.auto.AutoLoader;
 import org.firstinspires.ftc.teamcode.lib.auto.TrajectoryLoader;
 import org.firstinspires.ftc.teamcode.lib.auto.commands.EnumArgCommand;
@@ -48,7 +47,7 @@ public abstract class LoadedAuto extends BaseAuto {
                         (doorState) -> new InstantCommand(
                                 () -> intakeSubsystem.setDoorState(doorState))));
         autoLoader.interpreter.registerCommand("wait", new SingleArgCommand(WaitCommand::new));
-        autoLoader.interpreter.registerCommand("turn", new SingleArgCommand((angle) -> new TurnGyroCommand(driveTrain, driveTrain::getHeading, angle, 1)));
+        autoLoader.interpreter.registerCommand("turn", new SingleArgCommand(this::turn));
         autoLoader.interpreter.registerCommand("forward", new SingleArgCommand(this::forward));
         autoLoader.interpreter.registerCommand("set", new SetCommand());
         autoLoader.interpreter.registerCommand("set.static", new StaticSetCommand<>());
@@ -58,7 +57,8 @@ public abstract class LoadedAuto extends BaseAuto {
 
         autoLoader.interpreter.registerCommand("door", new EnumArgCommand<>(IntakeSubsystem.DoorState.class, this::setDoor));
 
-        autoLoader.interpreter.env.addVariable("intake.height", (double value) -> armSubsystem.setVerticalPosition(value));
+        autoLoader.interpreter.env.addVariable("intake.height", armSubsystem::setVerticalPosition);
+        autoLoader.interpreter.env.addVariable("lift.height", liftSubsystem::setLiftHeight);
 
         autoLoader.interpreter.env.addVariable("A", () -> A);
         autoLoader.interpreter.env.addVariable("A", (Boolean value) -> A = value);

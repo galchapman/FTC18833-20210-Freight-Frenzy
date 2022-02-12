@@ -37,9 +37,7 @@ public class Interpreter<T> {
                 switch (token.type) {
                     case Command:
                         T out = runCommand(token, tokens);
-                        if (out == null) {
-                            return null;
-                        } else {
+                        if (out != null) {
                             results.add(out);
                         }
                         break;
