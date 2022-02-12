@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.commandftc.opModes.CommandBasedTeleOp;
@@ -162,5 +163,7 @@ public class Drive extends CommandBasedTeleOp
         telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
         telemetry.addData("r pos", driveTrain::getFrontRightPosition);
 //        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
+
+        driveTrain.setPoseEstimate(new Pose2d(0.03, -1.63, Math.toRadians(90)));
     }
 }

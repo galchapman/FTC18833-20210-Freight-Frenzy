@@ -27,7 +27,7 @@ public class Environment {
     }
 
     public boolean hasBooleanVarRead(String name) {
-        return booleanVariablesRead.containsKey(name);
+        return name.equalsIgnoreCase("true") || name.equalsIgnoreCase("false") || booleanVariablesRead.containsKey(name);
     }
 
     public boolean hasBooleanVarWrite(String name) {

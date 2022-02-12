@@ -56,7 +56,7 @@ public class TrajectoryLoader {
                 TrajectoryBuilder builder = trajectoryBuilderSupplier.invoke(
                         new Pose2d( start_pos.getDouble("x"),
                                 start_pos.getDouble("y"),
-                                start_pos.getDouble("heading")),
+                                Math.toRadians(start_pos.getDouble("heading"))),
                         sequence.getBoolean("reversed"));
 
                 for (int j = 0; j < segments.length(); j++) {
@@ -69,13 +69,18 @@ public class TrajectoryLoader {
                             builder.back(segment.getDouble("distance"));
                             break;
                         case "spline":
-                            builder.splineTo(new Vector2d(segment.getDouble("x"), segment.getDouble("y")), segment.getDouble("heading"));
+                            builder.splineTo(new Vector2d(segment.getDouble("x"), segment.getDouble("y")), Math.toRadians(segment.getDouble("heading")));
                             break;
                         case "strafeLeft":
                             builder.strafeLeft(segment.getDouble("distance"));
                             break;
                         case "strafeRight":
                             builder.strafeRight(segment.getDouble("distance"));
+                            break;
+                        case "strafe":
+                            builder.strafeTo(new Vector2d(
+                                    segment.getDouble("x"),
+                                    segment.getDouble("y")));
                             break;
                     }
                 }

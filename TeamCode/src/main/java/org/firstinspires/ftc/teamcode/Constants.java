@@ -9,6 +9,8 @@ public final class Constants {
     public static final class MotorConstants {
         public static final class RevHDHexMotor {
             public static final int ticks_per_revolution = 28;
+            public static final int freeSpeedRPM = 6000;
+            public static final int revolution_per_second = freeSpeedRPM / 60;
         }
 
         public static final class REVThroughBoreEncoder {
@@ -23,14 +25,16 @@ public final class Constants {
         public final static double WheelDiameter = 0.096;
         public final static double HorizontalOdometryWheelDiameter = 0.06;
 
+        public final static double MaxSpeed = MotorConstants.RevHDHexMotor.revolution_per_second * WheelDiameter * Math.PI;
+
         public final static double odometry_wheel_ticks_to_meters = HorizontalOdometryWheelDiameter * Math.PI / ticks_per_revolution;
 
         public final static DoubleFunction<Integer> m_to_ticks = (double m) -> (int)(m / WheelDiameter / Math.PI * ticks_per_revolution);
         public final static DoubleFunction<Double> ticks_to_m = (double ticks) -> ticks * WheelDiameter * Math.PI / ticks_per_revolution;
 
-        public final static double kV = 0.55;
-        public final static double kStatic = 0.114;
-        public final static double kA = 0.056;
+        public final static double kV = 0.77576;
+        public final static double kStatic = 0.10551;
+        public final static double kA = 0.00284;
 
         @Config
         public final static class OdometryConstants {

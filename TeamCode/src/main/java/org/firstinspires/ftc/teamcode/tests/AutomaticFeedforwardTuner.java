@@ -10,8 +10,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.commandftc.opModes.LinearOpModeWithCommands;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.lib.LoggingUtil;
 import org.firstinspires.ftc.teamcode.lib.RegressionUtil;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
 import java.util.ArrayList;
@@ -28,18 +30,19 @@ import java.util.List;
  *      regression.
  */
 @Config
-//@Disabled
+@Disabled
 @Autonomous(group = "tests")
 public class AutomaticFeedforwardTuner extends LinearOpModeWithCommands {
     public static double MAX_POWER = 1;
     public static double DISTANCE = 4; // meter
-    public static double MAX_VELOCITY = 2;
+    public static double MAX_VELOCITY = Constants.DriveTrainConstants.MaxSpeed / 6;
 
     private DriveTrainSubsystem drive;
 
     @Override
     public void init_subsystems() {
         drive = new DriveTrainSubsystem();
+        new ArmSubsystem().setVerticalPosition(1);
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public abstract class BaseAuto extends CommandBasedAuto {
@@ -64,5 +65,9 @@ public abstract class BaseAuto extends CommandBasedAuto {
 
     protected Command strafe(double distance) {
         return new StrafeCommand(driveTrain, distance);
+    }
+
+    protected Command setDoor(IntakeSubsystem.DoorState state) {
+        return new InstantCommand(() -> intakeSubsystem.setDoorState(state));
     }
 }

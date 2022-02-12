@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
@@ -28,7 +27,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.commandftc.opModes.CommandBasedTeleOp;
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
-import org.firstinspires.ftc.teamcode.lib.Util;
 import org.firstinspires.ftc.teamcode.lib.drive.ArcadeDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.HorizontalDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.TankDrive;
@@ -49,7 +47,6 @@ import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.odome
 
 @Config
 public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, ArcadeDrive, HorizontalDrive {
-    public static double ratio = 1;
     private final DcMotorEx m_FrontLeftMotor;
     private final DcMotorEx m_RearLeftMotor;
     private final DcMotorEx m_FrontRightMotor;
@@ -60,14 +57,14 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     private final BNO055IMU imu;
 
-    public static PIDCoefficients FORWARD_PID = new PIDCoefficients(2, 0, 0);
+    public static PIDCoefficients FORWARD_PID = new PIDCoefficients(4, 0, 0);
     public static PIDCoefficients STRAFE_PID = new PIDCoefficients(7, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0);
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(6, Math.toRadians(165), 0.259);
-    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(0.4);
+    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(DriveTrainConstants.MaxSpeed, DriveTrainConstants.MaxSpeed / 0.259, 0.259);
+    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(0.8);
 
     private final boolean trajectoryControlled;
 
@@ -117,22 +114,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
         // Odometry
         setOdometryPosition(OdometryPosition.Up);
-//        setLocalizer(new Odometry(
-//                new DoubleSupplier[]{
-//                        this::getFrontLeftPosition,
-//                        this::getFrontRightPosition,
-//                        this::getHorizontalPosition},
-//                new Pose2d[]{
-//                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
-//                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
-//                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
-//                },
-//                new DoubleSupplier[]{
-//                        this::getFrontLeftVelocity,
-//                        this::getFrontRightVelocity,
-//                        this::getHorizontalVelocity
-//                })
-//        );
         setLocalizer(new TwoTrackingWheelLocalizer(
                 Arrays.asList(
                         DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
@@ -157,62 +138,18 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         trajectoryControlled = !CommandBasedTeleOp.class.isAssignableFrom(opMode.getClass()); // check if Opmode is autonomous
 
         CommandScheduler.getInstance().registerSubsystem(this); // Because we aren't extending SubsystemBase
-
-//        log = new File("/sdcard/FIRST/logs/" + System.nanoTime() + ".csv");
-//        try {
-//            writer = new FileWriter(log);
-//        } catch (Exception e) {
-//            writer = null;
-//        }
-//
-//        if (writer != null) {
-//            try {
-//                writer.write("t,l,r,rl,rr\n");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
-
-//    File log;
-//    Writer writer;
 
     @Override
     public void periodic() {
-//
-//        packet.put("FLp", m_FrontLeftMotor.getPower());
-//        packet.put("RLp", m_RearLeftMotor.getPower());
-//        packet.put("FRp", m_FrontRightMotor.getPower());
-//        packet.put("RRp", m_RearRightMotor.getPower());
-//        packet.put("FLv", getFrontLeftVelocity());
-//        packet.put("RLv", getRearLeftVelocity());
-//        packet.put("FRv", getFrontRightVelocity());
-//        packet.put("RRv", getRearRightVelocity());
+        updatePoseEstimate();
 
-//        if (writer != null) {
-//            try {
-//                writer.write(opMode.getRuntime() + ',' + getFrontLeftPosition() + "," + getFrontRightPosition() + "," + getRearLeftPosition() + ','  + getRearRightPosition() + '\n');
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-        if (trajectoryControlled && trajectories || true) {
-            updatePoseEstimate();
-            TelemetryPacket packet = new TelemetryPacket();
-
-            packet.put("l", getFrontLeftPosition());
-            packet.put("r", getFrontRightPosition());
-            packet.put("p", m_FrontLeftMotor.getPower());
-            packet.put("rl", Math.abs(getRearLeftPosition()));
-            packet.put("rr", Math.abs(getRearRightPosition()));
-            packet.put("d", Math.abs(getFrontLeftPosition()) - Math.abs(getFrontRightPosition()));
-            packet.put("h", getHorizontalPosition());
-            packet.put("external heading (deg)", Math.toDegrees(getRawExternalHeading()));
-
-            DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity(), packet);
+        if (trajectoryControlled && trajectories) {
+            DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
             if (signal != null)
                 setDriveSignal(signal);
+        } else {
+            trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         }
     }
 
@@ -267,9 +204,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     @Override
     public void tankDrive(double left, double right) {
         m_FrontLeftMotor.setPower(left);
-        m_RearLeftMotor.setPower(left * ratio);
+        m_RearLeftMotor.setPower(left);
         m_FrontRightMotor.setPower(right);
-        m_RearRightMotor.setPower(right * ratio);
+        m_RearRightMotor.setPower(right);
     }
 
     @Override
@@ -426,11 +363,8 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     @Override
-    public void setMotorPowers(double fl, double rl, double fr, double rr) {
-        setPowers(Util.clamp(1, fl),
-                Util.clamp(1, rl) * ratio,
-                Util.clamp(1, fr),
-                Util.clamp(1, rr) * ratio);
+    public void setMotorPowers(double fl, double rl, double rr, double fr) {
+        setPowers(fl, rl, fr, rr);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
