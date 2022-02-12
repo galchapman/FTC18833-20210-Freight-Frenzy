@@ -8,6 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class TestAuto extends LoadedAuto {
     @SuppressLint("SdCardPath")
     public TestAuto() {
-        super("/sdcard/FIRST/auto/test.auto");
+        super("/sdcard/FIRST/auto/test.auto", "/sdcard/FIRST/trajectories/test.json");
     }
 }

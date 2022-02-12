@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lib.tragectory;
+package org.firstinspires.ftc.teamcode.lib.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -9,29 +9,54 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import kotlin.jvm.functions.Function2;
 
 public class TrajectoryLoader {
-    private final Function2<Pose2d, Boolean, TrajectoryBuilder> m_trajectoryBuilderSupplier;
+    private final String text;
 
-    public TrajectoryLoader(Function2<Pose2d, Boolean, TrajectoryBuilder> trajectoryBuilderSupplier) {
-        this.m_trajectoryBuilderSupplier = trajectoryBuilderSupplier;
+    public TrajectoryLoader(String path) {
+        StringBuilder builder = new StringBuilder();
+        try {
+            File file = new File(path);
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line = br.readLine();
+
+            while (line != null) {
+                builder.append(line);
+                builder.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        text = builder.toString();
     }
 
-    public Trajectory[] load(String text) {
+    public Map<String, Trajectory> getTrajectories(Function2<Pose2d, Boolean, TrajectoryBuilder> trajectoryBuilderSupplier) {
         try {
             JSONObject trajectory = new JSONObject(text);
             JSONArray sequences = trajectory.getJSONArray("sequences");
-            Trajectory[] trajectories = new Trajectory[sequences.length()];
+            Map<String, Trajectory> trajectories = new HashMap<>();
 
             for (int i = 0; i < sequences.length(); i++) {
                 JSONObject sequence = sequences.getJSONObject(i);
                 JSONArray segments = sequence.getJSONArray("segments");
                 JSONObject start_pos = sequence.getJSONObject("start_pos");
-                TrajectoryBuilder builder = m_trajectoryBuilderSupplier.invoke(
+                String name = sequence.getString("name");
+                TrajectoryBuilder builder = trajectoryBuilderSupplier.invoke(
                         new Pose2d( start_pos.getDouble("x"),
-                                    start_pos.getDouble("y"),
-                                    start_pos.getDouble("heading")),
+                                start_pos.getDouble("y"),
+                                start_pos.getDouble("heading")),
                         sequence.getBoolean("reversed"));
 
                 for (int j = 0; j < segments.length(); j++) {
@@ -55,7 +80,7 @@ public class TrajectoryLoader {
                     }
                 }
 
-                trajectories[i] = builder.build();
+                trajectories.put(name, builder.build());
             }
 
             return trajectories;
