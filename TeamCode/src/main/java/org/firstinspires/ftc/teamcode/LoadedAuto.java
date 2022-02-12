@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.commands.drive.TurnCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.TurnGyroCommand;
 import org.firstinspires.ftc.teamcode.lib.auto.AutoLoader;
 import org.firstinspires.ftc.teamcode.lib.auto.commands.EnumArgCommand;
 import org.firstinspires.ftc.teamcode.lib.auto.commands.SetCommand;
@@ -30,7 +30,7 @@ public abstract class LoadedAuto extends BaseAuto {
                         (doorState) -> new InstantCommand(
                                 () -> intakeSubsystem.setDoorState(doorState))));
         autoLoader.interpreter.registerCommand("wait", new SingleArgCommand(WaitCommand::new));
-        autoLoader.interpreter.registerCommand("turn", new SingleArgCommand((angle) -> new TurnCommand(driveTrain, angle)));
+        autoLoader.interpreter.registerCommand("turn", new SingleArgCommand((angle) -> new TurnGyroCommand(driveTrain, driveTrain::getExternalHeading, angle, 1)));
         autoLoader.interpreter.registerCommand("set", new SetCommand());
         autoLoader.interpreter.registerCommand("arm.mode", new EnumArgCommand<>(DcMotor.RunMode.class,
                 (mode) -> new InstantCommand(() -> armSubsystem.setRunMode(mode))));

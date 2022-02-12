@@ -27,6 +27,6 @@ public class TurnCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return m_driveTrain.isBusy() && (start_time - System.nanoTime() >5000000000L);
+        return !m_driveTrain.isBusy() && (System.nanoTime() - start_time > 500000000L);
     }
 }

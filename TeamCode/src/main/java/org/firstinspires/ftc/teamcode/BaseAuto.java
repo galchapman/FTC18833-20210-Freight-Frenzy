@@ -20,8 +20,6 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-import static org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem.OdometryPosition.Down;
-
 public abstract class BaseAuto extends CommandBasedAuto {
     protected DriveTrainSubsystem driveTrain;
     protected ArmSubsystem armSubsystem;
@@ -33,7 +31,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
 
-        driveTrain.setOdometryPosition(Down);
+        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
         armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         armSubsystem.setPower(1);
 

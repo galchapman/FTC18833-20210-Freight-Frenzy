@@ -27,6 +27,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.commandftc.opModes.CommandBasedTeleOp;
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
+import org.firstinspires.ftc.teamcode.lib.Util;
 import org.firstinspires.ftc.teamcode.lib.drive.ArcadeDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.HorizontalDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.Odometry;
@@ -75,7 +76,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public enum OdometryPosition {
         Up(1),
-        Down(0.5);
+        Down(0.475);
 
         private final double servo_position;
         OdometryPosition(double pos) {
@@ -135,7 +136,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         );
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
-                new Pose2d(0.1, 0.1, Math.toRadians(0.5)), 0.5);
+                new Pose2d(0.1, 0.1, Math.toRadians(5)), 0.5);
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
         trajectoryControlled = !CommandBasedTeleOp.class.isAssignableFrom(opMode.getClass()); // check if Opmode is autonomous
@@ -163,13 +164,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public void periodic() {
-//        packet.put("l", Math.abs(getFrontLeftPosition()));
-//        packet.put("r", Math.abs(getFrontRightPosition()));
-//        packet.put("rl", Math.abs(getRearLeftPosition()));
-//        packet.put("rr", Math.abs(getRearRightPosition()));
-//        packet.put("d", Math.abs(getFrontLeftPosition()) - Math.abs(getFrontRightPosition()));
-//        packet.put("h", getHorizontalEncoder());
-//        packet.put("external heading (deg)", Math.toDegrees(getRawExternalHeading()));
 //
 //        packet.put("FLp", m_FrontLeftMotor.getPower());
 //        packet.put("RLp", m_RearLeftMotor.getPower());
@@ -191,6 +185,15 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         if (trajectoryControlled && trajectories) {
             updatePoseEstimate();
             TelemetryPacket packet = new TelemetryPacket();
+
+            packet.put("l", getFrontLeftPosition());
+            packet.put("r", -getFrontRightPosition());
+            packet.put("rl", Math.abs(getRearLeftPosition()));
+            packet.put("rr", Math.abs(getRearRightPosition()));
+            packet.put("d", Math.abs(getFrontLeftPosition()) - Math.abs(getFrontRightPosition()));
+            packet.put("h", getHorizontalPosition());
+            packet.put("external heading (deg)", Math.toDegrees(getRawExternalHeading()));
+
             DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity(), packet);
             if (signal != null)
                 setDriveSignal(signal);
@@ -408,7 +411,10 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public void setMotorPowers(double fl, double rl, double fr, double rr) {
-        setPowers(fl, rl * ratio, fr, rr * ratio);
+        setPowers(Util.clamp(1, fl),
+                Util.clamp(1, rl) * ratio,
+                Util.clamp(1, fr),
+                Util.clamp(1, rr) * ratio);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
