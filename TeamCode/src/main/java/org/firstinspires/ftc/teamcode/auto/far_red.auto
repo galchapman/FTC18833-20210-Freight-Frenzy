@@ -1,0 +1,112 @@
+set.static B true
+# places the marked friet
+@if A
+	follow go_to_low
+	set intake height 0.4
+	wait 0.45
+	set intake -0.7
+	door LowerPlacement
+	wait 0.3
+	set intake 0
+	set intake height 1
+	door Close
+@elif B
+	follow go_to_high_or_mid
+	set intake height 0.65
+	wait 0.5
+	door Open
+	wait 0.5
+	door Close
+	wait 0.2
+	set intake height 1
+@else # C
+	set lift height 0.32
+	follow go_to_high_or_mid
+	set intake height 0.60
+	wait 0.7
+	door Open
+	wait 0.4
+	set intake height 1
+	door Close
+	set lift height 0.17
+# go to intake position
+@if A
+	follow back_of_from_tower_A
+	turn -135deg
+	follow go_to_intake_position_A
+@else
+	follow back_of_from_tower_BC
+	turn -90deg
+	follow go_to_intake_position_BC
+
+# intake first freit
+set intake height 0
+set intake 1
+follow first_intake
+set intake height 1
+wait 0.3
+set intake 0
+# return to tower
+follow first_return_to_tower_part1
+set lift height 0.32
+set arm power 0.2
+set arm angle -70deg
+follow first_return_to_tower_part2
+wait 0.5
+# place freit
+set intake height 0.65
+set intake -0.3
+door Open
+wait 0.5
+set intake 0
+door Close
+# go to inake
+set intake height 0.8
+set lift height 0.17
+set arm angle 0
+follow go_to_intake_position2
+# intake
+set intake height 0
+set intake 1
+follow second_intake
+set intake height 1
+wait 0.3
+set intake 0
+# second return to tower
+follow second_return_to_tower_part1
+set lift height 0.32
+set arm power 0.2
+set arm angle -70deg
+follow second_return_to_tower_part2
+# put frieht
+set intake height 0.60
+wait 0.2
+set intake -0.4
+door Open
+wait 0.5
+set intake 0
+door Close
+# go to inake
+set intake height 0.8
+set lift height 0.17
+set arm angle 0
+follow go_to_intake_position3
+# intake
+set intake 1
+set intake height 0
+follow third_intake
+set intake height 1
+set intake 0
+# retrun to tower
+follow third_return_to_tower_part1
+set lift height 0.32
+set arm power 0.2
+set arm angle -70deg
+follow third_return_to_tower_part2
+# put frieht
+set intake height 0.60
+set intake -0.6
+door Open
+wait 0.5
+set intake 0
+door Close
