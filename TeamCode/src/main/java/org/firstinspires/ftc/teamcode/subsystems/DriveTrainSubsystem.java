@@ -116,13 +116,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         setOdometryPosition(OdometryPosition.Up);
         setLocalizer(new TwoTrackingWheelLocalizer(
                 Arrays.asList(
-                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
+                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
                         DriveTrainConstants.OdometryConstants.horizontalWheelPosition
                 )) {
             @NonNull
             @Override
             public List<Double> getWheelPositions() {
-                return Arrays.asList(getFrontLeftPosition(), getHorizontalPosition());
+                return Arrays.asList(getFrontRightPosition(), getHorizontalPosition());
             }
 
             @Override

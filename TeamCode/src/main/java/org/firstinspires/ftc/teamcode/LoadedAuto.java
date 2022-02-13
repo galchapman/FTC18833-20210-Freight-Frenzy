@@ -4,6 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.lib.GameType;
+import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 import org.firstinspires.ftc.teamcode.lib.auto.AutoLoader;
 import org.firstinspires.ftc.teamcode.lib.auto.TrajectoryLoader;
 import org.firstinspires.ftc.teamcode.lib.auto.commands.EnumArgCommand;
@@ -27,8 +29,10 @@ public abstract class LoadedAuto extends BaseAuto {
     TrajectoryLoader trajectoryLoader;
     Map<String, Trajectory> trajectories;
     boolean A = false, B = false, C = false;
+    GameType gameType;
 
-    public LoadedAuto(String file, String trajectoriesPath, Pose2d start) {
+    public LoadedAuto(String file, String trajectoriesPath, Pose2d start, StartingPosition startingPosition) {
+        super(startingPosition);
         this.file = file;
         this.trajectoriesPath = trajectoriesPath;
         this.start = start;
@@ -77,6 +81,12 @@ public abstract class LoadedAuto extends BaseAuto {
 
     @Override
     public Command getAutonomousCommand() throws Exception {
+        gameType = vision.getGameType();
+        telemetry.addData("game type", gameType);
+        telemetry.update();
+        A = gameType == GameType.A;
+        B = gameType == GameType.B;
+        C = gameType == GameType.C;
         return autoLoader.load(file).andThen(() -> driveTrain.stop());
     }
 }

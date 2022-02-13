@@ -33,6 +33,8 @@ public abstract class CommandBasedAuto extends OpMode {
         }
     }
 
+    public abstract void onStart();
+
     public abstract void plan();
 
     public abstract Command getAutonomousCommand() throws Exception;

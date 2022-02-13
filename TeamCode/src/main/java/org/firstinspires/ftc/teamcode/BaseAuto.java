@@ -5,18 +5,21 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.commandftc.RobotUniversal;
 import org.commandftc.opModes.CommandBasedAuto;
 import org.firstinspires.ftc.teamcode.commands.drive.DriveForwardCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.StrafeCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.TurnCommand;
+import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -27,13 +30,22 @@ public abstract class BaseAuto extends CommandBasedAuto {
     protected ArmSubsystem armSubsystem;
     protected IntakeSubsystem intakeSubsystem;
     protected LiftSubsystem liftSubsystem;
+    protected StartingPosition startingPosition;
+    protected VisionSubsystem vision;
+
+    protected BaseAuto(StartingPosition startingPosition) {
+        this.startingPosition = startingPosition;
+    }
 
     @Override
     public void plan() {
+        RobotUniversal.opModeType = RobotUniversal.OpModeType.Autonomous;
+        RobotUniversal.startingPosition = startingPosition;
         driveTrain = new DriveTrainSubsystem();
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         liftSubsystem = new LiftSubsystem();
+        vision = new VisionSubsystem();
 
         driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
         armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -49,6 +61,11 @@ public abstract class BaseAuto extends CommandBasedAuto {
         TelemetryPacket packet = new TelemetryPacket();
         DashboardUtil.drawRobot(packet.fieldOverlay(), driveTrain.getPoseEstimate());
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
+    }
+
+    @Override
+    public void onStart() {
+        vision.stop();
     }
 
     abstract public void initialize();

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
+import org.opencv.core.Rect;
+
 import java.util.function.DoubleFunction;
 
 public final class Constants {
@@ -65,5 +67,27 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final double intakeThreshold = 0.05;
+    }
+
+    @Config
+    public static final class VisionConstants {
+        public final static int camera_width = 1280;
+        public final static int camera_height = 800;
+
+        public static Rect FarRedARect = new Rect(700, 550, 225, 200);
+        public static Rect FarRedBRect = new Rect(1150, 550, 130, 200);
+        public static Rect NearRedARect = new Rect();
+        public static Rect NearRedBRect = new Rect();
+        public static Rect FarBlueARect = new Rect();
+        public static Rect FarBlueBRect = new Rect();
+        public static Rect NearBlueARect = new Rect();
+        public static Rect NearBlueBRect = new Rect();
+
+        public static double HueThresholdLow = 55;
+        public static double HueThresholdHigh = 95;
+        public static double SaturationThresholdLow = 77;
+        public static double SaturationThresholdHigh = 255;
+        public static double ValueThresholdLow = 37;
+        public static double ValueThresholdHigh = 255;
     }
 }
