@@ -69,6 +69,12 @@ public final class Constants {
         public static final double intakeThreshold = 0.05;
     }
 
+    public static final class DucksConstants {
+        public static final double biggerWheelDiameter = 15 * 0.0254;
+        public static final double wheelDiameter = 0.059;
+        public static final double ticks_per_rotation = MotorConstants.RevHDHexMotor.ticks_per_revolution * 20 * biggerWheelDiameter / wheelDiameter;
+    }
+
     @Config
     public static final class VisionConstants {
         public final static int camera_width = 1280;

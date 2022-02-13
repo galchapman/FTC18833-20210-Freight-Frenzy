@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.Constants;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
@@ -30,11 +32,15 @@ public class DucksSubsystem extends SubsystemBase {
         return m_motor.getPower();
     }
 
-    public void setTargetPosition(int position) {
+    private void setTargetPosition(int position) {
         m_motor.setTargetPosition(position);
     }
 
     public int getCurrentPosition() {
         return m_motor.getCurrentPosition();
+    }
+
+    public void spin(double rotations) {
+        m_motor.setTargetPosition(m_motor.getCurrentPosition() + (int)(rotations * Constants.DucksConstants.ticks_per_rotation));
     }
 }

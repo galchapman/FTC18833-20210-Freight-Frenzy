@@ -103,7 +103,7 @@ public class Drive extends CommandBasedTeleOp
 
         intakeCommand = new IntakeCommand(intakeSubsystem, () -> gamepad2.right_stick_y);
 
-        indexDuckCommand = new IndexDuckCommand(ducksSubsystem,5000,1).andThen(new WaitCommand(2));
+        indexDuckCommand = new IndexDuckCommand(ducksSubsystem,1.3,1).andThen(new WaitCommand(2));
 
         GoToIntakePositionCommand = new InstantCommand(
                 () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Close); })
