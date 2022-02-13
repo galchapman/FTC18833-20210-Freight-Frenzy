@@ -26,7 +26,7 @@ public abstract class LoadedAuto extends BaseAuto {
     private final Pose2d start;
     TrajectoryLoader trajectoryLoader;
     Map<String, Trajectory> trajectories;
-    boolean A = false, B = false;
+    boolean A = false, B = false, C = false;
 
     public LoadedAuto(String file, String trajectoriesPath, Pose2d start) {
         this.file = file;
@@ -59,13 +59,20 @@ public abstract class LoadedAuto extends BaseAuto {
 
         autoLoader.interpreter.env.addVariable("intake.height", armSubsystem::setVerticalPosition);
         autoLoader.interpreter.env.addVariable("lift.height", liftSubsystem::setLiftHeight);
+        autoLoader.interpreter.env.addVariable("intake", intakeSubsystem::intake);
+        autoLoader.interpreter.env.addVariable("arm.angle", armSubsystem::setAngleRad);
+        autoLoader.interpreter.env.addVariable("arm.power", armSubsystem::setPower);
 
         autoLoader.interpreter.env.addVariable("A", () -> A);
         autoLoader.interpreter.env.addVariable("A", (Boolean value) -> A = value);
         autoLoader.interpreter.env.addVariable("B", () -> B);
         autoLoader.interpreter.env.addVariable("B", (Boolean value) -> B = value);
+        autoLoader.interpreter.env.addVariable("C", () -> C);
+        autoLoader.interpreter.env.addVariable("C", (Boolean value) -> C = value);
 
         telemetry.addData("external heading", () -> Math.toDegrees(driveTrain.getExternalHeading()));
+        telemetry.addData("arm angle", armSubsystem::getAngle);
+        telemetry.addData("arm angle target", armSubsystem::getTargetAngle);
     }
 
     @Override

@@ -61,6 +61,10 @@ public class ArmSubsystem extends SubsystemBase {
 		m_motor.setTargetPosition((int)(angle * ArmConstants.motorGear * ArmConstants.gear / 360));
 	}
 
+	public void setAngleRad(double angle) {
+		m_motor.setTargetPosition((int)(angle * ArmConstants.motorGear * ArmConstants.gear / 2 / Math.PI));
+	}
+
 	public void setVerticalPosition(double position) {
 		m_leftServo.setPosition(position);
 		m_rightServo.setPosition(position);

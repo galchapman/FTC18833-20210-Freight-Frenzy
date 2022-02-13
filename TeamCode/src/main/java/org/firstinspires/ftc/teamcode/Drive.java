@@ -153,7 +153,7 @@ public class Drive extends CommandBasedTeleOp
 //        DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
 //        FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
 
-        new Trigger(intakeSubsystem::hasFreight).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
+        new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
 
         driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
 

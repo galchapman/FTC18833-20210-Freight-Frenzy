@@ -116,13 +116,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         setOdometryPosition(OdometryPosition.Up);
         setLocalizer(new TwoTrackingWheelLocalizer(
                 Arrays.asList(
-                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
+                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
                         DriveTrainConstants.OdometryConstants.horizontalWheelPosition
                 )) {
             @NonNull
             @Override
             public List<Double> getWheelPositions() {
-                return Arrays.asList(getFrontRightPosition(), getHorizontalPosition());
+                return Arrays.asList(getFrontLeftPosition(), getHorizontalPosition());
             }
 
             @Override
@@ -142,14 +142,12 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public void periodic() {
-        updatePoseEstimate();
 
         if (trajectoryControlled && trajectories) {
+            updatePoseEstimate();
             DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
             if (signal != null)
                 setDriveSignal(signal);
-        } else {
-            trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         }
     }
 
