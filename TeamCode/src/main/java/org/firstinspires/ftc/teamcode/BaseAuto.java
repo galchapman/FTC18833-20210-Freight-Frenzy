@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DucksSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
@@ -30,8 +31,9 @@ public abstract class BaseAuto extends CommandBasedAuto {
     protected ArmSubsystem armSubsystem;
     protected IntakeSubsystem intakeSubsystem;
     protected LiftSubsystem liftSubsystem;
-    protected StartingPosition startingPosition;
+    protected DucksSubsystem ducksSubsystem;
     protected VisionSubsystem vision;
+    protected StartingPosition startingPosition;
 
     protected BaseAuto(StartingPosition startingPosition) {
         this.startingPosition = startingPosition;
@@ -45,7 +47,8 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         liftSubsystem = new LiftSubsystem();
-        vision = new VisionSubsystem();
+//        vision = new VisionSubsystem();
+        ducksSubsystem = new DucksSubsystem();
 
         driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
         armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);

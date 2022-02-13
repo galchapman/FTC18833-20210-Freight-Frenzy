@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
-@Autonomous(name = "5. FarRed")
+@Autonomous(name = "FarRed")
 public class FarRedAuto extends LoadedAuto {
     @SuppressLint("SdCardPath")
     public FarRedAuto() {

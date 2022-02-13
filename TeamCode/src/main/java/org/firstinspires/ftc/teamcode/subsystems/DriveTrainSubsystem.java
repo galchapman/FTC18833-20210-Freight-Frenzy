@@ -72,7 +72,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public enum OdometryPosition {
         Up(1),
-        Down(0.475);
+        Down(0.45);
 
         private final double servo_position;
         OdometryPosition(double pos) {
@@ -116,13 +116,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         setOdometryPosition(OdometryPosition.Up);
         setLocalizer(new TwoTrackingWheelLocalizer(
                 Arrays.asList(
-                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
+                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
                         DriveTrainConstants.OdometryConstants.horizontalWheelPosition
                 )) {
             @NonNull
             @Override
             public List<Double> getWheelPositions() {
-                return Arrays.asList(getFrontRightPosition(), getHorizontalPosition());
+                return Arrays.asList(getFrontLeftPosition(), getHorizontalPosition());
             }
 
             @Override

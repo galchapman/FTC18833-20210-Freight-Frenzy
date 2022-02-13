@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.commands.DuckRoller.IndexDuckCommand;
 import org.firstinspires.ftc.teamcode.lib.GameType;
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 import org.firstinspires.ftc.teamcode.lib.auto.AutoLoader;
@@ -51,6 +52,7 @@ public abstract class LoadedAuto extends BaseAuto {
                         (doorState) -> new InstantCommand(
                                 () -> intakeSubsystem.setDoorState(doorState))));
         autoLoader.interpreter.registerCommand("wait", new SingleArgCommand(WaitCommand::new));
+        autoLoader.interpreter.registerCommand("ducks", new SingleArgCommand((spins) -> new IndexDuckCommand(ducksSubsystem, spins, 0.7)));
         autoLoader.interpreter.registerCommand("turn", new SingleArgCommand(this::turn));
         autoLoader.interpreter.registerCommand("forward", new SingleArgCommand(this::forward));
         autoLoader.interpreter.registerCommand("set", new SetCommand());
@@ -81,12 +83,12 @@ public abstract class LoadedAuto extends BaseAuto {
 
     @Override
     public Command getAutonomousCommand() throws Exception {
-        gameType = vision.getGameType();
-        telemetry.addData("game type", gameType);
-        telemetry.update();
-        A = gameType == GameType.A;
-        B = gameType == GameType.B;
-        C = gameType == GameType.C;
+//        gameType = vision.getGameType();
+//        telemetry.addData("game type", gameType);
+//        telemetry.update();
+//        A = gameType == GameType.A;
+//        B = gameType == GameType.B;
+//        C = gameType == GameType.C;
         return autoLoader.load(file).andThen(() -> driveTrain.stop());
     }
 }
