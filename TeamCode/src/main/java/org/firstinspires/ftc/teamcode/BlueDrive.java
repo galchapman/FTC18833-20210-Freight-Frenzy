@@ -15,6 +15,6 @@ public class BlueDrive extends Drive {
 
         indexDuckCommand = new IndexDuckCommand(ducksSubsystem, -1.3, 0.7).andThen(new WaitCommand(2));
 
-        gp1.y().whenPressed(indexDuckCommand);
+        gp1.y().whileHeld(indexDuckCommand);
     }
 }

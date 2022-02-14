@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.commandftc.opModes.CommandBasedTeleOp;
-import org.firstinspires.ftc.teamcode.commands.DuckRoller.IndexDuckCommand;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmPowerCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmToPositionCommand;
@@ -28,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-@TeleOp(name = "Drive")
 public class Drive extends CommandBasedTeleOp
 {
     DriveTrainSubsystem driveTrain;
@@ -103,8 +100,6 @@ public class Drive extends CommandBasedTeleOp
 
         intakeCommand = new IntakeCommand(intakeSubsystem, () -> gamepad2.right_stick_y);
 
-        indexDuckCommand = new IndexDuckCommand(ducksSubsystem,1.3,1).andThen(new WaitCommand(2));
-
         GoToIntakePositionCommand = new InstantCommand(
                 () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Close); })
                 .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height + 0.005, 1, 0, 1, 0));
@@ -131,12 +126,11 @@ public class Drive extends CommandBasedTeleOp
 
         gp2.right_stick_button().whenPressed(GoToIntakePositionCommand);
         gp2.left_stick_button().whenPressed(GoToScoringPositionCommand);
-        gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1));
+        gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1).andThen(() -> armSubsystem.setVerticalPosition(0.65)));
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
         gp2.y().whenPressed(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new WaitCommand(0.1)).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.1)));
-        // Duck commands
-        gp1.y().whileHeld(indexDuckCommand);
+
 
         // Telemetry
         // No need for anything but update in loop because use of suppliers

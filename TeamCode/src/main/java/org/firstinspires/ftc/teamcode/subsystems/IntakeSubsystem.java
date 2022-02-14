@@ -18,7 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private final DistanceSensor m_distanceSensor;
 
     public enum DoorState {
-        Open(0),
+        Open(0.2),
         Close(1),
         LowerPlacement(0.2);
 
