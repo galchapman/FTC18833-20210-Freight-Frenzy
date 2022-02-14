@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import org.commandftc.RobotUniversal;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.lib.GameType;
+import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -19,14 +20,14 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
-import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.FarBlueARect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.FarBlueBRect;
+import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.FarBlueCRect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.FarRedARect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.FarRedBRect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.HueThresholdHigh;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.HueThresholdLow;
-import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.NearBlueARect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.NearBlueBRect;
+import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.NearBlueCRect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.NearRedARect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.NearRedBRect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.SaturationThresholdHigh;
@@ -48,24 +49,6 @@ public class VisionSubsystem extends SubsystemBase {
 
         @Override
         public Mat processFrame(Mat input) {
-//            Mat filtered = new Mat();
-//            filterGreen(input, filtered);
-//            Mat mask = new Mat();
-//            mask(input, filtered, mask);
-//
-//            gameType = GameType.A;
-//
-//            Imgproc.rectangle(mask, AView, new Scalar(255, 255, 0), 4);
-//            Imgproc.rectangle(mask, BView, new Scalar(255, 0, 255), 4);
-//
-//
-//            filtered.release();
-//
-//            Utils.matToBitmap(input, bitmap);
-//            FtcDashboard.getInstance().sendImage(bitmap);
-//            input.release();
-//
-//            return mask;
 
             Mat a_sub = input.submat(AView);
             Mat b_sub = input.submat(BView);
@@ -74,22 +57,19 @@ public class VisionSubsystem extends SubsystemBase {
             filterGreen(a_sub, a_filtered);
             filterGreen(b_sub, b_filtered);
 
-//            telemetry.addData("a count",  Core.countNonZero(a_filtered));
-//            telemetry.addData("b count",  Core.countNonZero(b_filtered));
-//            telemetry.update();
-
             if (Core.countNonZero(b_filtered) > 1000) {
                 gameType = GameType.B;
-            } else if (Core.countNonZero(a_filtered) > 1000) {
+            } else if (Core.countNonZero(a_filtered) > 1000 ^ (RobotUniversal.startingPosition == StartingPosition.FarBlue || RobotUniversal.startingPosition == StartingPosition.NearBlue)) {
                 gameType = GameType.A;
             } else {
                 gameType = GameType.C;
             }
 
-            a_sub.release();
-            b_sub.release();
-            a_filtered.release();
-            b_filtered.release();
+            Imgproc.rectangle(input, AView, new Scalar(255, 255, 0), 3);
+            Imgproc.rectangle(input, BView, new Scalar(255, 0, 255), 3);
+
+//            a_filtered.release();
+//            b_filtered.release();
 
             return input;
         }
@@ -139,11 +119,11 @@ public class VisionSubsystem extends SubsystemBase {
                 BView = NearRedBRect;
                 break;
             case FarBlue:
-                AView = FarBlueARect;
+                AView = FarBlueCRect;
                 BView = FarBlueBRect;
                 break;
             case NearBlue:
-                AView = NearBlueARect;
+                AView = NearBlueCRect;
                 BView = NearBlueBRect;
                 break;
         }
