@@ -1,0 +1,40 @@
+{
+    "sequences": [
+        {
+			"name": "go_to_duck_position",
+			"start_pos": {"x": -1.18, "y": -1.63, "heading": 90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "strafe",
+					"x": -1.53,
+					"y": -1.43
+				}
+			]
+		},
+        {
+			"name": "go_to_high_or_mid",
+			"start_pos": {"x": 1.205, "y": -1.63, "heading": 90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "strafe",
+					"x": -0.3,
+					"y": -1.15
+				}
+			]
+		},
+		{
+			"name": "go_to_low",
+			"start_pos": {"x": 1.205, "y": -1.63, "heading": 90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "strafe",
+					"x": -0.3,
+					"y": -1.27
+				}
+			]
+		}
+    ]
+}
