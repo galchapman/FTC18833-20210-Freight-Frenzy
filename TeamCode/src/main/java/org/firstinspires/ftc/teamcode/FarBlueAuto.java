@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
-@Autonomous
+@Autonomous(name = "Far Blue", preselectTeleOp = "Blue Drive")
 public class FarBlueAuto extends LoadedAuto {
     @SuppressLint("SdCardPath")
     public FarBlueAuto() {
