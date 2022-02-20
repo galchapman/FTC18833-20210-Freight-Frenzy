@@ -37,14 +37,13 @@
 		},
 		{
 			"name": "go_to_intake_position_A",
-			"start_pos": {"x": -0.3, "y": 1.47, "heading": 45},
+			"start_pos": {"x": -0.3, "y": 1.47, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
-					"name": "spline",
+					"name": "strafe",
 					"x": 0.30,
-					"y": 1.65,
-					"heading": 0
+					"y": 1.70
 				}
 			]
 		},
@@ -65,16 +64,15 @@
 			"reversed": false,
 			"segments": [
 				{
-					"name": "spline",
+					"name": "strafe",
 					"x": 0.30,
-					"y": 1.655,
-					"heading": 0
+					"y": 1.70
 				}
 			]
 		},
 		{
 			"name": "first_intake",
-			"start_pos": {"x": 0.3, "y": 1.655, "heading": 0},
+			"start_pos": {"x": 0.3, "y": 1.70, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
@@ -85,7 +83,7 @@
 		},
 		{
 			"name": "first_return_to_tower_part1",
-			"start_pos": {"x": 1.05, "y": 1.655, "heading": 0},
+			"start_pos": {"x": 1.05, "y": 1.70, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{
@@ -96,7 +94,7 @@
 		},
 		{
 			"name": "first_return_to_tower_part2",
-			"start_pos": {"x": 0.05, "y": 1.655, "heading": 0},
+			"start_pos": {"x": 0.05, "y": 1.70, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{

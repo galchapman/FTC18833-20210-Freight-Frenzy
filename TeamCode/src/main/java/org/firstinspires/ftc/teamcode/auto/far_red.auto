@@ -34,7 +34,7 @@
 # go to intake position
 @if A
 	follow back_of_from_tower_A
-	turn -135deg
+	turn -90deg
 	follow go_to_intake_position_A
 @else
 	follow back_of_from_tower_BC
@@ -100,15 +100,15 @@ follow third_intake
 set intake height 1
 set intake 0
 # retrun to tower
-follow third_return_to_tower_part1
-set lift height 0.32
-set arm power 0.2
-set arm angle -70deg
-follow third_return_to_tower_part2
-# put frieht
-set intake height 0.60
-set intake -0.6
-door Open
-wait 0.5
-set intake 0
-door Close
+# follow third_return_to_tower_part1
+# set lift height 0.32
+# set arm power 0.2
+# set arm angle -70deg
+# follow third_return_to_tower_part2
+# # put frieht
+# set intake height 0.60
+# set intake -0.6
+# door Open
+# wait 0.5
+# set intake 0
+# door Close

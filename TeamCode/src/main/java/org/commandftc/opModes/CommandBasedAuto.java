@@ -21,6 +21,10 @@ public abstract class CommandBasedAuto extends OpMode {
         RobotUniversal.opModeType = RobotUniversal.OpModeType.Autonomous;
         plan();
     }
+    
+    public final void init_loop() {
+        telemetry.update();
+    }
 
     @Override
     public final void start() {

@@ -54,8 +54,6 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         armSubsystem.setPower(1);
 
-        armSubsystem.setVerticalPosition(1);
-
         liftSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftSubsystem.setPower(1);
 
@@ -64,11 +62,15 @@ public abstract class BaseAuto extends CommandBasedAuto {
         TelemetryPacket packet = new TelemetryPacket();
         DashboardUtil.drawRobot(packet.fieldOverlay(), driveTrain.getPoseEstimate());
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
+
+        telemetry.addData("height", liftSubsystem::getHeight);
     }
 
     @Override
     public void onStart() {
         vision.stop();
+
+        armSubsystem.setVerticalPosition(1);
     }
 
     abstract public void initialize();

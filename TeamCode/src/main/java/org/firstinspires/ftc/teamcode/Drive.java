@@ -126,7 +126,7 @@ public class Drive extends CommandBasedTeleOp
 
         gp2.right_stick_button().whenPressed(GoToIntakePositionCommand);
         gp2.left_stick_button().whenPressed(GoToScoringPositionCommand);
-        gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1).andThen(() -> armSubsystem.setVerticalPosition(0.65)));
+        gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1).alongWith(new InstantCommand(() -> armSubsystem.setVerticalPosition(0.65))));
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
         gp2.y().whenPressed(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new WaitCommand(0.1)).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.1)));
@@ -149,7 +149,7 @@ public class Drive extends CommandBasedTeleOp
 
         new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
 
-        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
+//        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
 
         armSubsystem.setVerticalPosition(1);
 

@@ -37,14 +37,13 @@
 		},
 		{
 			"name": "go_to_intake_position_A",
-			"start_pos": {"x": -0.3, "y": -1.47, "heading": -45},
+			"start_pos": {"x": -0.3, "y": -1.47, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
-					"name": "spline",
+					"name": "strafe",
 					"x": 0.30,
-					"y": -1.650,
-					"heading": 0
+					"y": -1.650
 				}
 			]
 		},
@@ -65,10 +64,9 @@
 			"reversed": false,
 			"segments": [
 				{
-					"name": "spline",
+					"name": "strafe",
 					"x": 0.30,
-					"y": -1.650,
-					"heading": 0
+					"y": -1.650
 				}
 			]
 		},

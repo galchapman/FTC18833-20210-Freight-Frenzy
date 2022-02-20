@@ -34,7 +34,7 @@
 # go to intake position
 @if A
 	follow back_of_from_tower_A
-	turn 135deg
+	turn 90deg
 	follow go_to_intake_position_A
 @else
 	follow back_of_from_tower_BC

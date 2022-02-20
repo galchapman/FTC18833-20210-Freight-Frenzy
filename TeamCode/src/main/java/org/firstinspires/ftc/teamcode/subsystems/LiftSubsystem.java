@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Constants.LiftConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
+import static org.firstinspires.ftc.teamcode.Constants.LiftConstants.lower_plate_height;
 import static org.firstinspires.ftc.teamcode.Constants.LiftConstants.sensor_height;
 
 public class LiftSubsystem extends SubsystemBase {
@@ -25,10 +26,13 @@ public class LiftSubsystem extends SubsystemBase {
         m_liftMotor.setTargetPosition(0);
         m_liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        m_encoderOffset = meters2ticks(getSensorHeight() + sensor_height);
+        double sensorRead = getSensorHeight();
 
-//        System.out.println("Some random print Height: " +  m_encoderOffset);
-//        System.out.println("Some random print Height: " +  ticks2meters(m_encoderOffset));
+        if (sensorRead < 0.5  ) {
+            m_encoderOffset = meters2ticks(sensorRead + sensor_height);
+        } else {
+            m_encoderOffset = meters2ticks(lower_plate_height);
+        }
     }
 
     public double getSensorHeight() {
