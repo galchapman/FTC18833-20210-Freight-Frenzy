@@ -151,8 +151,6 @@ public class Drive extends CommandBasedTeleOp
 
 //        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
 
-        armSubsystem.setVerticalPosition(1);
-
 //        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
         telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
         telemetry.addData("r pos", driveTrain::getFrontRightPosition);

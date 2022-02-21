@@ -25,6 +25,13 @@ public class IndexDuckCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return m_duckSubsystem.isBusy();
+        return !m_duckSubsystem.isBusy() || Math.abs(m_duckSubsystem.getError()) < 75;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (!interrupted) {
+            m_duckSubsystem.stop();
+        }
     }
 }

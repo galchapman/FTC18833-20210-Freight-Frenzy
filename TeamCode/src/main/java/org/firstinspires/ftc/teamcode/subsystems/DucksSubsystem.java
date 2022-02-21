@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
@@ -18,6 +19,8 @@ public class DucksSubsystem extends SubsystemBase {
         m_motor.setPower(0);
         m_motor.setTargetPosition(0);
         m_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        m_motor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void setPower(double power) {
@@ -32,15 +35,20 @@ public class DucksSubsystem extends SubsystemBase {
         return m_motor.getPower();
     }
 
-    private void setTargetPosition(int position) {
-        m_motor.setTargetPosition(position);
-    }
-
     public int getCurrentPosition() {
         return m_motor.getCurrentPosition();
     }
 
     public void spin(double rotations) {
         m_motor.setTargetPosition(m_motor.getCurrentPosition() + (int)(rotations * Constants.DucksConstants.ticks_per_rotation));
+    }
+
+    public void stop() {
+        m_motor.setTargetPosition(m_motor.getCurrentPosition());
+        m_motor.setPower(0);
+    }
+
+    public int getError() {
+        return m_motor.getTargetPosition() - m_motor.getCurrentPosition();
     }
 }
