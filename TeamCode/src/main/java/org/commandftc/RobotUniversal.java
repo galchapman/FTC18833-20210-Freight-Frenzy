@@ -1,7 +1,9 @@
 package org.commandftc;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Consumer;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
@@ -14,6 +16,7 @@ public final class RobotUniversal {
     public static OpMode opMode;
     public static OpModeType opModeType;
     public static StartingPosition startingPosition;
+    public static Consumer<TelemetryPacket> telemetryPacketUpdater = null;
 
     public enum OpModeType {
         Autonomous,

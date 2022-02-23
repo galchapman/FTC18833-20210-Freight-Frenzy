@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -21,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.camera_wi
 public class TestView extends OpMode {
     private OpenCvCamera camera;
     private final Bitmap bitmap = Bitmap.createBitmap(camera_width, camera_height, Bitmap.Config.RGB_565);
+    private DistanceSensor distanceSensor;
 
     @Override
     public void init() {
@@ -47,10 +50,13 @@ public class TestView extends OpMode {
                     }
                 }
         );
+
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "TestSensor");
     }
 
     @Override
     public void loop() {
-
+        telemetry.addData("distance", distanceSensor.getDistance(DistanceUnit.METER));
+        telemetry.update();
     }
 }

@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import com.acmerobotics.roadrunner.util.NanoClock;
 
+import org.commandftc.RobotUniversal;
 import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
 import org.firstinspires.ftc.teamcode.lib.tragectory.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.lib.tragectory.sequencesegment.TrajectorySegment;
@@ -77,13 +78,9 @@ public class TrajectorySequenceRunner {
 
     public @Nullable
     DriveSignal update(Pose2d poseEstimate, Pose2d poseVelocity) {
-        return update(poseEstimate, poseVelocity, new TelemetryPacket());
-    }
-
-    public @Nullable
-    DriveSignal update(Pose2d poseEstimate, Pose2d poseVelocity, TelemetryPacket packet) {
         Pose2d targetPose = null;
         DriveSignal driveSignal = null;
+        TelemetryPacket packet = new TelemetryPacket();
 
         Canvas fieldOverlay = packet.fieldOverlay();
 
@@ -196,6 +193,8 @@ public class TrajectorySequenceRunner {
         packet.put("headingError (deg)", Math.toDegrees(getLastPoseError().getHeading()));
 
         draw(fieldOverlay, currentTrajectorySequence, currentSegment, targetPose, poseEstimate);
+
+        RobotUniversal.telemetryPacketUpdater.accept(packet);
 
         dashboard.sendTelemetryPacket(packet);
 

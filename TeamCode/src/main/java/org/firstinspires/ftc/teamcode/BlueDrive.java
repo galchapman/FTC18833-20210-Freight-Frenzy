@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
@@ -26,4 +27,7 @@ public class BlueDrive extends Drive {
 
         gp1.y().whileHeld(indexDuckCommand, false);
     }
+
+    @Override
+    public void updateFtcDashboardTelemetry(TelemetryPacket packet) {}
 }

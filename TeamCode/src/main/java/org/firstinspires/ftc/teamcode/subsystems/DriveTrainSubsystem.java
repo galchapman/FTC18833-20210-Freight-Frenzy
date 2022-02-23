@@ -19,6 +19,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -26,6 +27,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.commandftc.opModes.CommandBasedTeleOp;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
 import org.firstinspires.ftc.teamcode.lib.drive.ArcadeDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.HorizontalDrive;
@@ -54,6 +56,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     private final DcMotorEx m_horizontalEncoder;
     private final Servo m_odometryServo;
+
+    private final Rev2mDistanceSensor m_leftDistanceSensor;
+    private final Rev2mDistanceSensor m_rightDistanceSensor;
 
     private final BNO055IMU imu;
 
@@ -90,6 +95,8 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_horizontalEncoder = (DcMotorEx) hardwareMap.dcMotor.get("IntakeMotor");
         m_odometryServo = hardwareMap.servo.get("OdometryServo");
         imu = hardwareMap.get(BNO055IMU.class, "imu");
+        m_leftDistanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "LeftDistanceSensor");
+        m_rightDistanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "RightDistanceSensor");
         // IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
@@ -434,5 +441,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public boolean areDriveMotorsBusy() {
         return m_FrontLeftMotor.isBusy() || m_RearLeftMotor.isBusy() || m_FrontRightMotor.isBusy() || m_RearRightMotor.isBusy();
+    }
+
+    public double getLeftDistance() {
+        return m_leftDistanceSensor.getDistance(DistanceUnit.METER);
+    }
+
+    public double getRightDistance() {
+        return m_rightDistanceSensor.getDistance(DistanceUnit.METER);
     }
 }

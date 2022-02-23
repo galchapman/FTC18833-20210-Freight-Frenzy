@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
+import org.commandftc.RobotUniversal;
 import org.commandftc.opModes.CommandBasedTeleOp;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmPowerCommand;
@@ -18,6 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DucksSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LEDSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,13 +30,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public class Drive extends CommandBasedTeleOp
+public abstract class Drive extends CommandBasedTeleOp
 {
     DriveTrainSubsystem driveTrain;
     LiftSubsystem liftSubsystem;
     ArmSubsystem armSubsystem;
     IntakeSubsystem intakeSubsystem;
     DucksSubsystem ducksSubsystem;
+    LEDSubsystem ledSubsystem;
     // Drive Commands
     TankDriveCommand tankDriveCommand;
     ArcadeDriveCommand arcadeDriveCommand;
@@ -78,11 +83,13 @@ public class Drive extends CommandBasedTeleOp
 
     @Override
     public void assign() {
+        RobotUniversal.telemetryPacketUpdater = Drive.this::updateFtcDashboardTelemetry;
         driveTrain = new DriveTrainSubsystem();
         liftSubsystem = new LiftSubsystem();
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         ducksSubsystem = new DucksSubsystem();
+        ledSubsystem = new LEDSubsystem();
 
         armSubsystem.setVerticalPosition(0.2);
 
@@ -157,5 +164,15 @@ public class Drive extends CommandBasedTeleOp
 //        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
 
         driveTrain.setPoseEstimate(new Pose2d(0.03, -1.63, Math.toRadians(90)));
+
+        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE);
+//        telemetry.addData("pattern", () -> ledSubsystem.getPattern().name());
+//        gp1.dpad_up().whenPressed(() -> ledSubsystem.next());
+//        gp1.dpad_down().whenPressed(() -> ledSubsystem.previous());
+
+        telemetry.addData("left distance", driveTrain::getLeftDistance);
+        telemetry.addData("right distance", driveTrain::getRightDistance);
     }
+
+    public abstract void updateFtcDashboardTelemetry(TelemetryPacket packet);
 }
