@@ -1,4 +1,6 @@
 package org.commandftc;
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -21,5 +23,11 @@ public final class RobotUniversal {
     public enum OpModeType {
         Autonomous,
         TeleOp
+    }
+
+    public static void setOpMode(@NonNull OpMode opMode) {
+        hardwareMap = opMode.hardwareMap;
+        telemetry = opMode.telemetry;
+        RobotUniversal.opMode = opMode;
     }
 }

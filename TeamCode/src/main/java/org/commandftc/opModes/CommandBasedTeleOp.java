@@ -20,9 +20,7 @@ public abstract class CommandBasedTeleOp extends OpMode {
      */
     @Override
     public final void init() {
-        RobotUniversal.hardwareMap = hardwareMap;
-        RobotUniversal.telemetry = telemetry;
-        RobotUniversal.opMode = this;
+        RobotUniversal.setOpMode(this);
         RobotUniversal.opModeType = RobotUniversal.OpModeType.TeleOp;
 
         gp1 = new Gp(gamepad1);
