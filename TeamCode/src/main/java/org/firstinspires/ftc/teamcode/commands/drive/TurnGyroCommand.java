@@ -65,7 +65,7 @@ public class TurnGyroCommand extends CommandBase {
         }
         angle += spinCount * 2 * Math.PI;
 
-        error = m_target - angle;
+        error = target - angle;
 
         spin(Math.abs(error) > 0.05 ? m_power * Util.clamp(-1, 1, error * 2) : 0.4);
 

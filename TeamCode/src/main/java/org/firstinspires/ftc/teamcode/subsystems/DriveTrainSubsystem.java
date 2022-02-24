@@ -26,7 +26,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.commandftc.opModes.CommandBasedTeleOp;
+import org.commandftc.RobotUniversal;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
 import org.firstinspires.ftc.teamcode.lib.drive.ArcadeDrive;
@@ -44,7 +44,6 @@ import java.util.List;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
-import static org.commandftc.RobotUniversal.opMode;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.odometry_wheel_ticks_to_meters;
 
 @Config
@@ -71,9 +70,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(DriveTrainConstants.MaxSpeed, DriveTrainConstants.MaxSpeed / 0.259, 0.259);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(0.8);
 
-    private final boolean trajectoryControlled;
-
-    public boolean trajectories = true;
+    public boolean trajectoryControlled;
 
     public enum OdometryPosition {
         Up(1),
@@ -137,25 +134,48 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
                 return DriveTrainSubsystem.this.getHeading();
             }
         });
+//        setLocalizer(new ThreeTrackingWheelLocalizer(Arrays.asList(
+//                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
+//                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
+//                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
+//        )) {
+//            @NonNull
+//            @Override
+//            public List<Double> getWheelPositions() {
+//                return Arrays.asList(getFrontLeftPosition(), getFrontRightPosition(), getHorizontalPosition());
+//            }
+//        });
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
                 new Pose2d(0.1, 0.1, Math.toRadians(5)), 0.5);
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
-        trajectoryControlled = !CommandBasedTeleOp.class.isAssignableFrom(opMode.getClass()); // check if Opmode is autonomous
+        trajectoryControlled = RobotUniversal.opModeType == RobotUniversal.OpModeType.Autonomous; // check if Opmode is autonomous
 
         CommandScheduler.getInstance().registerSubsystem(this); // Because we aren't extending SubsystemBase
     }
 
     @Override
     public void periodic() {
-
-        if (trajectoryControlled && trajectories) {
+        if (trajectoryControlled) {
             updatePoseEstimate();
             DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
             if (signal != null)
                 setDriveSignal(signal);
+        } else {
+            updatePoseEstimate();
+            trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         }
+
+        // make angle continues
+        double angle = getHeading();
+        double delta = angle - lastAngle;
+        if (delta > Math.PI / 2) {
+            spinCount--;
+        } else if (delta < -Math.PI / 2) {
+            spinCount++;
+        }
+        lastAngle = angle;
     }
 
     public void setOdometryPosition(OdometryPosition position) {
@@ -354,6 +374,12 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public double getHeading() {
         return imu.getAngularOrientation().firstAngle;
+    }
+
+    private double lastAngle = 0;
+    private int spinCount = 0;
+    public double getContainsHeading() {
+        return lastAngle + spinCount * 2 * Math.PI;
     }
 
     @Override

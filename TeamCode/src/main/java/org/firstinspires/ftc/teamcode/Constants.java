@@ -40,8 +40,8 @@ public final class Constants {
 
         @Config
         public final static class OdometryConstants {
-            public static Pose2d frontLeftWheelPosition = new Pose2d(0.16357, -0.078);
-            public static Pose2d frontRightWheelPosition = new Pose2d(0.16357, 0.078);
+            public static Pose2d frontLeftWheelPosition = new Pose2d(0.16357, -0.07);
+            public static Pose2d frontRightWheelPosition = new Pose2d(0.16357, 0.07);
 
             public static Pose2d horizontalWheelPosition = new Pose2d(-0.15152, 0, Math.toRadians(-90));
         }

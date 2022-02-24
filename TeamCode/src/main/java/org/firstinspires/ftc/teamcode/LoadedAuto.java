@@ -56,7 +56,7 @@ public abstract class LoadedAuto extends BaseAuto {
         autoLoader.interpreter.registerCommand("turn", new SingleArgCommand(this::turn));
         autoLoader.interpreter.registerCommand("forward", new SingleArgCommand(this::forward));
         autoLoader.interpreter.registerCommand("set", new SetCommand());
-        autoLoader.interpreter.registerCommand("set.static", new StaticSetCommand<>());
+        autoLoader.interpreter.registerCommand("@set", new StaticSetCommand<>());
         autoLoader.interpreter.registerCommand("follow", new FollowTrajectoryCommand(driveTrain, trajectories));
         autoLoader.interpreter.registerCommand("arm.mode", new EnumArgCommand<>(DcMotor.RunMode.class,
                 (mode) -> new InstantCommand(() -> armSubsystem.setRunMode(mode))));

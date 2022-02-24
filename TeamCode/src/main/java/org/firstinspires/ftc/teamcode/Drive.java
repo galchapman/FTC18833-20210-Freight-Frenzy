@@ -91,7 +91,7 @@ public abstract class Drive extends CommandBasedTeleOp
         ducksSubsystem = new DucksSubsystem();
         ledSubsystem = new LEDSubsystem();
 
-        armSubsystem.setVerticalPosition(0.2);
+        armSubsystem.setVerticalPosition(0.6);
 
         tankDriveCommand = new TankDriveCommand(driveTrain, () -> -gamepad1.left_stick_y * getDriveSpeed(), () -> -gamepad1.right_stick_y * getDriveSpeed());
         arcadeDriveCommand = new ArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_x, () -> -gamepad1.left_stick_y, () -> gamepad1.right_stick_x);
@@ -136,7 +136,7 @@ public abstract class Drive extends CommandBasedTeleOp
         gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1).alongWith(new InstantCommand(() -> armSubsystem.setVerticalPosition(0.65))));
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
-        gp2.y().whenPressed(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new WaitCommand(0.1)).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.1)));
+        gp2.y().whenHeld(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new WaitCommand(0.1)).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.1)));
 
 
         // Telemetry
@@ -156,7 +156,7 @@ public abstract class Drive extends CommandBasedTeleOp
 
         new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
 
-//        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
+        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
 
 //        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
         telemetry.addData("l pos", driveTrain::getFrontLeftPosition);

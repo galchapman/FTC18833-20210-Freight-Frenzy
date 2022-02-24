@@ -18,9 +18,9 @@ public class IntakeSubsystem extends SubsystemBase {
     private final DistanceSensor m_distanceSensor;
 
     public enum DoorState {
-        Open(0.2),
-        Close(1),
-        LowerPlacement(0.2);
+        Open(0.8),
+        Close(0),
+        LowerPlacement(1);
 
         public double servoPosition;
         DoorState(double servoPosition) {
@@ -35,6 +35,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
         m_intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        m_doorServo.setDirection(Servo.Direction.REVERSE);
 
         setDoorState(DoorState.Close);
     }

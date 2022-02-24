@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.lib.tragectory.sequencesegment.TurnSegment
 import org.firstinspires.ftc.teamcode.lib.tragectory.sequencesegment.WaitSegment;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -116,7 +117,7 @@ public class TrajectorySequenceRunner {
                 remainingMarkers.clear();
 
                 remainingMarkers.addAll(currentSegment.getMarkers());
-                remainingMarkers.sort((t1, t2) -> Double.compare(t1.getTime(), t2.getTime()));
+                remainingMarkers.sort(Comparator.comparingDouble(TrajectoryMarker::getTime));
             }
 
             double deltaTime = now - currentSegmentStartTime;
@@ -194,9 +195,10 @@ public class TrajectorySequenceRunner {
 
         draw(fieldOverlay, currentTrajectorySequence, currentSegment, targetPose, poseEstimate);
 
-        RobotUniversal.telemetryPacketUpdater.accept(packet);
-
-        dashboard.sendTelemetryPacket(packet);
+        if (RobotUniversal.telemetryPacketUpdater != null)
+            RobotUniversal.telemetryPacketUpdater.accept(packet);
+        else
+            dashboard.sendTelemetryPacket(packet);
 
         return driveSignal;
     }

@@ -29,5 +29,6 @@ public final class RobotUniversal {
         hardwareMap = opMode.hardwareMap;
         telemetry = opMode.telemetry;
         RobotUniversal.opMode = opMode;
+        telemetryPacketUpdater = null;
     }
 }
