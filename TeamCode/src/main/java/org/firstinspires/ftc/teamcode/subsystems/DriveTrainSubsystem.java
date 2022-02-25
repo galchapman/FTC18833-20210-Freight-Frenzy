@@ -9,7 +9,7 @@ import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
+import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
@@ -118,36 +118,36 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
         // Odometry
         setOdometryPosition(OdometryPosition.Up);
-        setLocalizer(new TwoTrackingWheelLocalizer(
-                Arrays.asList(
-                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
-                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
-                )) {
-            @NonNull
-            @Override
-            public List<Double> getWheelPositions() {
-                return Arrays.asList(getFrontLeftPosition(), getHorizontalPosition());
-            }
-
-            @Override
-            public double getHeading() {
-                return DriveTrainSubsystem.this.getHeading();
-            }
-        });
-//        setLocalizer(new ThreeTrackingWheelLocalizer(Arrays.asList(
+//        setLocalizer(new TwoTrackingWheelLocalizer(
+//                Arrays.asList(
 //                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
-//                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
 //                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
-//        )) {
+//                )) {
 //            @NonNull
 //            @Override
 //            public List<Double> getWheelPositions() {
-//                return Arrays.asList(getFrontLeftPosition(), getFrontRightPosition(), getHorizontalPosition());
+//                return Arrays.asList(getFrontLeftPosition(), getHorizontalPosition());
+//            }
+//
+//            @Override
+//            public double getHeading() {
+//                return DriveTrainSubsystem.this.getHeading();
 //            }
 //        });
+        setLocalizer(new ThreeTrackingWheelLocalizer(Arrays.asList(
+                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
+                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
+                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
+        )) {
+            @NonNull
+            @Override
+            public List<Double> getWheelPositions() {
+                return Arrays.asList(getFrontLeftPosition(), getFrontRightPosition(), getHorizontalPosition());
+            }
+        });
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
-                new Pose2d(0.1, 0.1, Math.toRadians(5)), 0.5);
+                new Pose2d(0.01, 0.01, Math.toRadians(5)), 0.5);
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
         trajectoryControlled = RobotUniversal.opModeType == RobotUniversal.OpModeType.Autonomous; // check if Opmode is autonomous

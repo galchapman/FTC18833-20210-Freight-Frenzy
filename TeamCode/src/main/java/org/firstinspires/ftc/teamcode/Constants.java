@@ -27,16 +27,18 @@ public final class Constants {
         public final static double WheelDiameter = 0.096;
         public final static double HorizontalOdometryWheelDiameter = 0.06;
 
-        public final static double MaxSpeed = MotorConstants.RevHDHexMotor.revolution_per_second * WheelDiameter * Math.PI;
+        public final static double GearRatio = 20;
+
+        public final static double MaxSpeed = MotorConstants.RevHDHexMotor.revolution_per_second / GearRatio * WheelDiameter * Math.PI;
 
         public final static double odometry_wheel_ticks_to_meters = HorizontalOdometryWheelDiameter * Math.PI / ticks_per_revolution;
 
         public final static DoubleFunction<Integer> m_to_ticks = (double m) -> (int)(m / WheelDiameter / Math.PI * ticks_per_revolution);
         public final static DoubleFunction<Double> ticks_to_m = (double ticks) -> ticks * WheelDiameter * Math.PI / ticks_per_revolution;
 
-        public final static double kV = 0.77576;
-        public final static double kStatic = 0.10551;
-        public final static double kA = 0.00284;
+        public final static double kV = 0.74243;
+        public final static double kStatic = 0.09980;
+        public final static double kA = 0.00184;
 
         @Config
         public final static class OdometryConstants {
