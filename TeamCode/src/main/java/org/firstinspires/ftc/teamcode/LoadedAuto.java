@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.lib.auto.commands.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.lib.auto.commands.SetCommand;
 import org.firstinspires.ftc.teamcode.lib.auto.commands.SingleArgCommand;
 import org.firstinspires.ftc.teamcode.lib.auto.commands.StaticSetCommand;
+import org.firstinspires.ftc.teamcode.lib.auto.commands.ZeroArgCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
 import java.util.Map;
@@ -60,6 +61,12 @@ public abstract class LoadedAuto extends BaseAuto {
         autoLoader.interpreter.registerCommand("follow", new FollowTrajectoryCommand(driveTrain, trajectories));
         autoLoader.interpreter.registerCommand("arm.mode", new EnumArgCommand<>(DcMotor.RunMode.class,
                 (mode) -> new InstantCommand(() -> armSubsystem.setRunMode(mode))));
+        double headingOffset = driveTrain.getHeading() - driveTrain.getPoseEstimate().getHeading();
+        autoLoader.interpreter.registerCommand("angle.update", new ZeroArgCommand<>(() -> new InstantCommand(
+                () -> {
+                    Pose2d pose2d = driveTrain.getPoseEstimate();
+                    driveTrain.setPoseEstimate(new Pose2d(pose2d.getX(), pose2d.getY(), driveTrain.getHeading() - headingOffset));
+                })));
 
         autoLoader.interpreter.registerCommand("door", new EnumArgCommand<>(IntakeSubsystem.DoorState.class, this::setDoor));
 

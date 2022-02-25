@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import edu.megiddo.lions.execption.LanguageException;
-import edu.megiddo.lions.execption.TokenFormatException;
 
 public class Tokenizer {
 
@@ -60,7 +59,7 @@ public class Tokenizer {
                     } else if (currentToken.toString().equalsIgnoreCase("else")) {
                         tokens.add(new Token(TokenType.Else, "", line, character));
                     } else {
-                        throw new TokenFormatException("Expected if else or elif after @ got " + currentToken, line, character);
+                        tokens.add(new Token(TokenType.Command, '@' + currentToken.toString(), line, character));
                     }
                 } else {
                     tokens.add(new Token(token, currentToken.toString(), line, character));

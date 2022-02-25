@@ -1,6 +1,6 @@
-# set.static A false
-# set.static B false
-# set.static C false
+# @set A false
+# @set B false
+# @set C false
 # places the marked friet
 @if A
 	follow go_to_low

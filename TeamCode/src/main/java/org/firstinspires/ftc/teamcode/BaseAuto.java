@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.commands.drive.DriveForwardCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.StrafeCommand;
-import org.firstinspires.ftc.teamcode.commands.drive.TurnCommand;
-import org.firstinspires.ftc.teamcode.lib.StartingPosition;
+import org.firstinspires.ftc.teamcode.commands.drive.TurnGyroCommand;
 import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
+import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
@@ -88,7 +88,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     }
 
     protected Command turn(double angle) {
-        return new TurnCommand(driveTrain, angle).andThen(new WaitCommand(1));
+        return new TurnGyroCommand(driveTrain, driveTrain::getHeading, angle, 1).andThen(new WaitCommand(1));
     }
 
     protected Command strafe(double distance) {
