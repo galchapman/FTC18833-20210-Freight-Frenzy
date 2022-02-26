@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
 
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -21,9 +22,13 @@ public class BlueDrive extends Drive {
     public void assign() {
         super.assign();
         GoToScoringPositionCommand.setTarget(0.20, -50, 0.5);
+        arcadeDriveCommand = new ArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_x, Math.toDegrees(90));
+
 
         indexDuckCommand = new FancyDuckIndexCommand(ducksSubsystem, -rotations, power0, power1, time0)
                 .andThen(new WaitCommand(time1));
+
+        driveTrain.setDefaultCommand(arcadeDriveCommand);
 
         gp1.y().whileHeld(indexDuckCommand, false);
     }

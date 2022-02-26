@@ -44,7 +44,16 @@ import java.util.List;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.MaxAccel;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.MaxAnglerVelocity;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.MaxVelocity;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.OdometryConstants;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.TrackWidth;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.kA;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.kV;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.odometry_wheel_ticks_to_meters;
+import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.ticks_to_m;
 
 @Config
 public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, ArcadeDrive, HorizontalDrive {
@@ -67,10 +76,12 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(DriveTrainConstants.MaxSpeed, DriveTrainConstants.MaxSpeed / 0.259, 0.259);
-    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(0.8);
+    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MaxVelocity, MaxAnglerVelocity, TrackWidth);
+    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MaxAccel);
 
     public boolean trajectoryControlled;
+
+    private double angleOffset;
 
     public enum OdometryPosition {
         Up(1),
@@ -83,7 +94,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public DriveTrainSubsystem() {
-        super(DriveTrainConstants.kV, DriveTrainConstants.kA, DriveTrainConstants.kStatic, 0.259, 1);
+        super(kV, kA, kStatic, TrackWidth);
         // Hardware
         m_FrontLeftMotor  = (DcMotorEx) hardwareMap.dcMotor.get("FrontLeftDriveMotor");
         m_RearLeftMotor   = (DcMotorEx) hardwareMap.dcMotor.get("RearLeftDriveMotor");
@@ -135,9 +146,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 //            }
 //        });
         setLocalizer(new ThreeTrackingWheelLocalizer(Arrays.asList(
-                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
-                        DriveTrainConstants.OdometryConstants.frontRightWheelPosition,
-                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
+                        OdometryConstants.frontLeftWheelPosition,
+                        OdometryConstants.frontRightWheelPosition,
+                        OdometryConstants.horizontalWheelPosition
         )) {
             @NonNull
             @Override
@@ -310,7 +321,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public double getRearLeftPosition() {
-        return DriveTrainConstants.ticks_to_m.apply(getRearLeftEncoder());
+        return ticks_to_m.apply(getRearLeftEncoder());
     }
 
     public double getFrontRightPosition() {
@@ -318,7 +329,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public double getRearRightPosition() {
-        return DriveTrainConstants.ticks_to_m.apply(getRearRightEncoder());
+        return ticks_to_m.apply(getRearRightEncoder());
     }
 
     public double getLeftPositionsAvg() {
@@ -370,10 +381,16 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_RearLeftMotor.setTargetPosition(rl);
         m_FrontRightMotor.setTargetPosition(fr);
         m_RearRightMotor.setTargetPosition(rr);
+
     }
 
     public double getHeading() {
-        return imu.getAngularOrientation().firstAngle;
+        return getRawExternalHeading() + angleOffset;
+    }
+
+    public void setPose(Pose2d pose) {
+        setPoseEstimate(pose);
+        angleOffset = pose.getHeading() - getRawExternalHeading();
     }
 
     private double lastAngle = 0;
@@ -384,7 +401,12 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     protected double getRawExternalHeading() {
-        return getHeading();
+        return imu.getAngularOrientation().firstAngle;
+    }
+
+    @Override
+    public Double getExternalHeadingVelocity() {
+        return (double) imu.getAngularVelocity().zRotationRate;
     }
 
     @NonNull
@@ -475,5 +497,25 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public double getRightDistance() {
         return m_rightDistanceSensor.getDistance(DistanceUnit.METER);
+    }
+
+    public void setWeightedDrivePower(Pose2d drivePower) {
+        Pose2d vel = drivePower;
+
+        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY())
+                + Math.abs(drivePower.getHeading()) > 1) {
+            // re-normalize the powers according to the weights
+            double denom = Math.abs(drivePower.getX())
+                    + Math.abs(drivePower.getY())
+                    + Math.abs(drivePower.getHeading());
+
+            vel = new Pose2d(
+                    drivePower.getX(),
+                    drivePower.getY(),
+                    drivePower.getHeading()
+            ).div(denom);
+        }
+
+        setDrivePower(vel);
     }
 }

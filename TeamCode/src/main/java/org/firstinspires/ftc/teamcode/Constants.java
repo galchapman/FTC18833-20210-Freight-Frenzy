@@ -29,7 +29,11 @@ public final class Constants {
 
         public final static double GearRatio = 20;
 
-        public final static double MaxSpeed = MotorConstants.RevHDHexMotor.revolution_per_second / GearRatio * WheelDiameter * Math.PI;
+        public static double TrackWidth = 0.259;
+        public static double MaxVelocity = MotorConstants.RevHDHexMotor.revolution_per_second / GearRatio * WheelDiameter * Math.PI;
+        public static double MaxAccel = 15.079;
+        public static double MaxAnglerVelocity = MaxVelocity / TrackWidth;
+        public static double MaxAnglerAccel = Math.toRadians(180);
 
         public final static double odometry_wheel_ticks_to_meters = HorizontalOdometryWheelDiameter * Math.PI / ticks_per_revolution;
 
