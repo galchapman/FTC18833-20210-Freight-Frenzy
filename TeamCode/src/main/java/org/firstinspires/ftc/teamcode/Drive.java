@@ -147,30 +147,11 @@ public abstract class Drive extends CommandBasedTeleOp
         telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
         telemetry.addData("has freight", intakeSubsystem::hasFreight);
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
-        telemetry.update();
-
-//        TelemetryPacket init_telemetry_packet = new TelemetryPacket();
-//        DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
-//        FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
+        telemetry.addData("LineColorSensorBrightness:", driveTrain::getLineColorSensorBrightness);
 
         new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
 
-//        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
-
-//        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
-        telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
-        telemetry.addData("r pos", driveTrain::getFrontRightPosition);
-//        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
-
-        driveTrain.setPose(new Pose2d(0.03, -1.63, Math.toRadians(90)));
-
-        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE);
-//        telemetry.addData("pattern", () -> ledSubsystem.getPattern().name());
-//        gp1.dpad_up().whenPressed(() -> ledSubsystem.next());
-//        gp1.dpad_down().whenPressed(() -> ledSubsystem.previous());
-
-        telemetry.addData("left distance", driveTrain::getLeftDistance);
-        telemetry.addData("right distance", driveTrain::getRightDistance);
+        telemetry.update();
     }
 
     public abstract void updateFtcDashboardTelemetry(TelemetryPacket packet);

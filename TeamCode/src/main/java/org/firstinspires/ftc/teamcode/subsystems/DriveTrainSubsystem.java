@@ -20,6 +20,8 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -68,6 +70,8 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     private final Rev2mDistanceSensor m_leftDistanceSensor;
     private final Rev2mDistanceSensor m_rightDistanceSensor;
 
+    private final ColorSensor m_ColorSensor;
+
     private final BNO055IMU imu;
 
     public static PIDCoefficients FORWARD_PID = new PIDCoefficients(4, 0, 0);
@@ -105,6 +109,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         m_leftDistanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "LeftDistanceSensor");
         m_rightDistanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "RightDistanceSensor");
+        m_ColorSensor = hardwareMap.get(ColorSensor.class, "LineColorSensor");
         // IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
@@ -386,6 +391,10 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public double getHeading() {
         return getRawExternalHeading() + angleOffset;
+    }
+
+    public int getLineColorSensorBrightness(){
+        return m_ColorSensor.alpha();
     }
 
     public void setPose(Pose2d pose) {
