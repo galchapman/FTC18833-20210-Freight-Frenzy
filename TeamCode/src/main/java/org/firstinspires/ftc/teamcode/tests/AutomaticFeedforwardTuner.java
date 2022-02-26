@@ -34,7 +34,7 @@ import java.util.List;
 public class AutomaticFeedforwardTuner extends LinearOpModeWithCommands {
     public static double MAX_POWER = 1;
     public static double DISTANCE = 2.75; // meter
-    public static double MAX_VELOCITY = Constants.DriveTrainConstants.MaxSpeed;
+    public static double MAX_VELOCITY = Constants.DriveTrainConstants.MaxVelocity;
 
     private DriveTrainSubsystem drive;
 

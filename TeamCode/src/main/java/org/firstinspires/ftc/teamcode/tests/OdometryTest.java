@@ -65,6 +65,8 @@ public class OdometryTest extends CommandBasedTeleOp {
         RobotUniversal.telemetryPacketUpdater = (packet) -> {
             packet.put("left", driveTrain.getFrontLeftPosition());
             packet.put("right", driveTrain.getFrontRightPosition());
+            packet.put("left distance", driveTrain.getLeftDistance());
+            packet.put("right distance", driveTrain.getRightDistance());
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
         };
     }

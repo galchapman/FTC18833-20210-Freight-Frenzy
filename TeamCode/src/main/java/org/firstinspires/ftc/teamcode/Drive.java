@@ -94,7 +94,6 @@ public abstract class Drive extends CommandBasedTeleOp
         armSubsystem.setVerticalPosition(0.6);
 
         tankDriveCommand = new TankDriveCommand(driveTrain, () -> -gamepad1.left_stick_y * getDriveSpeed(), () -> -gamepad1.right_stick_y * getDriveSpeed());
-        arcadeDriveCommand = new ArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_x, () -> -gamepad1.left_stick_y, () -> gamepad1.right_stick_x);
         driveLeftCommand = new GeneralDriveLeftCommand(driveTrain, () -> -gamepad1.left_stick_y);
         driveRightCommand = new GeneralDriveRightCommand(driveTrain, () -> -gamepad1.right_stick_y);
 
@@ -114,11 +113,11 @@ public abstract class Drive extends CommandBasedTeleOp
 
         // DriveTrain commands
         driveTrain.setDefaultCommand(tankDriveCommand);
-        gp1.x().whileHeld(arcadeDriveCommand);
-        gp1.dpad_left().whileHeld(driveLeftCommand);
-        gp1.left_bumper().whileHeld(driveLeftCommand);
-        gp1.dpad_right().whileHeld(driveRightCommand);
-        gp1.right_bumper().whileHeld(driveRightCommand);
+//        gp1.x().whileHeld(arcadeDriveCommand);
+//        gp1.dpad_left().whileHeld(driveLeftCommand);
+//        gp1.left_bumper().whileHeld(driveLeftCommand);
+//        gp1.dpad_right().whileHeld(driveRightCommand);
+//        gp1.right_bumper().whileHeld(driveRightCommand);
         // Lift commands
         liftSubsystem.setDefaultCommand(raiseLiftCommand);
         // Arm command
@@ -156,14 +155,14 @@ public abstract class Drive extends CommandBasedTeleOp
 
         new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
 
-        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
+//        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
 
 //        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
         telemetry.addData("l pos", driveTrain::getFrontLeftPosition);
         telemetry.addData("r pos", driveTrain::getFrontRightPosition);
 //        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
 
-        driveTrain.setPoseEstimate(new Pose2d(0.03, -1.63, Math.toRadians(90)));
+        driveTrain.setPose(new Pose2d(0.03, -1.63, Math.toRadians(90)));
 
         ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE);
 //        telemetry.addData("pattern", () -> ledSubsystem.getPattern().name());

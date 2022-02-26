@@ -44,7 +44,7 @@ public abstract class LoadedAuto extends BaseAuto {
     public void initialize() {
         autoLoader = new AutoLoader();
         trajectoryLoader = new TrajectoryLoader(trajectoriesPath);
-        driveTrain.setPoseEstimate(start);
+        driveTrain.setPose(start);
 
         trajectories = trajectoryLoader.getTrajectories(driveTrain::trajectoryBuilder);
 
@@ -65,7 +65,7 @@ public abstract class LoadedAuto extends BaseAuto {
         autoLoader.interpreter.registerCommand("angle.update", new ZeroArgCommand<>(() -> new InstantCommand(
                 () -> {
                     Pose2d pose2d = driveTrain.getPoseEstimate();
-                    driveTrain.setPoseEstimate(new Pose2d(pose2d.getX(), pose2d.getY(), driveTrain.getHeading() - headingOffset));
+                    driveTrain.setPose(new Pose2d(pose2d.getX(), pose2d.getY(), driveTrain.getHeading() - headingOffset));
                 })));
 
         autoLoader.interpreter.registerCommand("door", new EnumArgCommand<>(IntakeSubsystem.DoorState.class, this::setDoor));
