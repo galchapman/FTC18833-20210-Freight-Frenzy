@@ -130,8 +130,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_FrontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         m_RearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        // Encoders
-
+        setPIDFCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, DriveTrainConstants.pidfCoefficients);
 
         // Odometry
         setOdometryPosition(OdometryPosition.Up);
@@ -212,6 +211,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
             accel = getLeftVelocity() / (time - lt) * 1000000000;
             lt = time;
         }
+    }
+
+    public void setPIDFCoefficients(DcMotor.RunMode mode, PIDFCoefficients pidfCoefficients) {
+        m_FrontLeftMotor.setPIDFCoefficients(mode, pidfCoefficients);
+        m_RearLeftMotor.setPIDFCoefficients(mode, pidfCoefficients);
+        m_FrontRightMotor.setPIDFCoefficients(mode, pidfCoefficients);
+        m_RearRightMotor.setPIDFCoefficients(mode, pidfCoefficients);
     }
 
     public void setOdometryPosition(OdometryPosition position) {

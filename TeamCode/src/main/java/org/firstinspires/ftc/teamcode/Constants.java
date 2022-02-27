@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.opencv.core.Rect;
 
@@ -40,6 +41,8 @@ public final class Constants {
         public final static double kV = 0.5903;
         public final static double kStatic = 0.12282;
         public final static double kA = 0.00256;
+
+        public static PIDFCoefficients pidfCoefficients = new PIDFCoefficients(0, 0, 0, kF);
 
         @Config
         public final static class OdometryConstants {
