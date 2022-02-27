@@ -5,8 +5,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.opencv.core.Rect;
 
-import java.util.function.DoubleFunction;
-
 public final class Constants {
     public static final class MotorConstants {
         public static final class RevHDHexMotor {
@@ -20,6 +18,7 @@ public final class Constants {
         }
     }
 
+    @Config
     public static final class DriveTrainConstants {
         public final static double ticks_per_revolution =
                 MotorConstants.REVThroughBoreEncoder.ticks_per_revolution;
@@ -29,20 +28,17 @@ public final class Constants {
 
         public final static double GearRatio = 20;
 
-        public static double TrackWidth = 0.259;
-        public static double MaxVelocity = MotorConstants.RevHDHexMotor.revolution_per_second / GearRatio * WheelDiameter * Math.PI;
-        public static double MaxAccel = 15.079;
-        public static double MaxAnglerVelocity = MaxVelocity / TrackWidth;
-        public static double MaxAnglerAccel = Math.toRadians(180);
+        public final static double TrackWidth = 0.259;
+        public final static double MaxVelocity = 1.45; //MotorConstants.RevHDHexMotor.revolution_per_second / GearRatio * WheelDiameter * Math.PI;
+        public static double MaxAccel = 4;
+        public final static double MaxAnglerVelocity = MaxVelocity / TrackWidth;
+        public final static double MaxAnglerAccel = Math.toRadians(180);
 
         public final static double odometry_wheel_ticks_to_meters = HorizontalOdometryWheelDiameter * Math.PI / ticks_per_revolution;
 
-        public final static DoubleFunction<Integer> m_to_ticks = (double m) -> (int)(m / WheelDiameter / Math.PI * ticks_per_revolution);
-        public final static DoubleFunction<Double> ticks_to_m = (double ticks) -> ticks * WheelDiameter * Math.PI / ticks_per_revolution;
-
-        public final static double kV = 0.74243;
-        public final static double kStatic = 0.09980;
-        public final static double kA = 0.00184;
+        public final static double kV = 0.5903;
+        public final static double kStatic = 0.12282;
+        public final static double kA = 0.00256;
 
         @Config
         public final static class OdometryConstants {

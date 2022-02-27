@@ -7,12 +7,12 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.commandftc.RobotUniversal;
 import org.commandftc.opModes.LinearOpModeWithCommands;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.lib.LoggingUtil;
 import org.firstinspires.ftc.teamcode.lib.RegressionUtil;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
 import java.util.ArrayList;
@@ -41,13 +41,13 @@ public class AutomaticFeedforwardTuner extends LinearOpModeWithCommands {
     @Override
     public void init_subsystems() {
         drive = new DriveTrainSubsystem();
-        new ArmSubsystem().setVerticalPosition(1);
     }
 
     @Override
     public void runOpMode() {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        RobotUniversal.telemetryPacketUpdater = (ignored) -> {}; // Stop TrajectorySequenceRunner
 
         NanoClock clock = NanoClock.system();
 
