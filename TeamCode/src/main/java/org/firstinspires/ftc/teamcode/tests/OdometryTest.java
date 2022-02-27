@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+@Disabled
 @TeleOp
 public class OdometryTest extends CommandBasedTeleOp {
     DriveTrainSubsystem driveTrain;
@@ -63,8 +65,8 @@ public class OdometryTest extends CommandBasedTeleOp {
         gp1.right_bumper().whileHeld(new GeneralDriveRightCommand(driveTrain, () -> -gamepad1.right_stick_y));
 
         RobotUniversal.telemetryPacketUpdater = (packet) -> {
-            packet.put("left", driveTrain.getFrontLeftPosition());
-            packet.put("right", driveTrain.getFrontRightPosition());
+            packet.put("left", driveTrain.getLeftPosition());
+            packet.put("right", driveTrain.getRightPosition());
             packet.put("left distance", driveTrain.getLeftDistance());
             packet.put("right distance", driveTrain.getRightDistance());
             FtcDashboard.getInstance().sendTelemetryPacket(packet);

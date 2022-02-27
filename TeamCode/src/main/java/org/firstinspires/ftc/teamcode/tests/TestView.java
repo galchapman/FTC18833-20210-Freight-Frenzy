@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.tests;
 import android.graphics.Bitmap;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -19,6 +20,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.camera_height;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.camera_width;
 
+@Disabled
 @TeleOp
 public class TestView extends OpMode {
     private OpenCvCamera camera;
