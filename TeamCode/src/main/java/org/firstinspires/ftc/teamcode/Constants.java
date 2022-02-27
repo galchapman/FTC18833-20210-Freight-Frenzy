@@ -10,7 +10,7 @@ public final class Constants {
         public static final class RevHDHexMotor {
             public static final int ticks_per_revolution = 28;
             public static final int freeSpeedRPM = 6000;
-            public static final int revolution_per_second = freeSpeedRPM / 60;
+            public static final int revolutions_per_second = freeSpeedRPM / 60;
         }
 
         public static final class REVThroughBoreEncoder {
