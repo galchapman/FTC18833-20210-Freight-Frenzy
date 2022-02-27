@@ -26,16 +26,17 @@ public final class Constants {
         public final static double WheelDiameter = 0.096;
         public final static double HorizontalOdometryWheelDiameter = 0.06;
 
-        public final static double GearRatio = 20;
+        public final static double GearRatio = 19.2;
 
         public final static double TrackWidth = 0.259;
-        public final static double MaxVelocity = 1.45; //MotorConstants.RevHDHexMotor.revolution_per_second / GearRatio * WheelDiameter * Math.PI;
-        public static double MaxAccel = 4;
+        public final static double MaxVelocity = 1.463453;
+        public final static double MaxAccel = 2;
         public final static double MaxAnglerVelocity = MaxVelocity / TrackWidth;
         public final static double MaxAnglerAccel = Math.toRadians(180);
 
         public final static double odometry_wheel_ticks_to_meters = HorizontalOdometryWheelDiameter * Math.PI / ticks_per_revolution;
 
+        public final static double kF = 15.87153;
         public final static double kV = 0.5903;
         public final static double kStatic = 0.12282;
         public final static double kA = 0.00256;
@@ -99,5 +100,9 @@ public final class Constants {
         public static double SaturationThresholdHigh = 255;
         public static double ValueThresholdLow = 37;
         public static double ValueThresholdHigh = 255;
+    }
+
+    public static double getMotorVelocityF(double MaxTicksPerSecond) {
+        return 32767 / MaxTicksPerSecond;
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tests;
+package org.firstinspires.ftc.teamcode.tests.roadrunner;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.commandftc.RobotUniversal;
 import org.commandftc.opModes.LinearOpModeWithCommands;
@@ -29,7 +30,7 @@ import java.util.List;
  *      regression.
  */
 @Config
-//@Disabled
+@Disabled
 @Autonomous(group = "tests")
 public class AutomaticFeedforwardTuner extends LinearOpModeWithCommands {
     public static double MAX_POWER = 1;
