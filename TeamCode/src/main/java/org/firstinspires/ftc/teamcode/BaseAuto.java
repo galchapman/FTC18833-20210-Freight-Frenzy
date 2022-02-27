@@ -62,8 +62,6 @@ public abstract class BaseAuto extends CommandBasedAuto {
         TelemetryPacket packet = new TelemetryPacket();
         DashboardUtil.drawRobot(packet.fieldOverlay(), driveTrain.getPoseEstimate());
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
-
-        telemetry.addData("height", liftSubsystem::getHeight);
     }
 
     @Override
@@ -84,7 +82,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     }
 
     protected Command forward(double distance) {
-        return new DriveForwardCommand(driveTrain, driveTrain::getFrontLeftPosition, driveTrain::getFrontRightPosition, distance);
+        return new DriveForwardCommand(driveTrain, driveTrain::getLeftPosition, driveTrain::getRightPosition, distance);
     }
 
     protected Command turn(double angle) {
