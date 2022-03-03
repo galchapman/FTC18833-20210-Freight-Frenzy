@@ -150,14 +150,11 @@ public abstract class Drive extends CommandBasedTeleOp
         telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
         telemetry.addData("has freight", intakeSubsystem::hasFreight);
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
-        telemetry.update();
-
-//        TelemetryPacket init_telemetry_packet = new TelemetryPacket();
-//        DashboardUtil.drawRobot(init_telemetry_packet.fieldOverlay(), driveTrain.getPoseEstimate());
-//        FtcDashboard.getInstance().sendTelemetryPacket(init_telemetry_packet);
+        telemetry.addData("LineColorSensorBrightness", driveTrain::getLineColorSensorBrightness);
 
         new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0 && getRuntime() - lastRumble > 1)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500); lastRumble=getRuntime();});
 
+        telemetry.update();
 //        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
 
 //        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
