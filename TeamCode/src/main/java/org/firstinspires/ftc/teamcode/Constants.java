@@ -29,7 +29,7 @@ public final class Constants {
         public final static double GearRatio = 19.2;
 
         public final static double TrackWidth = 0.259;
-        public final static double MaxVelocity = 1.463453 * 0.9; // Its recommended to put max velocity to 90% of the true value
+        public final static double MaxVelocity = 1.463453; // Its recommended to put max velocity to 90% of the true value
         public static double MaxAccel = 2;
         public final static double MaxAnglerVelocity = MaxVelocity / TrackWidth;
         public final static double MaxAnglerAccel = Math.toRadians(180);

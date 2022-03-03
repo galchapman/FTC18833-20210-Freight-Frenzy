@@ -38,15 +38,18 @@ public class RedDrive extends Drive {
         telemetry.addData("index", ducksSubsystem::getCurrentPosition);
         telemetry.addData("index rotation", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
 
-        Trajectory trajectory = driveTrain.trajectoryBuilder(new Pose2d(0.72, -1.65), true)
-                .strafeTo(new Vector2d(-0.3, -1.20))
+        Trajectory trajectorySequence = driveTrain.trajectoryBuilder(new Pose2d(0.835, -1.663, 0), true)
+                .splineTo(new Vector2d(0.3, -1.663), 0)
+                .splineTo(new Vector2d(-0.5, -1.20), 0)
                 .build();
 
-        gp1.b().whenHeld(
-                new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.72, -1.65));
+
+        gp1.b().whenActive(
+                new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663));
                     driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
                 }).andThen(
-                        new FollowTrajectoryCommand(driveTrain, trajectory),
+                        new WaitCommand(0.5),
+                        new FollowTrajectoryCommand(driveTrain, trajectorySequence),
                         new InstantCommand(
                                 () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up)))
         );
