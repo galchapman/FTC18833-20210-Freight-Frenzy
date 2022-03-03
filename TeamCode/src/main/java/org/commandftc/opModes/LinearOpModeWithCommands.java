@@ -204,7 +204,6 @@ public abstract class LinearOpModeWithCommands extends OpMode {
     final public void loop() {
         handleLoop();
         CommandScheduler.getInstance().run();
-        telemetry.update();
     }
 
     /**

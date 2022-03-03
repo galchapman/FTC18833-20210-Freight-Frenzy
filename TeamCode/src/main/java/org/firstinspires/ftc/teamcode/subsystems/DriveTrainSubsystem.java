@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -73,9 +74,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     private final BNO055IMU imu;
 
-    public static PIDCoefficients FORWARD_PID = new PIDCoefficients(0, 0, 0); // 4
-    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(0, 0, 0); // 7
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0); // 5
+    public static PIDCoefficients FORWARD_PID = new PIDCoefficients(4, 0, 0); // 4
+    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(7, 0, 0); // 7
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0); // 5
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -85,6 +86,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     public boolean trajectoryControlled;
 
     private double angleOffset;
+
+    // if Periodic running on it's own thread
+    public final AtomicBoolean isPeriodicThread = new AtomicBoolean(false);
 
     @NonNull
     @Override
@@ -106,11 +110,11 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         super(kV, kA, kStatic, TrackWidth);
         // Hardware
         m_FrontLeftMotor  = (DcMotorEx) hardwareMap.dcMotor.get("FrontLeftDriveMotor");
-        m_leftOdometryEncoder = new Encoder(m_FrontLeftMotor);
         m_RearLeftMotor   = (DcMotorEx) hardwareMap.dcMotor.get("RearLeftDriveMotor");
         m_FrontRightMotor = (DcMotorEx) hardwareMap.dcMotor.get("FrontRightDriveMotor");
-        m_rightOdometryEncoder = new Encoder(m_FrontRightMotor);
         m_RearRightMotor  = (DcMotorEx) hardwareMap.dcMotor.get("RearRightDriveMotor");
+        m_leftOdometryEncoder = new Encoder(m_FrontLeftMotor);
+        m_rightOdometryEncoder = new Encoder(m_FrontRightMotor);
         m_horizontalOdometryEncoder = new Encoder((DcMotorEx) hardwareMap.dcMotor.get("IntakeMotor"));
         m_odometryServo = hardwareMap.servo.get("OdometryServo");
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -171,7 +175,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 //        });
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
-                new Pose2d(0.01, 0.01, Math.toRadians(5)), 0.5);
+                new Pose2d(0.02, 0.02, Math.toRadians(5)), 0.5);
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
         trajectoryControlled = RobotUniversal.opModeType == RobotUniversal.OpModeType.Autonomous; // check if Opmode is autonomous
@@ -181,9 +185,16 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public double accel = 0;
     long lt = 0;
+    double lv = 0;
 
-    @Override
+
     public void periodic() {
+        if (!isPeriodicThread.get()) {
+            periodic_impl();
+        }
+    }
+
+    public void periodic_impl() {
         if (trajectoryControlled) {
             updatePoseEstimate();
             DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
@@ -204,11 +215,14 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         }
         lastAngle = angle;
 
-        if (getPoseVelocity() != null) {
-            long time = System.nanoTime();
-            accel = getLeftVelocity() / (time - lt) * 1000000000;
-            lt = time;
+        long time = System.nanoTime();
+        double velocity = getLeftVelocity();
+        double current_accel = (velocity - lv) / (time - lt) * 1000000000;
+        if (Math.abs(current_accel) < 2) {
+            accel = current_accel;
         }
+        lt = time;
+        lv = velocity;
     }
 
     public void setOdometryPosition(OdometryPosition position) {
@@ -322,6 +336,22 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         return getHorizontalEncoder() * odometry_wheel_ticks_to_meters;
     }
 
+    public double getFrontLeftPower() {
+        return m_FrontLeftMotor.getPower();
+    }
+
+    public double getRearLeftPower() {
+        return m_RearLeftMotor.getPower();
+    }
+
+    public double getFrontRightPower() {
+        return m_FrontRightMotor.getPower();
+    }
+
+    public double getRearRightPower() {
+        return m_RearRightMotor.getPower();
+    }
+
     public double getLeftVelocity() {
         return m_leftOdometryEncoder.getCorrectedVelocity() * odometry_wheel_ticks_to_meters;
     }
@@ -356,7 +386,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getAngularVelocity().zRotationRate;
+        return (double) imu.getAngularVelocity().xRotationRate;
     }
 
     @Override

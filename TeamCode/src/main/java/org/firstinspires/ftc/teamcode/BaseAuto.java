@@ -10,6 +10,7 @@ import org.commandftc.opModes.CommandBasedAuto;
 import org.firstinspires.ftc.teamcode.commands.drive.DriveForwardCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectorySequenceCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.RoadRunnerThread;
 import org.firstinspires.ftc.teamcode.commands.drive.StrafeCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.TurnGyroCommand;
 import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
@@ -35,6 +36,8 @@ public abstract class BaseAuto extends CommandBasedAuto {
     protected VisionSubsystem vision;
     protected StartingPosition startingPosition;
 
+    protected RoadRunnerThread thread;
+
     protected BaseAuto(StartingPosition startingPosition) {
         this.startingPosition = startingPosition;
     }
@@ -50,6 +53,8 @@ public abstract class BaseAuto extends CommandBasedAuto {
         vision = new VisionSubsystem();
         ducksSubsystem = new DucksSubsystem();
 
+        thread = new RoadRunnerThread(driveTrain);
+
         driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
         armSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         armSubsystem.setPower(1);
@@ -59,15 +64,25 @@ public abstract class BaseAuto extends CommandBasedAuto {
 
         initialize();
 
-        TelemetryPacket packet = new TelemetryPacket();
-        DashboardUtil.drawRobot(packet.fieldOverlay(), driveTrain.getPoseEstimate());
-        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        TelemetryPacket temp_packet = new TelemetryPacket();
+        DashboardUtil.drawRobot(temp_packet.fieldOverlay(), driveTrain.getPoseEstimate());
+        FtcDashboard.getInstance().sendTelemetryPacket(temp_packet);
+
+        RobotUniversal.telemetryPacketUpdater = (packet) -> {
+            packet.put("FrontLeftPower", driveTrain.getFrontLeftPower());
+            packet.put("RearLeftPower", driveTrain.getRearLeftPower());
+            packet.put("FrontRightPower", driveTrain.getFrontRightPower());
+            packet.put("RearRightPower", driveTrain.getRearRightPower());
+            packet.put("isBusy", driveTrain.isBusy());
+
+            FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        };
     }
 
     @Override
     public void onStart() {
+        thread.schedule();
         vision.stop();
-
         armSubsystem.setVerticalPosition(1);
     }
 

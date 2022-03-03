@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,6 +18,7 @@ public class BlueDrive extends Drive {
     public static double time0 = 0.2;
     public static double time1 = 0.7;
     public static double rotations = 1.3;
+    public static double acceleration = 1;
 
     @Override
     public void assign() {
@@ -25,14 +27,21 @@ public class BlueDrive extends Drive {
         arcadeDriveCommand = new ArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_x, Math.toDegrees(90));
 
 
-        indexDuckCommand = new FancyDuckIndexCommand(ducksSubsystem, -rotations, power0, power1, time0)
+        indexDuckCommand = new FancyDuckIndexCommand(ducksSubsystem, power0 , power1, acceleration)
                 .andThen(new WaitCommand(time1));
 
-        driveTrain.setDefaultCommand(arcadeDriveCommand);
+//        driveTrain.setDefaultCommand(arcadeDriveCommand);
 
-        gp1.y().whileHeld(indexDuckCommand, false);
+        gp1.y().whileHeld(indexDuckCommand);
+
+        telemetry.addData("ducks spins", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
+        telemetry.addData("ducks power", ducksSubsystem::getPower);
     }
 
     @Override
-    public void updateFtcDashboardTelemetry(TelemetryPacket packet) {}
+    public void updateFtcDashboardTelemetry(TelemetryPacket packet) {
+        packet.put("ducks spins", ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
+        packet.put("ducks power", ducksSubsystem.getPower());
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+    }
 }

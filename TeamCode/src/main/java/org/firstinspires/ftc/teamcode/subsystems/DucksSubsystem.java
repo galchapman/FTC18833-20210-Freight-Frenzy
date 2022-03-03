@@ -15,7 +15,6 @@ public class DucksSubsystem extends SubsystemBase {
     public DucksSubsystem() {
         m_motor = hardwareMap.dcMotor.get("DucksMotor");
         m_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        m_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_motor.setPower(0);
         m_motor.setTargetPosition(0);
         m_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
