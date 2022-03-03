@@ -3,11 +3,17 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.IndexDuckCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
+import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 @TeleOp(name="Red Drive")
@@ -31,11 +37,25 @@ public class RedDrive extends Drive {
 
         telemetry.addData("index", ducksSubsystem::getCurrentPosition);
         telemetry.addData("index rotation", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
+
+        Trajectory trajectory = driveTrain.trajectoryBuilder(new Pose2d(0.72, -1.65), true)
+                .strafeTo(new Vector2d(-0.3, -1.20))
+                .build();
+
+        gp1.b().whenHeld(
+                new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.72, -1.65));
+                    driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
+                }).andThen(
+                        new FollowTrajectoryCommand(driveTrain, trajectory),
+                        new InstantCommand(
+                                () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up)))
+        );
     }
 
     @Override
     public void updateFtcDashboardTelemetry(TelemetryPacket packet) {
         packet.put("heading", Math.toDegrees(driveTrain.getHeading()));
+        packet.put("velocity", driveTrain.accel);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 }

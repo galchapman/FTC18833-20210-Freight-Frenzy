@@ -33,6 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
         m_doorServo = hardwareMap.servo.get("IntakeDoorServo");
         m_distanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "IntakeSensor");
 
+        m_intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m_intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

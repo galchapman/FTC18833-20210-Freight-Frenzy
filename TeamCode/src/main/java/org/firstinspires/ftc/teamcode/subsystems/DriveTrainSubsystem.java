@@ -9,7 +9,7 @@ import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
+import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
@@ -31,6 +31,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.commandftc.RobotUniversal;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
+import org.firstinspires.ftc.teamcode.lib.Encoder;
 import org.firstinspires.ftc.teamcode.lib.drive.ArcadeDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.HorizontalDrive;
 import org.firstinspires.ftc.teamcode.lib.drive.TankDrive;
@@ -40,8 +41,10 @@ import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequenceRunner;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -49,13 +52,11 @@ import static org.commandftc.RobotUniversal.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.MaxAccel;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.MaxAnglerVelocity;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.MaxVelocity;
-import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.OdometryConstants;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.TrackWidth;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.kA;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.kV;
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.odometry_wheel_ticks_to_meters;
-import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.ticks_to_m;
 
 @Config
 public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, ArcadeDrive, HorizontalDrive {
@@ -64,7 +65,10 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     private final DcMotorEx m_FrontRightMotor;
     private final DcMotorEx m_RearRightMotor;
 
-    private final DcMotorEx m_horizontalEncoder;
+    private final Encoder m_leftOdometryEncoder;
+    private final Encoder m_rightOdometryEncoder;
+    private final Encoder m_horizontalOdometryEncoder;
+
     private final Servo m_odometryServo;
 
     private final Rev2mDistanceSensor m_leftDistanceSensor;
@@ -74,9 +78,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     private final BNO055IMU imu;
 
-    public static PIDCoefficients FORWARD_PID = new PIDCoefficients(4, 0, 0);
-    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(7, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0);
+    public static PIDCoefficients FORWARD_PID = new PIDCoefficients(4, 0, 0); // 4
+    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(7, 0, 0); // 7
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0); // 5
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -86,6 +90,15 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     public boolean trajectoryControlled;
 
     private double angleOffset;
+
+    // if Periodic running on it's own thread
+    public final AtomicBoolean isPeriodicThread = new AtomicBoolean(false);
+
+    @NonNull
+    @Override
+    public List<Double> getWheelPositions() {
+        return new ArrayList<>();
+    }
 
     public enum OdometryPosition {
         Up(1),
@@ -104,7 +117,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_RearLeftMotor   = (DcMotorEx) hardwareMap.dcMotor.get("RearLeftDriveMotor");
         m_FrontRightMotor = (DcMotorEx) hardwareMap.dcMotor.get("FrontRightDriveMotor");
         m_RearRightMotor  = (DcMotorEx) hardwareMap.dcMotor.get("RearRightDriveMotor");
-        m_horizontalEncoder = (DcMotorEx) hardwareMap.dcMotor.get("IntakeMotor");
+        m_leftOdometryEncoder = new Encoder(m_FrontLeftMotor);
+        m_rightOdometryEncoder = new Encoder(m_FrontRightMotor);
+        m_horizontalOdometryEncoder = new Encoder((DcMotorEx) hardwareMap.dcMotor.get("IntakeMotor"));
         m_odometryServo = hardwareMap.servo.get("OdometryServo");
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         m_leftDistanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "LeftDistanceSensor");
@@ -124,46 +139,48 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_FrontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         m_RearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-//        setDrivePIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
-//                new PIDFCoefficients(-0.691699604743083, 0, 0, 0, MotorControlAlgorithm.LegacyPID));
-
-        m_horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        m_horizontalEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        setTargetPositions(0, 0, 0, 0);
-
         // Odometry
         setOdometryPosition(OdometryPosition.Up);
-//        setLocalizer(new TwoTrackingWheelLocalizer(
-//                Arrays.asList(
-//                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
-//                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
-//                )) {
-//            @NonNull
-//            @Override
-//            public List<Double> getWheelPositions() {
-//                return Arrays.asList(getFrontLeftPosition(), getHorizontalPosition());
-//            }
-//
-//            @Override
-//            public double getHeading() {
-//                return DriveTrainSubsystem.this.getHeading();
-//            }
-//        });
-        setLocalizer(new ThreeTrackingWheelLocalizer(Arrays.asList(
-                        OdometryConstants.frontLeftWheelPosition,
-                        OdometryConstants.frontRightWheelPosition,
-                        OdometryConstants.horizontalWheelPosition
-        )) {
+        setLocalizer(new TwoTrackingWheelLocalizer(
+                Arrays.asList(
+                        DriveTrainConstants.OdometryConstants.frontLeftWheelPosition,
+                        DriveTrainConstants.OdometryConstants.horizontalWheelPosition
+                )) {
             @NonNull
             @Override
             public List<Double> getWheelPositions() {
-                return Arrays.asList(getFrontLeftPosition(), getFrontRightPosition(), getHorizontalPosition());
+                return Arrays.asList(getLeftPosition(), getHorizontalPosition());
+            }
+
+            @Override
+            public double getHeading() {
+                return DriveTrainSubsystem.this.getHeading();
+            }
+
+            @Override
+            public Double getHeadingVelocity() {
+                return (double) imu.getAngularVelocity().zRotationRate;
+            }
+
+            @Override
+            public List<Double> getWheelVelocities() {
+                return Arrays.asList(getLeftVelocity(), getHorizontalVelocity());
             }
         });
+//        setLocalizer(new ThreeTrackingWheelLocalizer(Arrays.asList(
+//                        OdometryConstants.frontLeftWheelPosition,
+//                        OdometryConstants.frontRightWheelPosition,
+//                        OdometryConstants.horizontalWheelPosition
+//        )) {
+//            @NonNull
+//            @Override
+//            public List<Double> getWheelPositions() {
+//                return Arrays.asList(getFrontLeftPosition(), getFrontRightPosition(), getHorizontalPosition());
+//            }
+//        });
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
-                new Pose2d(0.01, 0.01, Math.toRadians(5)), 0.5);
+                new Pose2d(0.02, 0.02, Math.toRadians(5)), 0.5);
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
         trajectoryControlled = RobotUniversal.opModeType == RobotUniversal.OpModeType.Autonomous; // check if Opmode is autonomous
@@ -171,8 +188,18 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         CommandScheduler.getInstance().registerSubsystem(this); // Because we aren't extending SubsystemBase
     }
 
-    @Override
+    public double accel = 0;
+    long lt = 0;
+    double lv = 0;
+
+
     public void periodic() {
+        if (!isPeriodicThread.get()) {
+            periodic_impl();
+        }
+    }
+
+    public void periodic_impl() {
         if (trajectoryControlled) {
             updatePoseEstimate();
             DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
@@ -192,6 +219,15 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
             spinCount++;
         }
         lastAngle = angle;
+
+        long time = System.nanoTime();
+        double velocity = getLeftVelocity();
+        double current_accel = (velocity - lv) / (time - lt) * 1000000000;
+        if (Math.abs(current_accel) < 2) {
+            accel = current_accel;
+        }
+        lt = time;
+        lv = velocity;
     }
 
     public void setOdometryPosition(OdometryPosition position) {
@@ -281,112 +317,56 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_RearRightMotor.setPower(power);
     }
 
-    public int getFrontLeftEncoder() {
-        return -m_FrontLeftMotor.getCurrentPosition();
+    public int getLeftEncoder() {
+        return m_leftOdometryEncoder.getCurrentPosition();
     }
 
-    public int getRearLeftEncoder() {
-        return m_RearLeftMotor.getCurrentPosition();
-    }
-
-    public int getFrontRightEncoder() {
-        return -m_FrontRightMotor.getCurrentPosition();
-    }
-
-    public int getRearRightEncoder() {
-        return m_RearRightMotor.getCurrentPosition();
-    }
-
-    public int getFrontLeftEncoderTarget() {
-        return m_FrontLeftMotor.getTargetPosition();
-    }
-
-    public int getRearLeftEncoderTarget() {
-        return m_RearLeftMotor.getTargetPosition();
-    }
-
-    public int getFrontRightEncoderTarget() {
-        return m_FrontRightMotor.getTargetPosition();
-    }
-
-    public int getRearRightEncoderTarget() {
-        return m_RearRightMotor.getTargetPosition();
-    }
-
-    public int getLeftEncodersAvg() {
-        return (getFrontLeftEncoder() + getRearLeftEncoder()) / 2;
-    }
-
-    public int getRightEncodersAvg() {
-        return (getFrontRightEncoder() + getRearRightEncoder()) / 2;
-    }
-
-    public double getFrontLeftPosition() {
-        return getFrontLeftEncoder() * odometry_wheel_ticks_to_meters;
-    }
-
-    public double getRearLeftPosition() {
-        return ticks_to_m.apply(getRearLeftEncoder());
-    }
-
-    public double getFrontRightPosition() {
-        return getFrontRightEncoder() * odometry_wheel_ticks_to_meters;
-    }
-
-    public double getRearRightPosition() {
-        return ticks_to_m.apply(getRearRightEncoder());
-    }
-
-    public double getLeftPositionsAvg() {
-        return (getFrontLeftPosition() + getRearLeftPosition()) / 2;
-    }
-
-    public double getRightPositionsAvg() {
-        return (getFrontRightPosition() + getRearRightPosition()) / 2;
-    }
-
-    public double getFrontLeftVelocity() {
-        return DriveTrainConstants.ticks_to_m.apply(m_FrontLeftMotor.getVelocity());
-    }
-
-    public double getRearLeftVelocity() {
-        return DriveTrainConstants.ticks_to_m.apply(m_RearLeftMotor.getVelocity());
-    }
-
-    public double getFrontRightVelocity() {
-        return DriveTrainConstants.ticks_to_m.apply(m_FrontRightMotor.getVelocity());
-    }
-
-    public double getRearRightVelocity() {
-        return DriveTrainConstants.ticks_to_m.apply(m_RearRightMotor.getVelocity());
-    }
-
-    public double getLeftVelocity() {
-        return (getFrontLeftVelocity() + getRearLeftVelocity()) / 2;
-    }
-
-    public double getRightVelocity() {
-        return (getFrontRightVelocity() + getRearRightVelocity()) / 2;
+    public int getRightEncoder() {
+        return m_rightOdometryEncoder.getCurrentPosition();
     }
 
     public int getHorizontalEncoder() {
-        return m_horizontalEncoder.getCurrentPosition();
+        return m_horizontalOdometryEncoder.getCurrentPosition();
+    }
+
+    public double getLeftPosition() {
+        return getLeftEncoder() * odometry_wheel_ticks_to_meters;
+    }
+
+    public double getRightPosition() {
+        return getRightEncoder() * odometry_wheel_ticks_to_meters;
     }
 
     public double getHorizontalPosition() {
-        return m_horizontalEncoder.getCurrentPosition() * odometry_wheel_ticks_to_meters;
+        return getHorizontalEncoder() * odometry_wheel_ticks_to_meters;
+    }
+
+    public double getFrontLeftPower() {
+        return m_FrontLeftMotor.getPower();
+    }
+
+    public double getRearLeftPower() {
+        return m_RearLeftMotor.getPower();
+    }
+
+    public double getFrontRightPower() {
+        return m_FrontRightMotor.getPower();
+    }
+
+    public double getRearRightPower() {
+        return m_RearRightMotor.getPower();
+    }
+
+    public double getLeftVelocity() {
+        return m_leftOdometryEncoder.getCorrectedVelocity() * odometry_wheel_ticks_to_meters;
+    }
+
+    public double getRightVelocity() {
+        return m_rightOdometryEncoder.getCorrectedVelocity() * odometry_wheel_ticks_to_meters;
     }
 
     public double getHorizontalVelocity() {
-        return m_horizontalEncoder.getVelocity() * odometry_wheel_ticks_to_meters;
-    }
-
-    public void setTargetPositions(int fl, int rl, int fr, int rr) {
-        m_FrontLeftMotor.setTargetPosition(fl);
-        m_RearLeftMotor.setTargetPosition(rl);
-        m_FrontRightMotor.setTargetPosition(fr);
-        m_RearRightMotor.setTargetPosition(rr);
-
+        return m_horizontalOdometryEncoder.getCorrectedVelocity() * odometry_wheel_ticks_to_meters;
     }
 
     public double getHeading() {
@@ -415,13 +395,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getAngularVelocity().zRotationRate;
-    }
-
-    @NonNull
-    @Override
-    public List<Double> getWheelPositions() {
-        return Arrays.asList(getFrontLeftPosition(), getRearLeftPosition(), getFrontRightPosition(), getRearRightPosition());
+        return (double) imu.getAngularVelocity().xRotationRate;
     }
 
     @Override

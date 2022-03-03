@@ -81,6 +81,9 @@ public abstract class Drive extends CommandBasedTeleOp
             GoToScoringPositionCommand.setTarget(liftSubsystem.getHeight(), armSubsystem.getAngle(), armSubsystem.getVerticalPosition());
     }
 
+    // TODO: git god
+    double lastRumble = 0;
+
     @Override
     public void assign() {
         RobotUniversal.telemetryPacketUpdater = Drive.this::updateFtcDashboardTelemetry;
@@ -114,10 +117,10 @@ public abstract class Drive extends CommandBasedTeleOp
         // DriveTrain commands
         driveTrain.setDefaultCommand(tankDriveCommand);
 //        gp1.x().whileHeld(arcadeDriveCommand);
-//        gp1.dpad_left().whileHeld(driveLeftCommand);
-//        gp1.left_bumper().whileHeld(driveLeftCommand);
-//        gp1.dpad_right().whileHeld(driveRightCommand);
-//        gp1.right_bumper().whileHeld(driveRightCommand);
+        gp1.dpad_left().whileHeld(driveLeftCommand);
+        gp1.left_bumper().whileHeld(driveLeftCommand);
+        gp1.dpad_right().whileHeld(driveRightCommand);
+        gp1.right_bumper().whileHeld(driveRightCommand);
         // Lift commands
         liftSubsystem.setDefaultCommand(raiseLiftCommand);
         // Arm command
@@ -147,11 +150,27 @@ public abstract class Drive extends CommandBasedTeleOp
         telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
         telemetry.addData("has freight", intakeSubsystem::hasFreight);
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
-        telemetry.addData("LineColorSensorBrightness:", driveTrain::getLineColorSensorBrightness);
+        telemetry.addData("LineColorSensorBrightness", driveTrain::getLineColorSensorBrightness);
 
-        new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500);});
+        new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0 && getRuntime() - lastRumble > 1)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500); lastRumble=getRuntime();});
 
         telemetry.update();
+//        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
+
+//        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
+        telemetry.addData("l pos", driveTrain::getLeftPosition);
+        telemetry.addData("r pos", driveTrain::getRightPosition);
+//        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
+
+        driveTrain.setPose(new Pose2d(0.03, -1.63, Math.toRadians(90)));
+
+        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE);
+//        telemetry.addData("pattern", () -> ledSubsystem.getPattern().name());
+//        gp1.dpad_up().whenPressed(() -> ledSubsystem.next());
+//        gp1.dpad_down().whenPressed(() -> ledSubsystem.previous());
+
+        telemetry.addData("left distance", driveTrain::getLeftDistance);
+        telemetry.addData("right distance", driveTrain::getRightDistance);
     }
 
     public abstract void updateFtcDashboardTelemetry(TelemetryPacket packet);
