@@ -30,15 +30,14 @@ public final class Constants {
 
         public final static double TrackWidth = 0.259;
         public final static double MaxVelocity = 1.463453; // Its recommended to put max velocity to 90% of the true value
-        public static double MaxAccel = 2;
-        public final static double MaxAnglerVelocity = MaxVelocity / TrackWidth;
-        public final static double MaxAnglerAccel = Math.toRadians(180);
+        public static double MaxAccel = 1.2;
+        public final static double MaxAnglerVelocity = Math.toRadians(360);
 
         public final static double odometry_wheel_ticks_to_meters = HorizontalOdometryWheelDiameter * Math.PI / ticks_per_revolution;
 
         public final static double kV = 0.5903;
         public final static double kStatic = 0.12282;
-        public final static double kA = 0.00256;
+        public final static double kA = 0.1;
 
         @Config
         public final static class OdometryConstants {
@@ -68,7 +67,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double intakeThreshold = 0.05;
+        public static final double intakeThreshold = 0.075;
     }
 
     public static final class DucksConstants {

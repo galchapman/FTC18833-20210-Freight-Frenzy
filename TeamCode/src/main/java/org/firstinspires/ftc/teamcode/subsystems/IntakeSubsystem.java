@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public enum DoorState {
         Open(1),
         Close(0),
-        LowerPlacement(0.3);
+        LowerPlacement(0.4);
 
         public double servoPosition;
         DoorState(double servoPosition) {
@@ -59,7 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void toggleDoor() {
-        m_doorServo.setPosition((DoorState.Close.servoPosition + DoorState.Open.servoPosition) - m_doorServo.getPosition());
+        m_doorServo.setPosition((m_doorServo.getPosition() == DoorState.Close.servoPosition ? DoorState.Open : DoorState.Close).servoPosition);
     }
 
     public double getDistance() {

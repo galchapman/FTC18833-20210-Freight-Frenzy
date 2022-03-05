@@ -20,7 +20,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -94,12 +93,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     // if Periodic running on it's own thread
     public final AtomicBoolean isPeriodicThread = new AtomicBoolean(false);
 
-    @NonNull
-    @Override
-    public List<Double> getWheelPositions() {
-        return new ArrayList<>();
-    }
-
     public enum OdometryPosition {
         Up(1),
         Down(0.45);
@@ -111,7 +104,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public DriveTrainSubsystem() {
-        super(kV, kA, kStatic, TrackWidth);
+        super(kV, kA, kStatic, TrackWidth, 0);
         // Hardware
         m_FrontLeftMotor  = (DcMotorEx) hardwareMap.dcMotor.get("FrontLeftDriveMotor");
         m_RearLeftMotor   = (DcMotorEx) hardwareMap.dcMotor.get("RearLeftDriveMotor");
@@ -128,6 +121,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         // IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imu.initialize(parameters);
         // Initialize drive motors
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -186,6 +180,12 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         trajectoryControlled = RobotUniversal.opModeType == RobotUniversal.OpModeType.Autonomous; // check if Opmode is autonomous
 
         CommandScheduler.getInstance().registerSubsystem(this); // Because we aren't extending SubsystemBase
+    }
+
+    @NonNull
+    @Override
+    public List<Double> getWheelPositions() {
+        return new ArrayList<>();
     }
 
     public double accel = 0;
@@ -500,5 +500,23 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         }
 
         setDrivePower(vel);
+    }
+
+    public double getDriveHeading() {
+        double fl = m_FrontLeftMotor.getPower();
+        double rl = m_RearLeftMotor.getPower();
+        double fr = m_FrontRightMotor.getPower();
+        double rr = m_RearRightMotor.getPower();
+
+        double delta = ((fl + rl) - (fr + rr));
+
+        double a = fl - delta;
+        double b = fr - delta;
+
+        if (a == 0 && b == 0) {
+            return Double.NaN;
+        } else {
+            return Math.atan2(b, a)-Math.PI/4;
+        }
     }
 }

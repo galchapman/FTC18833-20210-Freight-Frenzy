@@ -9,12 +9,15 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.IndexDuckCommand;
+import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 @TeleOp(name="Red Drive")
 @Config
@@ -38,26 +41,33 @@ public class RedDrive extends Drive {
         telemetry.addData("index", ducksSubsystem::getCurrentPosition);
         telemetry.addData("index rotation", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
 
-        Trajectory trajectorySequence = driveTrain.trajectoryBuilder(new Pose2d(0.835, -1.663, 0), true)
-                .splineTo(new Vector2d(0.3, -1.663), 0)
-                .splineTo(new Vector2d(-0.5, -1.20), 0)
+        Trajectory trajectorySequence = driveTrain.trajectoryBuilder(new Pose2d(0.4, -1.663, 0), true)
+                .strafeTo(new Vector2d(-0.275, -1.175))
                 .build();
 
+        gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.575));
 
-        gp1.b().whenActive(
-                new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663));
-                    driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
-                }).andThen(
+
+        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100
+                && Math.abs(Math.PI + (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663));
+                            driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);}),
                         new WaitCommand(0.5),
-                        new FollowTrajectoryCommand(driveTrain, trajectorySequence),
-                        new InstantCommand(
-                                () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up)))
+                        new InstantCommand(() ->
+                                    new FollowTrajectoryCommand(driveTrain, trajectorySequence).andThen(
+                                            new InstantCommand(
+                                                    () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up))
+                                    ).schedule()
+                                )
+                )
         );
     }
 
     @Override
     public void updateFtcDashboardTelemetry(TelemetryPacket packet) {
         packet.put("heading", Math.toDegrees(driveTrain.getHeading()));
+        packet.put("drive heading", Math.toDegrees(driveTrain.getDriveHeading() + driveTrain.getHeading()));
         packet.put("velocity", driveTrain.accel);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }

@@ -60,8 +60,8 @@ public abstract class Drive extends CommandBasedTeleOp
 
     private double getDriveSpeed() {
         if (gamepad1.left_trigger > 0)          return 0.5;
-        else if (gamepad1.right_trigger > 0)    return 1;
-        else                                    return 0.75;
+        else if (gamepad1.right_trigger > 0)    return 0.75;
+        else                                    return 1;
     }
 
     private double getArmRotationPower() {
@@ -139,7 +139,8 @@ public abstract class Drive extends CommandBasedTeleOp
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
         gp2.y().whenHeld(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new WaitCommand(0.1)).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.1)));
-
+        // Capping element
+        gp1.x().whenPressed(new InstantCommand(() -> intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.LowerPlacement)));
 
         // Telemetry
         // No need for anything but update in loop because use of suppliers

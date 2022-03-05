@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.RoadRunnerThread;
 import org.firstinspires.ftc.teamcode.commands.drive.StrafeCommand;
-import org.firstinspires.ftc.teamcode.commands.drive.TurnGyroCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.TurnCommand;
 import org.firstinspires.ftc.teamcode.lib.DashboardUtil;
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 import org.firstinspires.ftc.teamcode.lib.tragectory.TrajectorySequence;
@@ -41,6 +41,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     protected BaseAuto(StartingPosition startingPosition) {
         this.startingPosition = startingPosition;
     }
+    private double lastTime = 0;
 
     @Override
     public void plan() {
@@ -74,6 +75,9 @@ public abstract class BaseAuto extends CommandBasedAuto {
             packet.put("FrontRightPower", driveTrain.getFrontRightPower());
             packet.put("RearRightPower", driveTrain.getRearRightPower());
             packet.put("isBusy", driveTrain.isBusy());
+            double time = getRuntime();
+            packet.put("dt", time - lastTime);
+            lastTime = time;
 
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
         };
@@ -101,7 +105,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     }
 
     protected Command turn(double angle) {
-        return new TurnGyroCommand(driveTrain, driveTrain::getHeading, angle, 1).andThen(new WaitCommand(1));
+        return new TurnCommand(driveTrain, angle).andThen(new WaitCommand(1));
     }
 
     protected Command strafe(double distance) {
