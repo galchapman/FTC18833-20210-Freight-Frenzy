@@ -17,6 +17,7 @@ public class IntakeMineralCommand extends CommandBase {
     private Trajectory forwardTrajectory;
     private Trajectory backwardTrajectory;
     private Status status;
+    private long startTime;
 
     private enum Status {
         Forward,
@@ -43,19 +44,21 @@ public class IntakeMineralCommand extends CommandBase {
         m_driveTrain.followTrajectoryAsync(forwardTrajectory);
         m_armSubsystem.setVerticalPosition(1);
         m_intake.intake(1);
+
+        startTime = System.nanoTime();
     }
 
     @Override
     public void execute() {
         switch (status) {
             case Forward:
-                if (m_intake.hasFreight() || !m_driveTrain.isBusy()) {
+                if (m_intake.hasFreight() || (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) < 500000000)) {
                     status = Status.Backward;
                     m_driveTrain.followTrajectoryAsync(backwardTrajectory);
                 }
                 break;
             case Backward:
-                if (!m_driveTrain.isBusy()) {
+                if (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) < 500000000) {
                     status = Status.Finished;
                 }
                 break;
