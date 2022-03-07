@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 @Autonomous(name = "Set Alliance Red", preselectTeleOp = "Red Drive", group = "Auto: red")
 public class GenericRedAuto extends BaseAuto {
 
-    protected GenericRedAuto() {
+    public GenericRedAuto() {
         super(StartingPosition.FarRed);
-        driveTrain.setPose(new Pose2d(0, -1.63, Math.toRadians(90)));
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        driveTrain.setPose(new Pose2d(0, -1.63, Math.toRadians(90)));
+    }
 
     @Override
     public Command getAutonomousCommand() {

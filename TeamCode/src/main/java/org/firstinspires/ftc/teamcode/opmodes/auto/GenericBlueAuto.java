@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 @Autonomous(name = "Set Alliance Blue", preselectTeleOp = "Blue Drive", group = "Auto: blue")
 public class GenericBlueAuto extends BaseAuto {
 
-    protected GenericBlueAuto() {
+    public GenericBlueAuto() {
         super(StartingPosition.FarBlue);
     }
 
