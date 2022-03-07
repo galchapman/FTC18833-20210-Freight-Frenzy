@@ -49,20 +49,20 @@ public class RedDrive extends Drive {
         gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.575));
 
 
-        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && !gamepad1.b
-                && Math.abs(Math.PI + (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
-                new SequentialCommandGroup(
-                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663));
-                            driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);}),
-                        new WaitCommand(0.5),
-                        new InstantCommand(() ->
-                                    new FollowTrajectoryCommand(driveTrain, trajectorySequence).andThen(
-                                            new InstantCommand(
-                                                    () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up))
-                                    ).schedule()
-                                )
-                )
-        );
+//        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && !gamepad1.b
+//                && Math.abs(Math.PI + (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
+//                new SequentialCommandGroup(
+//                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663));
+//                            driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);}),
+//                        new WaitCommand(0.5),
+//                        new InstantCommand(() ->
+//                                    new FollowTrajectoryCommand(driveTrain, trajectorySequence).andThen(
+//                                            new InstantCommand(
+//                                                    () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up))
+//                                    ).schedule()
+//                                )
+//                )
+//        );
     }
 
     @Override
