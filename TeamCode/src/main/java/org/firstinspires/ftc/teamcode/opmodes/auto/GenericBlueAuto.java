@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
@@ -18,7 +19,9 @@ public class GenericBlueAuto extends BaseAuto {
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        driveTrain.setPose(new Pose2d(0, 1.63, Math.toRadians(-90)));
+    }
 
     @Override
     public Command getAutonomousCommand() {
