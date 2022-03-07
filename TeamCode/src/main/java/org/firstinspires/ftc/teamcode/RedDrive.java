@@ -63,7 +63,7 @@ public class RedDrive extends Drive {
 //                                )
 //                )
 //        );
-        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20) && driveTrain.getLeftDistance() < 0.10)
+        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20) && driveTrain.getRightDistance() < 0.10)
                 .whenActive(() -> gamepad1.rumble(500));
     }
 
