@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.drive;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -8,18 +8,15 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.IndexDuckCommand;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
-import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
-import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-@TeleOp(name="Red Drive")
+@TeleOp(name="Red Drive", group = "drive")
 @Config
 public class RedDrive extends Drive {
     public static double indexPower = 0.885;

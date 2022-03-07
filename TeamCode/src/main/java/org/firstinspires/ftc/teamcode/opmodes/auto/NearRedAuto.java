@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import android.annotation.SuppressLint;
 
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
-@Autonomous
+@Autonomous(name = "Near Red", preselectTeleOp = "Red Drive", group = "Auto: red")
 public class NearRedAuto extends LoadedAuto {
     @SuppressLint("SdCardPath")
     public NearRedAuto() {

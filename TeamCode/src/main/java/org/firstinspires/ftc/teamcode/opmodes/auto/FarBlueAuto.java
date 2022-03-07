@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import android.annotation.SuppressLint;
 
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
-@Autonomous(name = "Far Blue", preselectTeleOp = "Blue Drive")
+@Autonomous(name = "Far Blue", preselectTeleOp = "Blue Drive", group = "Auto: blue")
 public class FarBlueAuto extends LoadedAuto {
     @SuppressLint("SdCardPath")
     public FarBlueAuto() {

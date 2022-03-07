@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.drive;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -6,13 +6,14 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
 
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 @Config
-@TeleOp(name="Blue Drive")
+@TeleOp(name="Blue Drive", group = "drive")
 public class BlueDrive extends Drive {
     public static double power0 = 0.5;
     public static double power1 = 0.885;
