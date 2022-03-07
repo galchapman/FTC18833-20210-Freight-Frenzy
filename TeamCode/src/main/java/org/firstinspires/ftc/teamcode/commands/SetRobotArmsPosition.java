@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class SetRobotArmsPosition extends SequentialCommandGroup {
 
@@ -93,10 +92,10 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
                 new WaitCommand(0.3),
                 new ParallelCommandGroup(
                         m_setLiftHeightCommand,
-                        m_rotateArmCommand.withTimeout(0.7).withInterrupt(() -> Math.abs(armSubsystem.AngleError()) < 10)
+                        m_rotateArmCommand.withTimeout(0.7).withInterrupt(() -> Math.abs(armSubsystem.AngleError()) < 20)
                                 .andThen(new StopArmCommand(armSubsystem).withTimeout(0.3)),
                         new SequentialCommandGroup(
-                                new WaitUntilCommand(() -> armSubsystem.AngleError() < 5),
+//                                new WaitUntilCommand(() -> armSubsystem.AngleError() < 10),
                                 new InstantCommand(() -> armSubsystem.setVerticalPosition(m_targetIntakePosition))
                         )
                 )
