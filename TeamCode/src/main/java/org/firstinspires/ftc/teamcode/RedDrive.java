@@ -50,9 +50,9 @@ public class RedDrive extends Drive {
 
 
 //        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && !gamepad1.b
-//                && Math.abs(Math.PI + (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
+//                && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
 //                new SequentialCommandGroup(
-//                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663));
+//                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663, driveTrain.getPoseEstimate().getHeading()));
 //                            driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);}),
 //                        new WaitCommand(0.5),
 //                        new InstantCommand(() ->
@@ -63,6 +63,8 @@ public class RedDrive extends Drive {
 //                                )
 //                )
 //        );
+        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20))
+                .whenActive(() -> gamepad1.rumble(500));
     }
 
     @Override
