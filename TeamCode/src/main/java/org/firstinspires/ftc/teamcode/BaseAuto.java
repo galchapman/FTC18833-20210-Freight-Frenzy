@@ -90,6 +90,11 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem.setVerticalPosition(1);
     }
 
+    @Override
+    public void onEnd() {
+        RobotUniversal.endPosition = driveTrain.getPoseEstimate();
+    }
+
     abstract public void initialize();
 
     protected Command follow(Trajectory trajectory) {
