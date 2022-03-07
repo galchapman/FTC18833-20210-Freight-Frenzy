@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-@TeleOp(name="Red Drive", group = "drive")
+@TeleOp(name="Red Drive", group = "Drive")
 @Config
 public class RedDrive extends Drive {
     public static double indexPower = 0.885;

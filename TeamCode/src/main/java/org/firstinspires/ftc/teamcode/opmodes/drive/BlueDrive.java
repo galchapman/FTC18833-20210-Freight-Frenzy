@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 @Config
-@TeleOp(name="Blue Drive", group = "drive")
+@TeleOp(name="Blue Drive", group = "Drive")
 public class BlueDrive extends Drive {
     public static double power0 = 0.5;
     public static double power1 = 0.885;
