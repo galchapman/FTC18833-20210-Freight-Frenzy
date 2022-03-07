@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.commandftc.RobotUniversal;
 import org.commandftc.opModes.CommandBasedAuto;
+import org.firstinspires.ftc.teamcode.commands.IntakeMineralCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.DriveForwardCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectorySequenceCommand;
@@ -110,7 +111,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     }
 
     protected Command turn(double angle) {
-        return new TurnCommand(driveTrain, angle).andThen(new WaitCommand(1));
+        return new TurnCommand(driveTrain, angle);
     }
 
     protected Command strafe(double distance) {
@@ -119,5 +120,9 @@ public abstract class BaseAuto extends CommandBasedAuto {
 
     protected Command setDoor(IntakeSubsystem.DoorState state) {
         return new InstantCommand(() -> intakeSubsystem.setDoorState(state));
+    }
+
+    protected Command intake(double distance) {
+        return new IntakeMineralCommand(driveTrain, armSubsystem, intakeSubsystem, distance);
     }
 }
