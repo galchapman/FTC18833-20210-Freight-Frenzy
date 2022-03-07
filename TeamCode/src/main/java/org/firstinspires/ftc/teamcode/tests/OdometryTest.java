@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 @Disabled
-@TeleOp
+@TeleOp(group = "tests")
 public class OdometryTest extends CommandBasedTeleOp {
     DriveTrainSubsystem driveTrain;
     ArmSubsystem armSubsystem;

@@ -41,7 +41,7 @@ import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.kV;
  */
 @Config
 @Disabled
-@Autonomous(group = "test")
+@Autonomous(group = "tests")
 public class ManualFeedforwardTuner extends LinearOpModeWithCommands {
     public static double DISTANCE = 2;
 

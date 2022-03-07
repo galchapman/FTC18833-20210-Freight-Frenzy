@@ -21,7 +21,7 @@ import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.camera_he
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.camera_width;
 
 @Disabled
-@TeleOp
+@TeleOp(group = "tests")
 public class TestView extends OpMode {
     private OpenCvCamera camera;
     private final Bitmap bitmap = Bitmap.createBitmap(camera_width, camera_height, Bitmap.Config.RGB_565);

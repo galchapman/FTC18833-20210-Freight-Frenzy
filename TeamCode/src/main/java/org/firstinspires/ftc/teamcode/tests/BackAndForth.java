@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.commands.drive.TankDriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
 @Config
-@TeleOp
+@TeleOp(group = "tests")
 public class BackAndForth extends CommandBasedTeleOp {
 
     public static double DISTANCE = 2;

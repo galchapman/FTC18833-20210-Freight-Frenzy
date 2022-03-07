@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 @Config
 @Disabled
-@Autonomous(group = "test")
+@Autonomous(group = "tests")
 public class MaxVelocityTuner extends LinearOpModeWithCommands {
     public static double RUNTIME = 1.5;
 
