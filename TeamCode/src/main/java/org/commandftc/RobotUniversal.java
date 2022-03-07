@@ -2,6 +2,7 @@ package org.commandftc;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -18,6 +19,7 @@ public final class RobotUniversal {
     public static OpMode opMode;
     public static OpModeType opModeType;
     public static StartingPosition startingPosition;
+    public static Pose2d endPosition = new Pose2d();
     public static Consumer<TelemetryPacket> telemetryPacketUpdater = null;
 
     public enum OpModeType {

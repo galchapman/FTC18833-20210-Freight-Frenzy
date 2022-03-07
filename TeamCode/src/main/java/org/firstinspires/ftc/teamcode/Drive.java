@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 import org.commandftc.RobotUniversal;
@@ -94,6 +93,8 @@ public abstract class Drive extends CommandBasedTeleOp
         ducksSubsystem = new DucksSubsystem();
         ledSubsystem = new LEDSubsystem();
 
+        driveTrain.setPose(RobotUniversal.endPosition);
+
         armSubsystem.setVerticalPosition(0.6);
 
         tankDriveCommand = new TankDriveCommand(driveTrain, () -> -gamepad1.left_stick_y * getDriveSpeed(), () -> -gamepad1.right_stick_y * getDriveSpeed());
@@ -162,8 +163,6 @@ public abstract class Drive extends CommandBasedTeleOp
         telemetry.addData("l pos", driveTrain::getLeftPosition);
         telemetry.addData("r pos", driveTrain::getRightPosition);
 //        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
-
-        driveTrain.setPose(new Pose2d(0.03, -1.63, Math.toRadians(90)));
 
         ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE);
 //        telemetry.addData("pattern", () -> ledSubsystem.getPattern().name());

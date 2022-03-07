@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 @Config
 public class RedDrive extends Drive {
     public static double indexPower = 0.885;
-    public static double rotations = -1.2;
+    public static double rotations = 1.2;
     public static double wait = 0.7;
     @Override
     public void assign() {
@@ -32,6 +32,7 @@ public class RedDrive extends Drive {
         indexDuckCommand = new IndexDuckCommand(ducksSubsystem,rotations,indexPower).andThen(new WaitCommand(wait));
         arcadeDriveCommand = new ArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_y, Math.toDegrees(-90));
 
+        gp1.x().whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(-90))));
 
         driveTrain.setDefaultCommand(tankDriveCommand);
         gp1.y().whileHeld(indexDuckCommand);
@@ -48,7 +49,7 @@ public class RedDrive extends Drive {
         gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.575));
 
 
-        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100
+        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && !gamepad1.b
                 && Math.abs(Math.PI + (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
                 new SequentialCommandGroup(
                         new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663));

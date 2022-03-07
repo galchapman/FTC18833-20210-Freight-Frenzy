@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
@@ -26,6 +27,7 @@ public class BlueDrive extends Drive {
         GoToScoringPositionCommand.setTarget(0.20, -50, 0.5);
         arcadeDriveCommand = new ArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_x, Math.toDegrees(90));
 
+        gp1.x().whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(90))));
 
         indexDuckCommand = new FancyDuckIndexCommand(ducksSubsystem, power0 , power1, acceleration)
                 .andThen(new WaitCommand(time1));
@@ -33,6 +35,8 @@ public class BlueDrive extends Drive {
 //        driveTrain.setDefaultCommand(arcadeDriveCommand);
 
         gp1.y().whileHeld(indexDuckCommand);
+
+        gp1.a().whileHeld(arcadeDriveCommand);
 
         telemetry.addData("ducks spins", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
         telemetry.addData("ducks power", ducksSubsystem::getPower);

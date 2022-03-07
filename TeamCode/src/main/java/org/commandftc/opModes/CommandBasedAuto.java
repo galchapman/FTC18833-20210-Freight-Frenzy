@@ -52,5 +52,8 @@ public abstract class CommandBasedAuto extends OpMode {
     @Override
     public final void stop() {
         CommandScheduler.getInstance().close();
+        onEnd();
     }
+
+    public void onEnd() {}
 }
