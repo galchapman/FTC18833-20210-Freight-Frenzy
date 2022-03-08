@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
+import org.commandftc.RobotUniversal;
 import org.ejml.equation.Operation;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
@@ -34,6 +36,12 @@ public class IntakeMineralCommand extends CommandBase {
         MAX_DISTANCE = max_distance;
 
         addRequirements(m_driveTrain, m_armSubsystem, m_intake);
+
+        RobotUniversal.telemetryPacketUpdater = (packet) -> {
+            packet.put("status", status);
+
+            FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        };
     }
 
     @Override
