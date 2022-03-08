@@ -2,37 +2,49 @@
     "sequences": [
         {
 			"name": "go_to_duck_position",
-			"start_pos": {"x": -1.18, "y": -1.63, "heading": 90},
+			"start_pos": {"x": -1.19, "y": -1.63, "heading": 90},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -1.53,
-					"y": -1.43
+					"x": -1.45,
+					"y": -1.47
 				}
 			]
 		},
+		{
+			"name": "put_cube_step_1",
+			"start_pos": {"x": -1.45, "y": -1.47, "heading": 90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "forward",
+					"distance": 0.845
+				}
+			]
+
+		},
         {
 			"name": "go_to_high_or_mid",
-			"start_pos": {"x": 1.205, "y": -1.63, "heading": 90},
+			"start_pos": {"x": -1.45, "y": -0.61, "heading": 90},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -0.3,
-					"y": -1.15
+					"x": -0.9,
+					"y": -0.61
 				}
 			]
 		},
 		{
 			"name": "go_to_low",
-			"start_pos": {"x": 1.205, "y": -1.63, "heading": 90},
+			"start_pos": {"x": -1.45, "y": -0.61, "heading": 90},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -0.3,
-					"y": -1.27
+					"x": -1.02,
+					"y": -0.61
 				}
 			]
 		}

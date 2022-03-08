@@ -26,7 +26,6 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public abstract class BaseAuto extends CommandBasedAuto {
     protected DriveTrainSubsystem driveTrain;
@@ -52,7 +51,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         liftSubsystem = new LiftSubsystem();
-        vision = new VisionSubsystem();
+        //vision = new VisionSubsystem();
         ducksSubsystem = new DucksSubsystem();
 
         thread = new RoadRunnerThread(driveTrain);
@@ -88,7 +87,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
     @Override
     public void onStart() {
         thread.schedule();
-        vision.stop();
+        //vision.stop();
         armSubsystem.setVerticalPosition(1);
     }
 
