@@ -77,7 +77,6 @@ public abstract class BaseAuto extends CommandBasedAuto {
             packet.put("RearRightPower", driveTrain.getRearRightPower());
             packet.put("isBusy", driveTrain.isBusy());
             packet.put("hasFreight", intakeSubsystem.hasFreight());
-            packet.put("intake distance", intakeSubsystem.getDistance());
             double time = getRuntime();
             packet.put("dt", time - lastTime);
             lastTime = time;

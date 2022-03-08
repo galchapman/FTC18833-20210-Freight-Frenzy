@@ -69,6 +69,7 @@ public class RedDrive extends Drive {
         packet.put("heading", Math.toDegrees(driveTrain.getHeading()));
         packet.put("drive heading", Math.toDegrees(driveTrain.getDriveHeading() + driveTrain.getHeading()));
         packet.put("velocity", driveTrain.accel);
+        packet.put("intake distance", intakeSubsystem.getDistance());
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 }
