@@ -27,20 +27,15 @@ public abstract class CommandBasedAuto extends OpMode {
     @Override
     public final void start() {
         onStart();
-        try {
-            autonomousCommand = getAutonomousCommand();
-            autonomousCommand.schedule();
-        } catch (Exception e) {
-            telemetry.addLine(e.getMessage());
-            telemetry.update();
-        }
+        autonomousCommand = getAutonomousCommand();
+        autonomousCommand.schedule();
     }
 
     public abstract void onStart();
 
     public abstract void plan();
 
-    public abstract Command getAutonomousCommand() throws Exception;
+    public abstract Command getAutonomousCommand();
 
     @Override
     public final void loop() {
