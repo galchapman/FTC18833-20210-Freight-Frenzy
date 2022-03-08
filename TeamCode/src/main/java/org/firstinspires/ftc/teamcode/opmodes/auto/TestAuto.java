@@ -13,7 +13,7 @@ public class TestAuto extends LoadedAuto {
     public TestAuto() {
         super("/sdcard/FIRST/auto/test.auto",
                 "/sdcard/FIRST/trajectories/test.json",
-                new Pose2d(0.03, -1.63, Math.toRadians(90)),
+                new Pose2d(0, 0, Math.toRadians(90)),
                 StartingPosition.FarRed);
     }
 }
