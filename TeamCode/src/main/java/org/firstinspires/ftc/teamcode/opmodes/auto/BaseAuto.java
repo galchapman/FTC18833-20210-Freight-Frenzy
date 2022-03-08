@@ -94,6 +94,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
 
     @Override
     public void onEnd() {
+        thread.end(true);
         RobotUniversal.endPosition = driveTrain.getPoseEstimate();
     }
 
