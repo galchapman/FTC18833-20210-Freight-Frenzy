@@ -26,6 +26,7 @@ public abstract class CommandBasedAuto extends OpMode {
 
     @Override
     public final void start() {
+        onStart();
         try {
             autonomousCommand = getAutonomousCommand();
             autonomousCommand.schedule();
