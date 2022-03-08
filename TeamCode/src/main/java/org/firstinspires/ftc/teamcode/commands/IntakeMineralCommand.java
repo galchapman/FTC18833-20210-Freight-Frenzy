@@ -42,7 +42,7 @@ public class IntakeMineralCommand extends CommandBase {
         status = Status.Forward;
 
         m_driveTrain.followTrajectoryAsync(forwardTrajectory);
-        m_armSubsystem.setVerticalPosition(1);
+        m_armSubsystem.setVerticalPosition(0);
         m_intake.intake(1);
     }
 
