@@ -1,6 +1,6 @@
 package edu.megiddo.lions.execption;
 
-public class LanguageException extends Exception {
+public class LanguageException extends RuntimeException {
     public final int line;
     public final int character;
 

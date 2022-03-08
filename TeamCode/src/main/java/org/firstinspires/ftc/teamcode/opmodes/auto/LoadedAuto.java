@@ -90,7 +90,7 @@ public abstract class LoadedAuto extends BaseAuto {
     }
 
     @Override
-    public Command getAutonomousCommand() throws Exception {
+    public Command getAutonomousCommand() {
         gameType = vision.getGameType();
         telemetry.addData("game type", gameType);
         telemetry.update();
