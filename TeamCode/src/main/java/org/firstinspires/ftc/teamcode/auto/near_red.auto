@@ -1,5 +1,5 @@
 @set A false
 @set B false
 @set C false
-# places the marked friet
+# places the marked freight
 follow go_to_duck_position

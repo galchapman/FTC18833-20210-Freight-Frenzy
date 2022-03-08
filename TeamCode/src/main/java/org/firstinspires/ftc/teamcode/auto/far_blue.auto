@@ -1,7 +1,7 @@
 # @set A false
 # @set B false
 # @set C true
-# places the marked friet
+# places the marked freight
 @if A
 	follow go_to_low
 	set intake height 0.4
@@ -41,7 +41,7 @@
 	turn 90deg
 	follow go_to_intake_position_BC
 
-# intake first freit
+# intake first freight
 set intake height 0
 set intake 1
 follow first_intake
@@ -55,14 +55,14 @@ set arm power 0.2
 set arm angle 70deg
 follow first_return_to_tower_part2
 wait 0.5
-# place freit
+# place freight
 set intake height 0.65
 set intake -0.3
 door Open
 wait 0.5
 set intake 0
 door Close
-# go to inake
+# go to intake
 set intake height 0.8
 set lift height 0.17
 set arm angle 0
@@ -79,7 +79,7 @@ follow second_return_to_tower_part1
 set lift height 0.32
 set arm angle 70deg
 follow second_return_to_tower_part2
-# put frieht
+# put freight
 set intake height 0.60
 wait 0.2
 set intake -0.4
@@ -87,7 +87,7 @@ door Open
 wait 0.5
 set intake 0
 door Close
-# go to inake
+# go to intake
 set intake height 0.8
 set lift height 0.17
 set arm angle 0
