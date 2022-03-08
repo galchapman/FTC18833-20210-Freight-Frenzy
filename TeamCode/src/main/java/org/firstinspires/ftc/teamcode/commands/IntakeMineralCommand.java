@@ -51,7 +51,7 @@ public class IntakeMineralCommand extends CommandBase {
     public void execute() {
         switch (status) {
             case Forward:
-                if (m_intake.hasFreight() || (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 250000000)) {
+                if (m_intake.hasFreight() || (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.5e+9)) {
                     status = Status.Backward;
                     m_driveTrain.followTrajectoryAsync(backwardTrajectory);
                     startTime = System.nanoTime();
@@ -59,7 +59,7 @@ public class IntakeMineralCommand extends CommandBase {
                 }
                 break;
             case Backward:
-                if (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 250000000) {
+                if (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.5e+9) {
                     status = Status.Finished;
                 }
                 break;
