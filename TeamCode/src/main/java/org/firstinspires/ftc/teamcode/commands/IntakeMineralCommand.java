@@ -38,7 +38,9 @@ public class IntakeMineralCommand extends CommandBase {
         addRequirements(m_driveTrain, m_armSubsystem, m_intake);
 
         RobotUniversal.telemetryPacketUpdater = (packet) -> {
+            packet.clearLines();
             packet.put("status", status);
+            packet.put("has freight", m_intake.hasFreight());
 
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
         };
@@ -72,6 +74,7 @@ public class IntakeMineralCommand extends CommandBase {
 
                     startTime = System.nanoTime();
                     m_armSubsystem.setVerticalPosition(1);
+                    m_intake.intake(0);
                 }
                 break;
             case Backward:
