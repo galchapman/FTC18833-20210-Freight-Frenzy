@@ -62,8 +62,11 @@ public class IntakeSubsystem extends SubsystemBase {
         m_doorServo.setPosition((m_doorServo.getPosition() == DoorState.Close.servoPosition ? DoorState.Open : DoorState.Close).servoPosition);
     }
 
+    private double lastDistance = 0;
     public double getDistance() {
-        return m_distanceSensor.getDistance(DistanceUnit.METER);
+        double distance = m_distanceSensor.getDistance(DistanceUnit.METER);
+        if (Math.abs(distance - lastDistance) < 0.2) return lastDistance=distance;
+        else return (lastDistance + (lastDistance=distance))/2;
     }
 
     public boolean hasFreight() {
