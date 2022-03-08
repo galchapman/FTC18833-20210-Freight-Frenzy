@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.ejml.equation.Operation;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
@@ -36,7 +38,11 @@ public class IntakeMineralCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        forwardTrajectory = m_driveTrain.trajectoryBuilder(m_driveTrain.getPoseEstimate()).forward(MAX_DISTANCE).build();
+        forwardTrajectory = m_driveTrain.trajectoryBuilder(m_driveTrain.getPoseEstimate(),
+                DriveTrainSubsystem.getVelocityConstraint(Constants.DriveTrainConstants.MaxVelocity / 2,
+                    Constants.DriveTrainConstants.MaxAnglerVelocity,
+                    Constants.DriveTrainConstants.TrackWidth))
+                .forward(MAX_DISTANCE).build();
         backwardTrajectory = m_driveTrain.trajectoryBuilder(forwardTrajectory.end()).back(MAX_DISTANCE).build();
 
         status = Status.Forward;
@@ -51,7 +57,7 @@ public class IntakeMineralCommand extends CommandBase {
     public void execute() {
         switch (status) {
             case Forward:
-                if (m_intake.hasFreight() || (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.5e+9)) {
+                if (m_intake.hasFreight() || (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.25e+9)) {
                     status = Status.Backward;
                     m_driveTrain.followTrajectoryAsync(backwardTrajectory);
                     startTime = System.nanoTime();
@@ -59,7 +65,7 @@ public class IntakeMineralCommand extends CommandBase {
                 }
                 break;
             case Backward:
-                if (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.5e+9) {
+                if (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.25e+9) {
                     status = Status.Finished;
                 }
                 break;
