@@ -85,12 +85,12 @@ public final class Constants {
 
         public static Rect FarRedARect = new Rect(700, 550, 225, 200);
         public static Rect FarRedBRect = new Rect(1150, 550, 50, 200);
-        public static Rect NearRedARect = new Rect();
-        public static Rect NearRedBRect = new Rect();
+        public static Rect NearRedARect = new Rect(0,0, 1, 1);
+        public static Rect NearRedBRect = new Rect(0,0, 1, 1);
         public static Rect FarBlueBRect = new Rect(0, 550, 130, 200);
         public static Rect FarBlueCRect = new Rect(355, 550, 225, 200);
-        public static Rect NearBlueBRect = new Rect();
-        public static Rect NearBlueCRect = new Rect();
+        public static Rect NearBlueBRect = new Rect(0,0, 1, 1);
+        public static Rect NearBlueCRect = new Rect(0,0, 1, 1);
 
         public static double HueThresholdLow = 55;
         public static double HueThresholdHigh = 95;
