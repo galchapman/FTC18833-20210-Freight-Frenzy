@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.commandftc.RobotUniversal;
-import org.ejml.equation.Operation;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
@@ -18,7 +16,6 @@ public class IntakeMineralCommand extends CommandBase {
     private final ArmSubsystem m_armSubsystem;
     private final IntakeSubsystem m_intake;
     private final double MAX_DISTANCE;
-    private Trajectory forwardTrajectory;
     private Trajectory backwardTrajectory;
     private Status status;
     private long startTime;
@@ -48,10 +45,10 @@ public class IntakeMineralCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        forwardTrajectory = m_driveTrain.trajectoryBuilder(m_driveTrain.getPoseEstimate(),
+        Trajectory forwardTrajectory = m_driveTrain.trajectoryBuilder(m_driveTrain.getPoseEstimate(),
                 DriveTrainSubsystem.getVelocityConstraint(Constants.DriveTrainConstants.MaxVelocity / 2,
-                    Constants.DriveTrainConstants.MaxAnglerVelocity,
-                    Constants.DriveTrainConstants.TrackWidth))
+                        Constants.DriveTrainConstants.MaxAnglerVelocity,
+                        Constants.DriveTrainConstants.TrackWidth))
                 .forward(MAX_DISTANCE).build();
         backwardTrajectory = m_driveTrain.trajectoryBuilder(forwardTrajectory.end()).back(MAX_DISTANCE).build();
 
@@ -67,7 +64,7 @@ public class IntakeMineralCommand extends CommandBase {
     public void execute() {
         switch (status) {
             case Forward:
-                if (m_intake.hasFreight() || (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.25e+9)) {
+                if (m_intake.hasFreight()){ // || (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.25e+9)) {
                     status = Status.Backward;
                     m_driveTrain.stop();
                     m_driveTrain.followTrajectoryAsync(backwardTrajectory);
