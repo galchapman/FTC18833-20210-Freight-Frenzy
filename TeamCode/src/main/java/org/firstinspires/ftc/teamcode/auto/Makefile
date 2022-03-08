@@ -1,5 +1,10 @@
 deploy-all: deploy-far_blue deploy-far_red deploy-near_red deploy-test
 
-deploy-%: %.auto %.json
-	@adb push $%.auto /sdcard/FIRST/auto/$%.auto
-	@adb push $%.json /sdcard/FIRST/trajectories/$%.json
+deploy-%: push-%.auto push-%.json
+
+
+push-%.auto: %.auto
+	@adb push $^ /sdcard/FIRST/auto/$^
+
+push-%.json: %.auto
+	@adb push $^ /sdcard/FIRST/trajectories/$^
