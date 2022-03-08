@@ -37,7 +37,7 @@ public class IntakeMineralCommand extends CommandBase {
         RobotUniversal.telemetryPacketUpdater = (packet) -> {
             packet.put("status", status);
             packet.put("has freight", m_intake.hasFreight());
-            packet.put("intake distance", m_intake.getDistance());
+            packet.put("intake distance", Math.min(m_intake.getDistance(), 0.5));
 
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
         };
