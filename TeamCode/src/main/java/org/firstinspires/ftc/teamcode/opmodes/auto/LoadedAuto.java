@@ -90,13 +90,13 @@ public abstract class LoadedAuto extends BaseAuto {
     }
 
     @Override
-    public Command getAutonomousCommand() throws Exception {
-        gameType = vision.getGameType();
-        telemetry.addData("game type", gameType);
-        telemetry.update();
-        A = gameType == GameType.A;
-        B = gameType == GameType.B;
-        C = gameType == GameType.C;
+    public Command getAutonomousCommand() {
+//        gameType = vision.getGameType();
+//        telemetry.addData("game type", gameType);
+//        telemetry.update();
+//        A = gameType == GameType.A;
+//        B = gameType == GameType.B;
+//        C = gameType == GameType.C;
         return autoLoader.load(file).andThen(() -> driveTrain.stop());
     }
 }
