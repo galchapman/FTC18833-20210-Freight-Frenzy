@@ -16,7 +16,6 @@ public class IntakeMineralCommand extends CommandBase {
     private final ArmSubsystem m_armSubsystem;
     private final IntakeSubsystem m_intake;
     private final double MAX_DISTANCE;
-    private Trajectory backwardTrajectory;
     private Status status;
     private long startTime;
 
@@ -50,7 +49,6 @@ public class IntakeMineralCommand extends CommandBase {
                         Constants.DriveTrainConstants.MaxAnglerVelocity,
                         Constants.DriveTrainConstants.TrackWidth))
                 .forward(MAX_DISTANCE).build();
-        backwardTrajectory = m_driveTrain.trajectoryBuilder(forwardTrajectory.end()).back(MAX_DISTANCE).build();
 
         status = Status.Forward;
 
@@ -67,6 +65,8 @@ public class IntakeMineralCommand extends CommandBase {
                 if (m_intake.hasFreight() || (!m_driveTrain.isBusy() && (System.nanoTime() - startTime) > 0.25e+9)) {
                     status = Status.Backward;
                     m_driveTrain.stop();
+
+                    Trajectory backwardTrajectory = m_driveTrain.trajectoryBuilder(m_driveTrain.getPoseEstimate()).back(MAX_DISTANCE).build();
                     m_driveTrain.followTrajectoryAsync(backwardTrajectory);
 
                     startTime = System.nanoTime();
