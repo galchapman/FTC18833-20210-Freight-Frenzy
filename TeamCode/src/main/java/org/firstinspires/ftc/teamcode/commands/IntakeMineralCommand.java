@@ -35,7 +35,6 @@ public class IntakeMineralCommand extends CommandBase {
         addRequirements(m_driveTrain, m_armSubsystem, m_intake);
 
         RobotUniversal.telemetryPacketUpdater = (packet) -> {
-            packet.clearLines();
             packet.put("status", status);
             packet.put("has freight", m_intake.hasFreight());
             packet.put("intake distance", m_intake.getDistance());
