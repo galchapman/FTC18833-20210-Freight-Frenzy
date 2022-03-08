@@ -12,7 +12,11 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.IndexDuckCommand;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
+import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -46,20 +50,20 @@ public class RedDrive extends Drive {
         gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.575));
 
 
-//        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && !gamepad1.b
-//                && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
-//                new SequentialCommandGroup(
-//                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663, driveTrain.getPoseEstimate().getHeading()));
-//                            driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);}),
-//                        new WaitCommand(0.5),
-//                        new InstantCommand(() ->
-//                                    new FollowTrajectoryCommand(driveTrain, trajectorySequence).andThen(
-//                                            new InstantCommand(
-//                                                    () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up))
-//                                    ).schedule()
-//                                )
-//                )
-//        );
+        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100
+                && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663, driveTrain.getPoseEstimate().getHeading()));
+                            driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);}),
+                        new WaitCommand(0.5),
+                        new InstantCommand(() ->
+                                    new FollowTrajectoryCommand(driveTrain, trajectorySequence).andThen(
+                                            new InstantCommand(
+                                                    () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up))
+                                    ).withInterrupt(() -> gamepad1.b).schedule()
+                                )
+                ).withInterrupt(() -> gamepad1.b)
+        );
         new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20) && driveTrain.getRightDistance() < 0.20)
                 .whenActive(() -> gamepad1.rumble(500));
     }
