@@ -44,6 +44,7 @@ public class IntakeMineralCommand extends CommandBase {
         m_driveTrain.followTrajectoryAsync(forwardTrajectory);
         m_armSubsystem.setVerticalPosition(0);
         m_intake.intake(1);
+        startTime = System.nanoTime();
     }
 
     @Override
