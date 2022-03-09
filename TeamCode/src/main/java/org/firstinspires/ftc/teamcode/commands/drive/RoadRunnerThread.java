@@ -39,6 +39,6 @@ public class RoadRunnerThread extends CommandBase implements Runnable {
 
     @Override
     public void end(boolean interrupted) {
-        m_driveTrain.isPeriodicThread.set(false);
+        isRunning.set(false);
     }
 }
