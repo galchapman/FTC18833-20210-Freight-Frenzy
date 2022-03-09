@@ -34,11 +34,11 @@
 @if A
 	follow back_of_from_tower_A
 	turn -90deg
-	follow go_to_intake_position_A
+	# follow go_to_intake_position_A
 @else
 	follow back_of_from_tower_BC
 	turn -90deg
-	follow go_to_intake_position_BC
+	# follow go_to_intake_position_BC
 
 # intake first freight
 set intake height 0
