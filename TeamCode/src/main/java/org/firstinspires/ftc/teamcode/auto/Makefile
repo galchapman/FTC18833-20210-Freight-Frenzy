@@ -1,4 +1,4 @@
-deploy-all: deploy-far_blue deploy-far_red deploy-near_red deploy-test
+deploy-all: deploy-far_blue deploy-far_red deploy-near_red deploy-test deploy-near_blue
 
 deploy-%: push-%.auto push-%.json
 	

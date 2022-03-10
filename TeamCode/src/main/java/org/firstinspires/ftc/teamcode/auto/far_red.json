@@ -77,18 +77,18 @@
 			"segments": [
 				{
 					"name": "forward",
-					"distance": 0.75
+					"distance": 0.80
 				}
 			]
 		},
 		{
 			"name": "first_return_to_tower_part1",
-			"start_pos": {"x": 1.05, "y": -1.675, "heading": 0},
+			"start_pos": {"x": 1.10, "y": -1.675, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{
 					"name": "back",
-					"distance": 1 
+					"distance": 1.05 
 				}
 			]
 		},

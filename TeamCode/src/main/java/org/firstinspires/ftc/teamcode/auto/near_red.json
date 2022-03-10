@@ -31,7 +31,7 @@
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -0.9,
+					"x": -0.88,
 					"y": -0.61
 				}
 			]
@@ -45,6 +45,41 @@
 					"name": "strafe",
 					"x": -1.02,
 					"y": -0.61
+				}
+			]
+		},
+		{
+			"name": "stick_to_the_wall_low",
+			"start_pos": {"x": -1.02, "y": -0.61, "heading": -90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "strafe",
+					"x": -1.55,
+					"y": -0.61
+				}
+			]
+		},
+		{
+			"name": "stick_to_the_wall_high_or_mid",
+			"start_pos": {"x": -0.88, "y": -0.61, "heading": -90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "strafe",
+					"x": -1.55,
+					"y": -0.61
+				}
+			]
+		},
+		{
+			"name": "go_to_box",
+			"start_pos": {"x": -1.55, "y": -0.61, "heading": -90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "forward",
+					"distance": 0.37
 				}
 			]
 		}

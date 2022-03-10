@@ -1,6 +1,6 @@
 @set A false
 @set B false
-@set C false
+@set C true
 # bring down the duck
 follow go_to_duck_position
 # TODO: rotate rolet  
@@ -9,28 +9,59 @@ wait 0.4 # rotate tolet time!!!
 # places the marked freight
 follow put_cube_step_1 # go to the first stasion
 
-# #A
-# set arm power 0.5 
-# set arm angle 80deg
-# wait 0.3
-# set intake height 0.45
-# follow go_to_low
-# wait 0.45
-# set intake 0.6
-# door LowerPlacement
-# wait 0.3
-# set intake 0
-# door Close
+@if A
+	set arm power 0.5 
+	set arm angle 80deg
+	wait 0.3
+	set intake height 0.45
+	follow go_to_low
+	wait 0.45
+	set intake 0.6
+	door LowerPlacement
+	wait 0.3
+	set intake 0
+	door Close
 
-#B
-set arm power 0.5 
-set arm angle 80deg
-wait 0.3
-follow go_to_high_or_mid
-set intake height 0.65
-wait 0.5
-door Open
-wait 0.5
-door Close
-wait 0.2
+@elif B
+	set arm power 0.5 
+	set arm angle 80deg
+	wait 0.3
+	follow go_to_high_or_mid
+	set intake height 0.65
+	wait 0.5
+	door Open
+	set intake -0.6
+	wait 0.8
+	door Close
+	set intake 0
+	wait 0.2
+	set intake height 1
+
+@else #C
+	set arm power 0.5 
+	set arm angle 80deg
+	set lift height 0.3
+	wait 0.3
+	follow go_to_high_or_mid
+	set intake height 0.65
+	wait 0.5
+	door Open
+	set intake -0.6
+	wait 0.8
+	door Close
+	set intake 0
+	wait 0.2
+	set intake height 1
+
+# return arms
+set lift height 0.18
+set arm power 0.15
+set arm angle 0deg
+turn -180deg
 set intake height 1
+wait 0.5
+@if A
+	follow stick_to_the_wall_low
+@else
+	follow stick_to_the_wall_high_or_mid
+follow go_to_box

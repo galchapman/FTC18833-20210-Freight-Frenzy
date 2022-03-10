@@ -21,7 +21,7 @@
 	wait 0.2
 	set intake height 1
 @else # C
-	set lift height 0.32
+	set lift height 0.37
 	follow go_to_high_or_mid
 	set intake height 0.60
 	wait 0.7
