@@ -26,6 +26,10 @@ public class DucksSubsystem extends SubsystemBase {
         m_motor.setPower(power);
     }
 
+    public void setRunMode(DcMotor.RunMode mode){m_motor.setMode(mode);}
+
+    public void setDirection(DcMotorSimple.Direction direction){m_motor.setDirection(direction);}
+
     public boolean isBusy() {
         return m_motor.isBusy();
     }

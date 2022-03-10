@@ -76,6 +76,11 @@ public final class Constants {
         public static final double ticks_per_rotation =
                 MotorConstants.RevHDHexMotor.ticks_per_revolution * 12
                         * biggerWheelDiameter / wheelDiameter;
+        public static final double maxPower = 0.85;
+        public static final double minPower = 0.3;
+        public static final double accelerationSpeed = 1.5;
+        public static final double blueSpin = -1.3;
+        public static final double redSpin = 1.3;
     }
 
     @Config

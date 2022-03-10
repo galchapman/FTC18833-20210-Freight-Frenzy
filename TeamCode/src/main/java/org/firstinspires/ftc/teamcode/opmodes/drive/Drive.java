@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import org.commandftc.RobotUniversal;
 import org.commandftc.opModes.CommandBasedTeleOp;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmPowerCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmToPositionCommand;
@@ -26,7 +27,6 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -53,7 +53,7 @@ public abstract class Drive extends CommandBasedTeleOp
     // intake commands
     IntakeCommand intakeCommand;
     //Ducky command
-    SequentialCommandGroup indexDuckCommand;
+    FancyDuckIndexCommand fancyDuckIndexCommand;
     //Multiple subsystem commands
     Command GoToIntakePositionCommand;
     SetRobotArmsPosition GoToScoringPositionCommand;

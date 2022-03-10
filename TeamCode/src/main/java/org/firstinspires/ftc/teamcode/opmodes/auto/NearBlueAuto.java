@@ -13,7 +13,7 @@ public class NearBlueAuto extends LoadedAuto {
     public NearBlueAuto() {
         super("/sdcard/FIRST/auto/near_blue.auto",
                 "/sdcard/FIRST/trajectories/near_blue.json",
-                new Pose2d(-1.19, 1.63, Math.toRadians(90)),
+                new Pose2d(-1.19, 1.63, Math.toRadians(-90)),
                 StartingPosition.NearBlue);
     }
 }

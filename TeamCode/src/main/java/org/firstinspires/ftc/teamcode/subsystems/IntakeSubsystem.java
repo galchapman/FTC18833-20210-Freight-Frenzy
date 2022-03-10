@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public enum DoorState {
         Open(1),
         Close(0),
-        LowerPlacement(0.4);
+        LowerPlacement(0.3);
 
         public double servoPosition;
         DoorState(double servoPosition) {

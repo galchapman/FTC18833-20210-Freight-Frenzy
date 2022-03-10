@@ -1,6 +1,6 @@
-# @set A false
-# @set B false
-# @set C true
+@set A false
+@set B false
+@set C true
 # places the marked freight
 @if A
 	follow go_to_low

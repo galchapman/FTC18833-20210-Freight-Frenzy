@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.commandftc.RobotUniversal;
 import org.commandftc.opModes.CommandBasedAuto;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
 import org.firstinspires.ftc.teamcode.commands.IntakeMineralCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.DriveForwardCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
@@ -125,5 +127,13 @@ public abstract class BaseAuto extends CommandBasedAuto {
 
     protected Command intake(double distance) {
         return new IntakeMineralCommand(driveTrain, armSubsystem, intakeSubsystem, distance);
+    }
+
+    protected Command rotateDuck(double spins){
+        return new FancyDuckIndexCommand(ducksSubsystem,
+                Constants.DucksConstants.maxPower,
+                Constants.DucksConstants.minPower,
+                Constants.DucksConstants.accelerationSpeed,
+                spins);
     }
 }

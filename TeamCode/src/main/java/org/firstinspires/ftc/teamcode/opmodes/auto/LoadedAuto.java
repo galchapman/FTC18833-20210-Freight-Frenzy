@@ -4,7 +4,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.commands.DuckRoller.IndexDuckCommand;
 import org.firstinspires.ftc.teamcode.lib.GameType;
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 import org.firstinspires.ftc.teamcode.lib.auto.AutoLoader;
@@ -53,7 +52,7 @@ public abstract class LoadedAuto extends BaseAuto {
                         (doorState) -> new InstantCommand(
                                 () -> intakeSubsystem.setDoorState(doorState))));
         autoLoader.interpreter.registerCommand("wait", new SingleArgCommand(WaitCommand::new));
-        autoLoader.interpreter.registerCommand("ducks", new SingleArgCommand((spins) -> new IndexDuckCommand(ducksSubsystem, spins, 0.7)));
+        autoLoader.interpreter.registerCommand("ducks", new SingleArgCommand(this::rotateDuck));
         autoLoader.interpreter.registerCommand("turn", new SingleArgCommand(this::turn));
         autoLoader.interpreter.registerCommand("forward", new SingleArgCommand(this::forward));
         autoLoader.interpreter.registerCommand("intake", new SingleArgCommand(this::intake));
