@@ -1,6 +1,6 @@
-@set A false
-@set B true
-@set C false
+#@set A false
+#@set B true
+#@set C false
 # bring down the duck
 follow go_to_duck_position_step_1
 # turn 90deg

@@ -1,6 +1,6 @@
-@set A false
-@set B false
-@set C true
+#@set A false
+#@set B false
+#@set C true
 # bring down the duck
 follow go_to_duck_position
 ducks 1.3 #that is a fancy Command

@@ -27,7 +27,6 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public abstract class Drive extends CommandBasedTeleOp
@@ -140,7 +139,7 @@ public abstract class Drive extends CommandBasedTeleOp
         gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1).alongWith(new InstantCommand(() -> armSubsystem.setVerticalPosition(0.65))));
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
-        gp2.y().whenHeld(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new WaitCommand(0.1)).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.1)));
+        gp2.y().whenPressed(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.2)));
         // Capping element
         gp1.x().whenPressed(new InstantCommand(() -> intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.LowerPlacement)));
 

@@ -48,8 +48,13 @@ public class RedDrive extends Drive {
                 .strafeTo(new Vector2d(-0.275, -1.175))
                 .build();
 
-        gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.575));
+        gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.525));
 
+        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whenActive(new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> gp1.left_stick_y(), () -> 0, 0));
+        //gp1.a().whileHeld(gp1.right_bumper().whileHeld(new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> gp1.left_stick_y(), () -> 0, 0)));
+
+        gp1.dpad_down().whileHeld(new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> 1,() -> 0,0));
+        gp1.dpad_up().whileHeld(new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> -1,() -> 0,0));
 
         new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100
                 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
@@ -66,6 +71,9 @@ public class RedDrive extends Drive {
                 ).withInterrupt(() -> gamepad1.b)
         );
         new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20) && driveTrain.getRightDistance() < 0.20)
+                .whenActive(() -> gamepad1.rumble(500));
+
+        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 80)
                 .whenActive(() -> gamepad1.rumble(500));
     }
 
