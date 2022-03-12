@@ -14,12 +14,6 @@ import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
 @Config
 @TeleOp(name="Blue Drive", group = "Drive")
 public class BlueDrive extends Drive {
-    public static double power0 = 0.3;
-    public static double power1 = 0.885;
-    public static double time0 = 0.2;
-    public static double time1 = 0.6;
-    public static double rotations = 1.3;
-    public static double acceleration = 1.5;
 
     @Override
     public void assign() {
