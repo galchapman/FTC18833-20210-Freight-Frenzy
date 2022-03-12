@@ -121,7 +121,8 @@ public abstract class Drive extends CommandBasedTeleOp
         gp1.dpad_left().whileHeld(driveLeftCommand);
         gp1.left_bumper().whileHeld(driveLeftCommand);
         gp1.dpad_right().whileHeld(driveRightCommand);
-        gp1.right_bumper().whileHeld(driveRightCommand);
+        //gp1.right_bumper().whileHeld(driveRightCommand);
+        new Trigger(() -> gamepad1.right_bumper && !gamepad1.a).whileActiveOnce(driveRightCommand);
         // Lift commands
         liftSubsystem.setDefaultCommand(raiseLiftCommand);
         // Arm command

@@ -39,7 +39,9 @@ public class RedDrive extends Drive {
         driveTrain.setDefaultCommand(tankDriveCommand);
         gp1.y().whenPressed(fancyDuckIndexCommand);
 
-        gp1.a().whileHeld(arcadeDriveCommand);
+        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> (gp1.left_stick_y() > 0)? 1:(gp1.left_stick_y()<0)? -1:0, () -> 0, 0)));
+
+        new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 
         telemetry.addData("index", ducksSubsystem::getCurrentPosition);
         telemetry.addData("index rotation", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
@@ -50,11 +52,6 @@ public class RedDrive extends Drive {
 
         gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.525));
 
-        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whenActive(new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> gp1.left_stick_y(), () -> 0, 0));
-        //gp1.a().whileHeld(gp1.right_bumper().whileHeld(new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> gp1.left_stick_y(), () -> 0, 0)));
-
-        gp1.dpad_down().whileHeld(new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> 1,() -> 0,0));
-        gp1.dpad_up().whileHeld(new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> -1,() -> 0,0));
 
         new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100
                 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
@@ -73,7 +70,7 @@ public class RedDrive extends Drive {
         new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20) && driveTrain.getRightDistance() < 0.20)
                 .whenActive(() -> gamepad1.rumble(500));
 
-        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 80)
+        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100)
                 .whenActive(() -> gamepad1.rumble(500));
     }
 
