@@ -149,7 +149,6 @@ public abstract class Drive extends CommandBasedTeleOp
         telemetry.addData("dt(s)", this::dt);
         telemetry.addData("angle", armSubsystem::getAngle);
         telemetry.addData("lift height", liftSubsystem::getHeight);
-        telemetry.addData("lift height sensor", liftSubsystem::getSensorHeight);
         telemetry.addData("has freight", intakeSubsystem::hasFreight);
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
         telemetry.addData("LineColorSensorBrightness", driveTrain::getLineColorSensorBrightness);

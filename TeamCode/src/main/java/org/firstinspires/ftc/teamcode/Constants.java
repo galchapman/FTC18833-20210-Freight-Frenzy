@@ -49,8 +49,8 @@ public final class Constants {
     }
 
     public static final class LiftConstants {
-        public static final int inverse_motor_gear = 80;
-        public static final int ticks_per_motor_revolution = MotorConstants.RevHDHexMotor.ticks_per_revolution * inverse_motor_gear;
+        public static final double inverse_motor_gear = 5.23 * 3.61 * 3.61;
+        public static final double ticks_per_motor_revolution = MotorConstants.RevHDHexMotor.ticks_per_revolution * inverse_motor_gear;
         public static final double gear = 15f / 10f;
         public static final int ticks_per_revolution = (int)(ticks_per_motor_revolution / gear);
         public static final double gear_radios = 0.0205;
@@ -58,7 +58,7 @@ public final class Constants {
         public static final double distance_per_tick = distance_per_revolution / ticks_per_revolution;
 
         public static final double lower_plate_height = 0.165;
-        public static final double sensor_height = 0.087;
+        public static final double top_height = 0.41;
     }
 
     public static final class ArmConstants {
@@ -71,7 +71,8 @@ public final class Constants {
     }
 
     public static final class DucksConstants {
-        public static final double biggerWheelDiameter = 15 * 0.0254;
+        public static final double motorGear = 3.61 * 2.89;
+        public static final double biggerWheelDiameter = motorGear * 0.0254;
         public static final double wheelDiameter = 0.059;
         public static final double ticks_per_rotation =
                 MotorConstants.RevHDHexMotor.ticks_per_revolution * 12
