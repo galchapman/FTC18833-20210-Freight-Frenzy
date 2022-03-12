@@ -42,7 +42,7 @@ public class RedDrive extends Drive {
                 .strafeTo(new Vector2d(-0.275, -1.175))
                 .build();
 
-        gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.525));
+        gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.6));
 
 
 //        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100
