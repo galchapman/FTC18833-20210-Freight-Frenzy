@@ -95,7 +95,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public enum OdometryPosition {
         Up(1),
-        Down(0.6);
+        Down(0.55);
 
         private final double servo_position;
         OdometryPosition(double pos) {

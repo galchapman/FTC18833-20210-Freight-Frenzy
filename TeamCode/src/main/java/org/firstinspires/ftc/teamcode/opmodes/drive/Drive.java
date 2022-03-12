@@ -176,6 +176,11 @@ public abstract class Drive extends CommandBasedTeleOp
     public abstract void updateFtcDashboardTelemetry(TelemetryPacket packet);
 
     @Override
+    public void start() {
+        resetStartTime();
+    }
+
+    @Override
     public void end() {
         RobotUniversal.endPosition = driveTrain.getPoseEstimate();
     }

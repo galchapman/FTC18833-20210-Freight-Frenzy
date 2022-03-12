@@ -6,27 +6,19 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
-import org.firstinspires.ftc.teamcode.commands.drive.FollowTrajectoryCommand;
-import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 @TeleOp(name="Red Drive", group = "Drive")
 @Config
 public class RedDrive extends Drive {
-    public static double maxPower = 0.885;
-    public static double minPower = 0.55;
-    public static double accelerationSpeed = 0.55;
-    public static double wait = 0.7;
     @Override
     public void assign() {
         super.assign();
@@ -39,7 +31,7 @@ public class RedDrive extends Drive {
         driveTrain.setDefaultCommand(tankDriveCommand);
         gp1.y().whenPressed(fancyDuckIndexCommand);
 
-        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.2, () -> (gp1.left_stick_y() > 0)? 1:(gp1.left_stick_y()<0)? -1:0, () -> 0, 0)));
+        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.1, () -> (gp1.left_stick_y() > 0)? 1:(gp1.left_stick_y()<0)? -1:0, () -> 0, 0)));
 
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 
@@ -53,25 +45,33 @@ public class RedDrive extends Drive {
         gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, -70, 1, 0.525));
 
 
-        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100
-                && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
-                new SequentialCommandGroup(
-                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663, driveTrain.getPoseEstimate().getHeading()));
-                            driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);}),
-                        new WaitCommand(0.5),
-                        new InstantCommand(() ->
-                                    new FollowTrajectoryCommand(driveTrain, trajectorySequence).andThen(
-                                            new InstantCommand(
-                                                    () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up))
-                                    ).withInterrupt(() -> gamepad1.b).schedule()
-                                )
-                ).withInterrupt(() -> gamepad1.b)
-        );
-        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20) && driveTrain.getRightDistance() < 0.20)
-                .whenActive(() -> gamepad1.rumble(500));
+//        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100
+//                && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20)).whenActive(
+//                new SequentialCommandGroup(
+//                        new InstantCommand(() -> {driveTrain.setPose(new Pose2d(0.835, -1.663, driveTrain.getPoseEstimate().getHeading()));
+//                            driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);}),
+//                        new WaitCommand(0.5),
+//                        new InstantCommand(() ->
+//                                    new FollowTrajectoryCommand(driveTrain, trajectorySequence).andThen(
+//                                            new InstantCommand(
+//                                                    () -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up))
+//                                    ).withInterrupt(() -> gamepad1.b).schedule()
+//                                )
+//                ).withInterrupt(() -> gamepad1.b)
+//        );
+//        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20) && driveTrain.getRightDistance() < 0.20)
+//                .whenActive(() -> gamepad1.rumble(500));
+//
+//        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100)
+//                .whenActive(() -> gamepad1.rumble(500));
 
-        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100)
-                .whenActive(() -> gamepad1.rumble(500));
+        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        new Trigger(() -> getRuntime() > 20).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA));
+        new Trigger(() -> getRuntime() > 40).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE_GREEN));
+        new Trigger(() -> getRuntime() > 60).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.ORANGE));
+        new Trigger(() -> getRuntime() > 80).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE));
+        new Trigger(() -> getRuntime() > 100).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED));
+        new Trigger(() -> getRuntime() > 120).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED));
     }
 
     @Override

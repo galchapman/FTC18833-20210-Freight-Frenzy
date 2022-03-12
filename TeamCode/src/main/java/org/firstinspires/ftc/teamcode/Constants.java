@@ -37,7 +37,7 @@ public final class Constants {
 
         public final static double kV = 0.5903;
         public final static double kStatic = 0.12282;
-        public final static double kA = 0.1;
+        public static double kA = 0.1;
 
         @Config
         public final static class OdometryConstants {
@@ -80,8 +80,8 @@ public final class Constants {
         public static final double maxPower = 0.85;
         public static final double minPower = 0.3;
         public static final double accelerationSpeed = 1.5;
-        public static final double blueSpin = -1.3;
-        public static final double redSpin = 1.3;
+        public static final double blueSpin = -1.5;
+        public static final double redSpin = 1.5;
     }
 
     @Config
@@ -91,12 +91,12 @@ public final class Constants {
 
         public static Rect FarRedARect = new Rect(700, 550, 225, 200);
         public static Rect FarRedBRect = new Rect(1150, 550, 50, 200);
-        public static Rect NearRedARect = new Rect(0,0, 1, 1);
-        public static Rect NearRedBRect = new Rect(0,0, 1, 1);
+        public static Rect NearRedARect = new Rect(700, 550, 225, 200);
+        public static Rect NearRedBRect = new Rect(1150, 550, 50, 200);
         public static Rect FarBlueBRect = new Rect(0, 550, 130, 200);
         public static Rect FarBlueCRect = new Rect(355, 550, 225, 200);
-        public static Rect NearBlueBRect = new Rect(0,0, 1, 1);
-        public static Rect NearBlueCRect = new Rect(0,0, 1, 1);
+        public static Rect NearBlueBRect = new Rect(0, 550, 130, 200);
+        public static Rect NearBlueCRect = new Rect(355, 550, 225, 200);
 
         public static double HueThresholdLow = 55;
         public static double HueThresholdHigh = 95;
