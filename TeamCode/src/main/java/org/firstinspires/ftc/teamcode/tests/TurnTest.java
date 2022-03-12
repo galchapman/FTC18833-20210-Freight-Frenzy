@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-@Autonomous(group = "tests")
+@Autonomous(name = "Turn test", group = "tests")
 public class TurnTest extends CommandBasedAuto {
 
     DriveTrainSubsystem driveTrain;
