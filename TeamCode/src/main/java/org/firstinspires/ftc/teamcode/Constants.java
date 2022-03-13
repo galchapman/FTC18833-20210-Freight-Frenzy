@@ -80,8 +80,8 @@ public final class Constants {
         public static final double maxPower = 0.85;
         public static final double minPower = 0.3;
         public static final double accelerationSpeed = 1.5;
-        public static final double blueSpin = -1.5;
-        public static final double redSpin = 1.5;
+        public static final double blueSpin = -1.7;
+        public static final double redSpin = 1.7;
     }
 
     @Config
@@ -90,9 +90,9 @@ public final class Constants {
         public final static int camera_height = 800;
 
         public static Rect FarRedARect = new Rect(700, 550, 225, 200);
-        public static Rect FarRedBRect = new Rect(1150, 550, 50, 200);
+        public static Rect FarRedBRect = new Rect(1150, 550, 130, 200);
         public static Rect NearRedARect = new Rect(700, 550, 225, 200);
-        public static Rect NearRedBRect = new Rect(1150, 550, 50, 200);
+        public static Rect NearRedBRect = new Rect(1150, 550, 130, 200);
         public static Rect FarBlueBRect = new Rect(0, 550, 130, 200);
         public static Rect FarBlueCRect = new Rect(355, 550, 225, 200);
         public static Rect NearBlueBRect = new Rect(0, 550, 130, 200);

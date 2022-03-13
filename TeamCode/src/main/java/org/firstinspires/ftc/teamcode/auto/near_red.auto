@@ -1,35 +1,38 @@
-#@set A false
-#@set B false
-#@set C true
+# @set A false
+# @set B false
+# @set C true
 # bring down the duck
 follow go_to_duck_position
-ducks 1.3 #that is a fancy Command
+ducks 1.7 #that is a fancy Command
 wait 2 # rotate tolet time!!!
 
 # places the marked freight
 follow put_cube_step_1 # go to the first stasion
 
 @if A
+	set lift height 0.20
 	set arm power 0.5 
 	set arm angle 80deg
 	wait 0.3
-	set intake height 0.45
+	set intake height 0.4
 	follow go_to_low
 	wait 0.45
-	set intake 0.6
 	door LowerPlacement
-	wait 0.3
+	wait 0.2
+	set intake -0.6
+	wait 0.7
 	set intake 0
 	door Close
 
 @elif B
 	set arm power 0.5 
-	set arm angle 80deg
+	set arm angle 83deg
 	wait 0.3
-	follow go_to_high_or_mid
+	follow go_to_mid
 	set intake height 0.65
 	wait 0.5
 	door Open
+	wait 0.2
 	set intake -0.6
 	wait 0.8
 	door Close
@@ -42,10 +45,11 @@ follow put_cube_step_1 # go to the first stasion
 	set arm angle 80deg
 	set lift height 0.3
 	wait 0.3
-	follow go_to_high_or_mid
+	follow go_to_high
 	set intake height 0.65
 	wait 0.5
 	door Open
+	wait 0.2
 	set intake -0.6
 	wait 0.8
 	door Close
@@ -54,14 +58,20 @@ follow put_cube_step_1 # go to the first stasion
 	set intake height 1
 
 # return arms
-set lift height 0.18
+set intake height 1
+set lift height 0.16
 set arm power 0.15
 set arm angle 0deg
 turn -180deg
-set intake height 1
 wait 0.5
 @if A
 	follow stick_to_the_wall_low
+@elif B
+	follow stick_to_the_wall_mid
 @else
-	follow stick_to_the_wall_high_or_mid
+	follow stick_to_the_wall_high
 follow go_to_box
+turn 90deg
+wait 0.4
+follow stick_to_the_wall_in_box_1
+follow stick_to_the_wall_in_box_2

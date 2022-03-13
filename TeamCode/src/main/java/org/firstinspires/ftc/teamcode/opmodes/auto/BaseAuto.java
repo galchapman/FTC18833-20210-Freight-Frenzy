@@ -53,7 +53,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         liftSubsystem = new LiftSubsystem();
-        //vision = new VisionSubsystem();
+        vision = new VisionSubsystem();
         ducksSubsystem = new DucksSubsystem();
 
         thread = new RoadRunnerThread(driveTrain);

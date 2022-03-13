@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
@@ -62,16 +61,8 @@ public class RedDrive extends Drive {
 //        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100 && Math.abs(-Math.PI - (driveTrain.getDriveHeading() + driveTrain.getHeading())) < Math.toRadians(20) && driveTrain.getRightDistance() < 0.20)
 //                .whenActive(() -> gamepad1.rumble(500));
 //
-//        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 100)
-//                .whenActive(() -> gamepad1.rumble(500));
-
-        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
-        new Trigger(() -> getRuntime() > 20).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA));
-        new Trigger(() -> getRuntime() > 40).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE_GREEN));
-        new Trigger(() -> getRuntime() > 60).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.ORANGE));
-        new Trigger(() -> getRuntime() > 80).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE));
-        new Trigger(() -> getRuntime() > 100).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED));
-        new Trigger(() -> getRuntime() > 120).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED));
+        new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 200)
+                .whileActiveContinuous(() -> gamepad1.rumble(500));
     }
 
     @Override

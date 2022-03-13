@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.subsystems.LEDSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -64,7 +65,8 @@ public abstract class Drive extends CommandBasedTeleOp
     }
 
     private double getArmRotationPower() {
-        double power = 0.5 * (gamepad2.right_trigger - gamepad2.left_trigger);
+        double power = ((gamepad2.right_trigger - gamepad2.left_trigger > 0)? 1: (gamepad2.right_trigger - gamepad2.left_trigger < 0)? -1: 0)
+                * ((gamepad2.dpad_left)? 0.2:0.5);
         if (armSubsystem.getAngle() > -80 && armSubsystem.getAngle() < 85)  return power;
         else if (power > 0 && armSubsystem.getAngle() < -80)                return power;
         else if (power < 0 && armSubsystem.getAngle() > 85)                 return power;
@@ -112,7 +114,8 @@ public abstract class Drive extends CommandBasedTeleOp
 
         GoToIntakePositionCommand = new InstantCommand(
                 () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Close); })
-                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height + 0.005, 1, 0, 1, 0));
+                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height + 0.005, 1, 0, 1, 0))
+        .withInterrupt(() -> gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0);
         GoToScoringPositionCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.20, 1, 50, 0.6, 0.5);
 
         // DriveTrain commands
@@ -136,7 +139,7 @@ public abstract class Drive extends CommandBasedTeleOp
         gp2.x().whenActive(() -> armSubsystem.setVerticalPosition(0.4), armSubsystem);
 
         gp2.right_stick_button().whenPressed(GoToIntakePositionCommand);
-        gp2.left_stick_button().whenPressed(GoToScoringPositionCommand);
+        gp2.left_stick_button().whenPressed(GoToScoringPositionCommand.withInterrupt(() -> gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0));
         gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1).alongWith(new InstantCommand(() -> armSubsystem.setVerticalPosition(0.65))));
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
@@ -171,6 +174,26 @@ public abstract class Drive extends CommandBasedTeleOp
 
         telemetry.addData("left distance", driveTrain::getLeftDistance);
         telemetry.addData("right distance", driveTrain::getRightDistance);
+
+        // green flash when a mineral enters the intake
+        new Trigger(intakeSubsystem::hasFreight).whenActive(new CommandBase() {
+            RevBlinkinLedDriver.BlinkinPattern pattern;
+            @Override
+            public void initialize() {
+                pattern = ledSubsystem.getPattern();
+                ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                ledSubsystem.setPattern(pattern);
+            }
+        }.withTimeout(0.5));
+
+
+        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+        new Trigger(() -> getRuntime() > 75).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED));
+        new Trigger(() -> getRuntime() > 110).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE));
     }
 
     public abstract void updateFtcDashboardTelemetry(TelemetryPacket packet);

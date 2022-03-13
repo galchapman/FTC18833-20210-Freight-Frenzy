@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
 
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 @Config
 @TeleOp(name="Blue Drive", group = "Drive")
 public class BlueDrive extends Drive {
@@ -30,7 +32,9 @@ public class BlueDrive extends Drive {
 
         gp1.y().whenPressed(fancyDuckIndexCommand);
 
-        gp1.a().whileHeld(arcadeDriveCommand);
+        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.1, () -> (gp1.left_stick_y() > 0)? -1:(gp1.left_stick_y()<0)? 1:0, () -> 0, 0)));
+
+        new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 
         telemetry.addData("ducks spins", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
         telemetry.addData("ducks power", ducksSubsystem::getPower);

@@ -92,9 +92,4 @@ public class TestView extends OpMode {
     public void loop() {
         telemetry.update();
     }
-
-    @Override
-    public void stop() {
-        camera.stopStreaming();
-    }
 }

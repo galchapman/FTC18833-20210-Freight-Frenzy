@@ -4,11 +4,10 @@ import android.annotation.SuppressLint;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
-@Disabled
+//@Disabled
 @Autonomous(name = "Far Blue", preselectTeleOp = "Blue Drive", group = "Auto: blue")
 public class FarBlueAuto extends LoadedAuto {
     @SuppressLint("SdCardPath")
