@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.megiddo.lions.execption.LanguageException;
 import kotlin.jvm.functions.Function2;
 
 public class TrajectoryLoader {
@@ -89,7 +90,8 @@ public class TrajectoryLoader {
             }
 
             return trajectories;
-        } catch (JSONException ignored) {}
-        return null;
+        } catch (JSONException exception) {
+            throw new LanguageException("JSONException", exception.toString(), 0, 0);
+        }
     }
 }
