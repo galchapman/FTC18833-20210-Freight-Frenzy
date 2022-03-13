@@ -10,6 +10,7 @@ public class FollowTrajectoryCommand extends CommandBase {
     private final DriveTrainSubsystem driveTrain;
     private final Trajectory trajectory;
     private boolean wasTrajectoryControlled;
+    private long startTime;
 
     public FollowTrajectoryCommand(DriveTrainSubsystem driveTrain, Trajectory trajectory) {
         this.driveTrain = driveTrain;
@@ -23,11 +24,13 @@ public class FollowTrajectoryCommand extends CommandBase {
         driveTrain.followTrajectoryAsync(trajectory);
         wasTrajectoryControlled = driveTrain.trajectoryControlled;
         driveTrain.trajectoryControlled = true;
+
+        startTime = System.currentTimeMillis();
     }
 
     @Override
     public boolean isFinished() {
-        return !driveTrain.isBusy();
+        return !driveTrain.isBusy() && System.currentTimeMillis() - startTime > 500;
     }
 
     @Override

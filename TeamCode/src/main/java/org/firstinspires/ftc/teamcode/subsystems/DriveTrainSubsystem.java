@@ -78,8 +78,8 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     private final BNO055IMU imu;
 
     public static PIDCoefficients FORWARD_PID = new PIDCoefficients(4, 0, 0); // 4
-    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(7, 0, 0); // 7
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0); // 5
+    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(8, 0, 0); // 7
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 0); // 5
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -95,7 +95,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public enum OdometryPosition {
         Up(1),
-        Down(0.45);
+        Down(0.5);
 
         private final double servo_position;
         OdometryPosition(double pos) {
@@ -152,11 +152,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
             }
 
             @Override
-            public Double getHeadingVelocity() {
-                return (double) imu.getAngularVelocity().zRotationRate;
-            }
-
-            @Override
             public List<Double> getWheelVelocities() {
                 return Arrays.asList(getLeftVelocity(), getHorizontalVelocity());
             }
@@ -206,9 +201,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
                 DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
                 if (signal != null)
                     setDriveSignal(signal);
-            } else {
-                updatePoseEstimate();
-                trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
             }
         }
 
