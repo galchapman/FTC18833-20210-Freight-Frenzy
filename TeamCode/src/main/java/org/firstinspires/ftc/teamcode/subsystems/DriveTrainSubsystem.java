@@ -169,7 +169,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 //        });
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
-                new Pose2d(0.02, 0.02, Math.toRadians(5)), 0.5);
+                new Pose2d(0.1, 0.02, Math.toRadians(5)), 0.5);
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
         trajectoryControlled = RobotUniversal.opModeType == RobotUniversal.OpModeType.Autonomous; // check if Opmode is autonomous

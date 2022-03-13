@@ -39,16 +39,16 @@
 	follow back_of_from_tower_BC
 	turn -90deg
 	follow go_to_intake_position_BC
-
-# intake first freight
-set intake height 0
-set intake 1
-follow first_intake
-set intake height 1
-wait 0.3
-set intake 0
-# return to tower
-follow first_return_to_tower_part1
+intake 1
+# # intake first freight
+# set intake height 0
+# set intake 1
+# follow first_intake
+# set intake height 1
+# wait 0.3
+# set intake 0
+# # return to tower
+# follow first_return_to_tower_part1
 set lift height 0.32
 set arm power 0.2
 set arm angle -70deg
@@ -66,15 +66,16 @@ set intake height 0.8
 set lift height 0.17
 set arm angle 0
 follow go_to_intake_position2
-# intake
-set intake height 0
-set intake 1
-follow second_intake
-set intake height 1
-wait 0.3
-set intake 0
-# second return to tower
-follow second_return_to_tower_part1
+intake 1.3
+# # intake
+# set intake height 0
+# set intake 1
+# follow second_intake
+# set intake height 1
+# wait 0.3
+# set intake 0
+# # second return to tower
+# follow second_return_to_tower_part1
 set lift height 0.32
 set arm power 0.2
 set arm angle -70deg
@@ -89,7 +90,7 @@ set intake 0
 door Close
 # go to intake
 set intake height 0.8
-set lift height 0.17
+set lift height 0.16
 set arm angle 0
 follow go_to_intake_position3
 # intake

@@ -158,13 +158,13 @@
 				{
 					"name": "strafe",
 					"x": 0.3,
-					"y": -1.675
+					"y": -1.7
 				}
 			]
 		},
 		{
 			"name": "third_intake",
-			"start_pos": {"x": 0.3, "y": -1.675, "heading": 0},
+			"start_pos": {"x": 0.3, "y": -1.7, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{

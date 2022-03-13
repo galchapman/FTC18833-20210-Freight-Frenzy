@@ -36,7 +36,7 @@ public class IntakeMineralCommand extends CommandBase {
     @Override
     public void initialize() {
         forwardTrajectory = m_driveTrain.trajectoryBuilder(m_driveTrain.getPoseEstimate(),
-                DriveTrainSubsystem.getVelocityConstraint(Constants.DriveTrainConstants.MaxVelocity / 2,
+                DriveTrainSubsystem.getVelocityConstraint(Constants.DriveTrainConstants.MaxVelocity  * 0.5,
                         Constants.DriveTrainConstants.MaxAnglerVelocity,
                         Constants.DriveTrainConstants.TrackWidth))
                 .forward(MAX_DISTANCE).build();
