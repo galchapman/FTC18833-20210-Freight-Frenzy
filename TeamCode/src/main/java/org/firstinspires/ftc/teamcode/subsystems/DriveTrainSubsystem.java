@@ -282,10 +282,20 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public void arcadeDrive(double x, double y,double spin) {
-        m_FrontLeftMotor.setPower(x + y + spin);
-        m_RearLeftMotor.setPower(-x + y + spin);
-        m_FrontRightMotor.setPower(-x + y - spin);
-        m_RearRightMotor.setPower(x + y - spin);
+        double[] powers = new double[]{x + y + spin, -x + y + spin, -x + y - spin, x + y - spin};
+
+        double max = 1;
+        for (double power:
+             powers) {
+            if (Math.abs(power) > max) {
+                max = Math.abs(power);
+            }
+        }
+
+        m_FrontLeftMotor.setPower(powers[0] / max);
+        m_RearLeftMotor.setPower(powers[1] / max);
+        m_FrontRightMotor.setPower(powers[2] / max);
+        m_RearRightMotor.setPower(powers[3] / max);
     }
 
     public void setPowers(double frontLeft, double rearLeft, double frontRight, double rearRight) {

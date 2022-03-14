@@ -21,7 +21,7 @@ public class BlueDrive extends Drive {
     public void assign() {
         super.assign();
         GoToScoringPositionCommand.setTarget(0.20, -50, 0.5);
-        GoToSippingHubCommand.setTarget(0.395, 70, 0.75);
+        GoToSippingHubCommand.setTarget(0.395, 70, 0.57);
         arcadeDriveCommand = new FieldCentricArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_x, Math.toDegrees(90));
 
         gp1.x().whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(90))));
@@ -32,9 +32,9 @@ public class BlueDrive extends Drive {
 
         gp1.y().whenPressed(fancyDuckIndexCommand);
 
-        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.15,
-                () -> (Math.abs(gp1.left_stick_y()) > 0.1) ? 1 :
-                        (Math.abs(gp1.left_stick_y()) < 0 ? -1 : 0), () -> 0)));
+        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> 0.15,
+                () -> (gp1.left_stick_y() > 0.1) ? 1 :
+                        (gp1.left_stick_y() < -0.1 ? -1 : 0), () -> 0)));
 
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 

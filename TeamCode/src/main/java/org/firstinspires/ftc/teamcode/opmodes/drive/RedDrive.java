@@ -20,7 +20,7 @@ public class RedDrive extends Drive {
     public void assign() {
         super.assign();
         GoToScoringPositionCommand.setTarget(0.20, 50, 0.5);
-        GoToSippingHubCommand.setTarget(0.395, -70, 0.75);
+        GoToSippingHubCommand.setTarget(0.395, -70, 0.57);
         fancyDuckIndexCommand = new FancyDuckIndexCommand(ducksSubsystem, Constants.DucksConstants.maxPower, Constants.DucksConstants.minPower, Constants.DucksConstants.accelerationSpeed, Constants.DucksConstants.redSpin);
         arcadeDriveCommand = new FieldCentricArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_y, Math.toDegrees(-90));
 
@@ -29,9 +29,11 @@ public class RedDrive extends Drive {
         driveTrain.setDefaultCommand(tankDriveCommand);
         gp1.y().whenPressed(fancyDuckIndexCommand);
 
-        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> 0.1, () -> (gp1.left_stick_y() > 0)? 1:(gp1.left_stick_y()<0)? -1:0, () -> 0)));
-
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
+
+        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.15,
+                () -> (gp1.left_stick_y() > 0.1) ? 1 :
+                        (gp1.left_stick_y() < -0.1 ? -1 : 0), () -> 0)));
 
         telemetry.addData("index", ducksSubsystem::getCurrentPosition);
         telemetry.addData("index rotation", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);

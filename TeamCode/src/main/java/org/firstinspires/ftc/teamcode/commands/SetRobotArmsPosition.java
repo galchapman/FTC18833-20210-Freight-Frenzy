@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class SetRobotArmsPosition extends SequentialCommandGroup {
 
@@ -65,12 +65,6 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
         }
 
         @Override
-        public void end(boolean interrupted) {
-            m_liftSubsystem.stop();
-            m_liftSubsystem.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-
-        @Override
         public boolean isFinished() {return !m_liftSubsystem.isBusy();}
     }
 
@@ -93,20 +87,28 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
                                 .andThen(new StopArmCommand(armSubsystem).withTimeout(0.7))
                 );
 
-        if (!Double.isNaN(m_targetIntakePosition)) {
-            command.addCommands(new InstantCommand(() -> armSubsystem.setVerticalPosition(m_targetIntakePosition)));
-        }
-
         addCommands(
                 new InstantCommand(() -> armSubsystem.setVerticalPosition(1)),
-                new WaitCommand(0.3),
-                command
+                command.withInterrupt(() -> Math.abs(liftSubsystem.getHeight() - m_setLiftHeightCommand.m_height) < 0.1)
         );
+
+        if (!Double.isNaN(m_targetIntakePosition)) {
+            addCommands(
+                    new InstantCommand(() -> armSubsystem.setVerticalPosition(m_targetIntakePosition)));
+        }
+
+        addCommands(new WaitUntilCommand(() -> !liftSubsystem.isBusy()));
     }
 
     public void setTarget(double liftHeight, double armAngle, double intakePosition) {
         m_setLiftHeightCommand.m_height = liftHeight;
         m_rotateArmCommand.m_angle = armAngle;
         m_targetIntakePosition = intakePosition;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        m_setLiftHeightCommand.m_liftSubsystem.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
