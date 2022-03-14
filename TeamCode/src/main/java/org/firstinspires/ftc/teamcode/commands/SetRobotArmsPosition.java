@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class SetRobotArmsPosition extends SequentialCommandGroup {
@@ -31,11 +32,6 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
             m_ArmSubsystem.setAngle(m_angle);
             m_ArmSubsystem.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
             m_ArmSubsystem.setPower(m_power);
-        }
-
-        @Override
-        public void end(boolean interrupted) {
-            m_ArmSubsystem.stop();
         }
 
         @Override
@@ -89,6 +85,7 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
 
         addCommands(
                 new InstantCommand(() -> armSubsystem.setVerticalPosition(1)),
+                new WaitCommand(0.2),
                 command.withInterrupt(() -> Math.abs(liftSubsystem.getHeight() - m_setLiftHeightCommand.m_height) < 0.1)
         );
 
@@ -111,5 +108,7 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
         super.end(interrupted);
         m_setLiftHeightCommand.m_liftSubsystem.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_setLiftHeightCommand.m_liftSubsystem.stop();
+        m_rotateArmCommand.m_ArmSubsystem.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m_rotateArmCommand.m_ArmSubsystem.stop();
     }
 }
