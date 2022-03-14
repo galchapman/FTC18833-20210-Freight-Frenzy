@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmPowerCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmToPositionCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.SetIntakeArmPositionCommand;
-import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.FieldCentricArcadeDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.GeneralDriveLeftCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.GeneralDriveRightCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.TankDriveCommand;
@@ -40,7 +40,7 @@ public abstract class Drive extends CommandBasedTeleOp
     LEDSubsystem ledSubsystem;
     // Drive Commands
     TankDriveCommand tankDriveCommand;
-    ArcadeDriveCommand arcadeDriveCommand;
+    FieldCentricArcadeDriveCommand arcadeDriveCommand;
     GeneralDriveLeftCommand driveLeftCommand;
     GeneralDriveRightCommand driveRightCommand;
     // Lift Commands
@@ -57,6 +57,7 @@ public abstract class Drive extends CommandBasedTeleOp
     //Multiple subsystem commands
     Command GoToIntakePositionCommand;
     SetRobotArmsPosition GoToScoringPositionCommand;
+    SetRobotArmsPosition GoToSippingHubCommand;
 
     private double getDriveSpeed() {
         if (gamepad1.left_trigger > 0)          return 0.5;
@@ -117,6 +118,8 @@ public abstract class Drive extends CommandBasedTeleOp
                 .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height, 1, 0, 1, 0));
         GoToScoringPositionCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.20, 1, 50, 0.6, 0.5);
 
+        GoToSippingHubCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, 70, 1, 0.7);
+
         // DriveTrain commands
         driveTrain.setDefaultCommand(tankDriveCommand);
 //        gp1.x().whileHeld(arcadeDriveCommand);
@@ -130,8 +133,8 @@ public abstract class Drive extends CommandBasedTeleOp
         // Arm command
         armSubsystem.setDefaultCommand(rotateArmContinuouslyCommand);
 
-        gp2.left_bumper().whileHeld(() -> armSubsystem.setVerticalPosition(Math.min(armSubsystem.getVerticalPosition()+0.015, 0.65)));
-        gp2.right_bumper().whileHeld(() -> armSubsystem.setVerticalPosition(Math.max(armSubsystem.getVerticalPosition()-0.015, 0)));
+        gp2.left_bumper().whileHeld(() -> armSubsystem.setVerticalPosition(Math.min(armSubsystem.getVerticalPosition()+0.03, 1)));
+        gp2.right_bumper().whileHeld(() -> armSubsystem.setVerticalPosition(Math.max(armSubsystem.getVerticalPosition()-0.03, 0)));
 
         gp2.b().whenActive(() -> armSubsystem.setVerticalPosition(1), armSubsystem);
         gp2.a().and(new Trigger(this::canLowerArm)).whenActive(() -> armSubsystem.setVerticalPosition(0), armSubsystem);
@@ -139,12 +142,10 @@ public abstract class Drive extends CommandBasedTeleOp
 
         gp2.right_stick_button().whenPressed(GoToIntakePositionCommand);
         gp2.left_stick_button().whenPressed(GoToScoringPositionCommand.withInterrupt(() -> gamepad2.right_trigger > 0.2 || gamepad2.left_trigger > 0.2));
-        gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1).alongWith(new InstantCommand(() -> armSubsystem.setVerticalPosition(0.65))));
+        gp2.dpad_up().whenPressed(GoToSippingHubCommand);
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
         gp2.y().whenPressed(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.2)));
-        // Capping element
-        gp1.x().whenPressed(new InstantCommand(() -> intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.LowerPlacement)));
 
         // Telemetry
         // No need for anything but update in loop because use of suppliers
@@ -155,6 +156,7 @@ public abstract class Drive extends CommandBasedTeleOp
         telemetry.addData("has freight", intakeSubsystem::hasFreight);
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
         telemetry.addData("LineColorSensorBrightness", driveTrain::getLineColorSensorBrightness);
+        telemetry.addData("intake height", armSubsystem::getVerticalPosition);
 
         new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0 && getRuntime() - lastRumble > 1)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500); lastRumble=getRuntime();});
 

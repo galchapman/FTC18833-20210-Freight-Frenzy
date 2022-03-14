@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
@@ -12,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 /**
  * This auto is used to set robot position after restart
  */
-@Disabled
+//@Disabled
 @Autonomous(name = "Set Alliance Red", preselectTeleOp = "Red Drive", group = "Auto: red")
 public class GenericRedAuto extends BaseAuto {
 

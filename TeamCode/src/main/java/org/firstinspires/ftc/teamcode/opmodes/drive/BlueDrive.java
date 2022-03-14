@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
-import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.FieldCentricArcadeDriveCommand;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -21,8 +21,8 @@ public class BlueDrive extends Drive {
     public void assign() {
         super.assign();
         GoToScoringPositionCommand.setTarget(0.20, -50, 0.5);
-        arcadeDriveCommand = new ArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_x, Math.toDegrees(90));
-        gp2.dpad_up().whenPressed(new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.395, 1, 70, 1, 0.525));
+        GoToSippingHubCommand.setTarget(0.395, 70, 0.75);
+        arcadeDriveCommand = new FieldCentricArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_x, Math.toDegrees(90));
 
         gp1.x().whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(90))));
 
@@ -32,7 +32,9 @@ public class BlueDrive extends Drive {
 
         gp1.y().whenPressed(fancyDuckIndexCommand);
 
-        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.1, () -> (gp1.left_stick_y() > 0)? -1:(gp1.left_stick_y()<0)? 1:0, () -> 0, 0)));
+        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.15,
+                () -> (Math.abs(gp1.left_stick_y()) > 0.1) ? 1 :
+                        (Math.abs(gp1.left_stick_y()) < 0 ? -1 : 0), () -> 0)));
 
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 
