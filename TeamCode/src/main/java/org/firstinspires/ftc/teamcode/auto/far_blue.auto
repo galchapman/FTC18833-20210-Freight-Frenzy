@@ -16,7 +16,6 @@
 	set intake height 0.65
 	follow go_to_high_or_mid
 	door Open
-	wait 0.5
 	set intake -0.4
 	wait 0.5
 	door Close
@@ -28,9 +27,11 @@
 	set intake height 0.60
 	wait 0.7
 	door Open
+	set intake -0.4
 	wait 0.4
 	set intake height 1
 	door Close
+	set intake 0
 	set lift height 0.17
 # go to intake position
 @if A
