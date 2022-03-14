@@ -114,8 +114,8 @@ public abstract class Drive extends CommandBasedTeleOp
 
         GoToIntakePositionCommand = new InstantCommand(
                 () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Close); })
-                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height + 0.005, 1, 0, 1, 0))
-        .withInterrupt(() -> gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0);
+                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height, 1, 0, 1, 0))
+        .withInterrupt(() -> gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1);
         GoToScoringPositionCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.20, 1, 50, 0.6, 0.5);
 
         // DriveTrain commands
