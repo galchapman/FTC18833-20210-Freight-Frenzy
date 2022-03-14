@@ -110,5 +110,6 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
     public void end(boolean interrupted) {
         super.end(interrupted);
         m_setLiftHeightCommand.m_liftSubsystem.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m_setLiftHeightCommand.m_liftSubsystem.stop();
     }
 }
