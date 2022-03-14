@@ -10,12 +10,15 @@
 	door LowerPlacement
 	wait 0.3
 	set intake 0
+	set intake height 1
 	door Close
 @elif B
 	follow go_to_high_or_mid
 	set intake height 0.65
 	wait 0.5
 	door Open
+	wait 0.2
+	set intake -0.4
 	wait 0.5
 	door Close
 	wait 0.2
@@ -39,6 +42,7 @@
 	follow back_of_from_tower_BC
 	turn -90deg
 	follow go_to_intake_position_BC
+
 # intake first freight
 set intake height 0
 set intake 1
@@ -97,16 +101,3 @@ set intake height 0
 follow third_intake
 set intake height 1
 set intake 0
-# # return to tower
-# follow third_return_to_tower_part1
-# set lift height 0.32
-# set arm power 0.2
-# set arm angle -70deg
-# follow third_return_to_tower_part2
-# # put freight
-# set intake height 0.60
-# set intake -0.6
-# door Open
-# wait 0.5
-# set intake 0
-# door Close

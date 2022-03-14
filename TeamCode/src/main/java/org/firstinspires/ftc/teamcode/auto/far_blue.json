@@ -26,7 +26,7 @@
 		},
 		{
 			"name": "back_of_from_tower_A",
-			"start_pos": {"x": -0.3, "y": 1.27, "heading": -90},
+			"start_pos": {"x": -0.3, "y": 1.24, "heading": -90},
 			"reversed": true,
 			"segments": [
 				{
@@ -37,13 +37,13 @@
 		},
 		{
 			"name": "go_to_intake_position_A",
-			"start_pos": {"x": -0.3, "y": 1.47, "heading": 0},
+			"start_pos": {"x": -0.3, "y": 1.44, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
 					"x": 0.30,
-					"y": 1.70
+					"y": 1.675
 				}
 			]
 		},
@@ -66,13 +66,13 @@
 				{
 					"name": "strafe",
 					"x": 0.30,
-					"y": 1.70
+					"y": 1.675
 				}
 			]
 		},
 		{
 			"name": "first_intake",
-			"start_pos": {"x": 0.3, "y": 1.70, "heading": 0},
+			"start_pos": {"x": 0.3, "y": 1.675, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
@@ -83,116 +83,93 @@
 		},
 		{
 			"name": "first_return_to_tower_part1",
-			"start_pos": {"x": 1.05, "y": 1.70, "heading": 0},
+			"start_pos": {"x": 1.10, "y": 1.675, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{
 					"name": "back",
-					"distance": 0.80 
+					"distance": 1.05 
 				}
 			]
 		},
 		{
 			"name": "first_return_to_tower_part2",
-			"start_pos": {"x": 0.05, "y": 1.70, "heading": 0},
+			"start_pos": {"x": 0.05, "y": 1.675, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -0.3,
+					"x": -0.25,
 					"y": 1.20
 				}
 			]
 		},
 		{
 			"name": "go_to_intake_position2",
-			"start_pos": {"x": -0.3, "y": 1.20, "heading": 0},
+			"start_pos": {"x": -0.25, "y": 1.20, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
 					"x": 0.3,
-					"y": 1.655
+					"y": 1.7
 				}
 			]
 		},
 		{
 			"name": "second_intake",
-			"start_pos": {"x": 0.3, "y": 1.655, "heading": 0},
+			"start_pos": {"x": 0.3, "y": 1.7, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "forward",
-					"distance": 0.90
+					"distance": 0.85
 				}
 			]
 		},
 		{
 			"name": "second_return_to_tower_part1",
-			"start_pos": {"x": 1.05, "y": 1.655, "heading": 0},
+			"start_pos": {"x": 1.05, "y": 1.7, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{
 					"name": "back",
-					"distance": 0.90
+					"distance": 0.85
 				}
 			]
 		},
 		{
 			"name": "second_return_to_tower_part2",
-			"start_pos": {"x": 0.3, "y": 1.655, "heading": 0},
+			"start_pos": {"x": 0.3, "y": 1.7, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -0.3,
+					"x": -0.25,
 					"y": 1.20
 				}
 			]
 		},
 		{
 			"name": "go_to_intake_position3",
-			"start_pos": {"x": -0.3, "y": 1.20, "heading": 0},
+			"start_pos": {"x": -0.25, "y": 1.20, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": 0.3,
-					"y": 1.65
+					"x": 0.25,
+					"y": 1.7
 				}
 			]
 		},
 		{
 			"name": "third_intake",
-			"start_pos": {"x": 0.3, "y": 1.65, "heading": 0},
+			"start_pos": {"x": 0.3, "y": 1.7, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "forward",
-					"distance": 0.95
-				}
-			]
-		},
-		{
-			"name": "third_return_to_tower_part1",
-			"start_pos": {"x": 1.05, "y": 1.65, "heading": 0},
-			"reversed": true,
-			"segments": [
-				{
-					"name": "back",
 					"distance": 0.90
-				}
-			]
-		},
-		{
-			"name": "third_return_to_tower_part2",
-			"start_pos": {"x": 0.3, "y": 1.655, "heading": 0},
-			"reversed": true,
-			"segments": [
-				{
-					"name": "strafe",
-					"x": -0.3,
-					"y": 1.20
 				}
 			]
 		}
