@@ -87,18 +87,20 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
 
         m_targetIntakePosition = intakePosition;
 
+        ParallelCommandGroup command = new ParallelCommandGroup(
+                        m_setLiftHeightCommand,
+                        m_rotateArmCommand.withTimeout(0.5).withInterrupt(() -> Math.abs(armSubsystem.AngleError()) < 10 && Math.abs(armSubsystem.getAngleVelocity()) < 50)
+                                .andThen(new StopArmCommand(armSubsystem).withTimeout(0.7))
+                );
+
+        if (!Double.isNaN(m_targetIntakePosition)) {
+            command.addCommands(new InstantCommand(() -> armSubsystem.setVerticalPosition(m_targetIntakePosition)));
+        }
+
         addCommands(
                 new InstantCommand(() -> armSubsystem.setVerticalPosition(1)),
                 new WaitCommand(0.3),
-                new ParallelCommandGroup(
-                        m_setLiftHeightCommand,
-                        m_rotateArmCommand.withTimeout(0.5).withInterrupt(() -> Math.abs(armSubsystem.AngleError()) < 20)
-                                .andThen(new StopArmCommand(armSubsystem).withTimeout(0)),
-                        new SequentialCommandGroup(
-//                                new WaitUntilCommand(() -> armSubsystem.AngleError() < 10),
-                                new InstantCommand(() -> armSubsystem.setVerticalPosition(m_targetIntakePosition))
-                        )
-                )
+                command
         );
     }
 

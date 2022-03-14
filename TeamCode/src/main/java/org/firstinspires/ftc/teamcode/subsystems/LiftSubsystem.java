@@ -34,7 +34,7 @@ public class LiftSubsystem extends SubsystemBase {
         if (m_bottomLimitSwitch.isPressed()) {
             m_encoderOffset = meters2ticks(lower_plate_height) - m_liftMotor.getCurrentPosition();
             if (m_liftMotor.getTargetPosition() < m_liftMotor.getCurrentPosition())
-                m_liftMotor.setTargetPosition(m_liftMotor.getCurrentPosition());
+                setLiftHeight(lower_plate_height);
         }
     }
 
