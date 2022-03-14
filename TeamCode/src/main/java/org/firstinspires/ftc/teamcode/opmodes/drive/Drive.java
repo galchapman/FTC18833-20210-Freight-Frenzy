@@ -114,8 +114,7 @@ public abstract class Drive extends CommandBasedTeleOp
 
         GoToIntakePositionCommand = new InstantCommand(
                 () -> {saveArmsLocation(); intakeSubsystem.setDoorState(IntakeSubsystem.DoorState.Close); })
-                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height, 1, 0, 1, 0))
-        .withInterrupt(() -> gamepad2.right_trigger > 0.1 || gamepad2.left_trigger > 0.1);
+                .andThen(new SetRobotArmsPosition(armSubsystem, liftSubsystem, Constants.LiftConstants.lower_plate_height, 1, 0, 1, 0));
         GoToScoringPositionCommand = new SetRobotArmsPosition(armSubsystem, liftSubsystem, 0.20, 1, 50, 0.6, 0.5);
 
         // DriveTrain commands
@@ -139,7 +138,7 @@ public abstract class Drive extends CommandBasedTeleOp
         gp2.x().whenActive(() -> armSubsystem.setVerticalPosition(0.4), armSubsystem);
 
         gp2.right_stick_button().whenPressed(GoToIntakePositionCommand);
-        gp2.left_stick_button().whenPressed(GoToScoringPositionCommand.withInterrupt(() -> gamepad2.right_trigger > 0 || gamepad2.left_trigger > 0));
+        gp2.left_stick_button().whenPressed(GoToScoringPositionCommand.withInterrupt(() -> gamepad2.right_trigger > 0.2 || gamepad2.left_trigger > 0.2));
         gp2.dpad_up().whenPressed(new SetLiftHeightCommand(liftSubsystem, 0.4, 1).alongWith(new InstantCommand(() -> armSubsystem.setVerticalPosition(0.65))));
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
