@@ -3,7 +3,8 @@
 #@set C false
 # bring down the duck
 follow go_to_duck_position_step_1
-# turn 90deg
+turn 90deg
+wait 0.5
 follow go_to_duck_position_step_2
 follow go_to_duck_position_step_3
 ducks -1.7 #that is a fancy Command

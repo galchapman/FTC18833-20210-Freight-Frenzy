@@ -21,25 +21,25 @@
                 {
                     "name": "strafe",
                     "x": -1.50,
-                    "y": 1.43
+                    "y": 1.46
                 }
             ]
 		},
         {
             "name": "go_to_duck_position_step_3",
-            "start_pos": {"x": -1.50, "y": 1.43, "heading": 0},
+            "start_pos": {"x": -1.50, "y": 1.46, "heading": 0},
             "reversed": false,
             "segments": [
                 {
                     "name": "strafe",
                     "x": -1.50,
-                    "y": 1.425
+                    "y": 1.5
                 }
             ]
 		},
 		{
 			"name": "put_cube_step_1",
-			"start_pos": {"x": -1.50, "y": 1.52, "heading": 0},
+			"start_pos": {"x": -1.50, "y": 1.5, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
@@ -69,14 +69,14 @@
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -1.02,
+					"x": -1.12,
 					"y": 0.61
 				}
 			]
 		},
 		{
 			"name": "stick_to_the_wall_low",
-			"start_pos": {"x": -1.02, "y": 0.61, "heading": 90},
+			"start_pos": {"x": -1.12, "y": 0.61, "heading": 90},
 			"reversed": false,
 			"segments": [
 				{

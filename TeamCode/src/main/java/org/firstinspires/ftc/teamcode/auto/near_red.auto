@@ -10,7 +10,6 @@ wait 2 # rotate tolet time!!!
 follow put_cube_step_1 # go to the first stasion
 
 @if A
-	set lift height 0.20
 	set arm power 0.5 
 	set arm angle 80deg
 	wait 0.3
@@ -18,8 +17,7 @@ follow put_cube_step_1 # go to the first stasion
 	follow go_to_low
 	wait 0.45
 	door LowerPlacement
-	wait 0.2
-	set intake -0.6
+	set intake -1
 	wait 0.7
 	set intake 0
 	door Close
@@ -29,7 +27,7 @@ follow put_cube_step_1 # go to the first stasion
 	set arm angle 83deg
 	wait 0.3
 	follow go_to_mid
-	set intake height 0.65
+	set intake height 0.6
 	wait 0.5
 	door Open
 	wait 0.2
