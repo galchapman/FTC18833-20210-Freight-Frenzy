@@ -22,6 +22,7 @@
 	wait 0.5
 	door Close
 	wait 0.2
+	set intake 0
 	set intake height 1
 @else # C
 	set lift height 0.37
