@@ -5,9 +5,9 @@
 @if A
 	set intake height 0.45
 	follow go_to_low
-	wait 0.45
-	set intake -0.6
 	door LowerPlacement
+	set intake -1
+	wait 0.45
 	wait 0.3
 	set intake 0
 	set intake height 1
@@ -47,7 +47,6 @@ set intake height 0
 set intake 1
 follow first_intake
 set intake height 1
-wait 0.3
 set intake 0
 # return to tower
 follow first_return_to_tower_part1
@@ -55,7 +54,6 @@ set lift height 0.32
 set arm power 0.2
 set arm angle 70deg
 follow first_return_to_tower_part2
-wait 0.5
 # place freight
 set intake height 0.65
 set intake -0.3
@@ -73,7 +71,6 @@ set intake height 0
 set intake 1
 follow second_intake
 set intake height 1
-wait 0.3
 set intake 0
 # second return to tower
 follow second_return_to_tower_part1
