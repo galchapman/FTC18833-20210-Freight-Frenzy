@@ -112,6 +112,10 @@ Index the duck using fancy stuff like acceleration.
 
 We use triggers to chnage the LED color during a match.
 
+### Intake Trigger
+
+We use an tirgger to chnage the LED color to green and rumble the gamepad when a freigth is in our intake.
+
 ## AutonomousLoader
 
 We created a custom language for our autonomous, and wrote all of them [using it](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/).
