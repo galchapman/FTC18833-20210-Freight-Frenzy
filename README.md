@@ -55,8 +55,8 @@ Note that this is the only subsystem in our robot that could run on it's own [th
 
 ### Lift
 
-This subsystem control our lift.
-It's includes a DcMotor with an encoder and a limit switch to reset the lift height.
+This subsystem control our lifter.
+It's includes a DcMotor with an encoder and a limit switch to reset the lifter height.
 
 ### Arm
 
