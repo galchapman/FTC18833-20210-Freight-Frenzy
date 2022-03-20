@@ -24,10 +24,10 @@ public class RedDrive extends Drive {
         fancyDuckIndexCommand = new FancyDuckIndexCommand(ducksSubsystem, Constants.DucksConstants.maxPower, Constants.DucksConstants.minPower, Constants.DucksConstants.accelerationSpeed, Constants.DucksConstants.redSpin);
         arcadeDriveCommand = new FieldCentricArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_y, Math.toDegrees(-90));
 
-        gp1.x().whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(-90))));
+        gp1.x.whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(-90))));
 
         driveTrain.setDefaultCommand(tankDriveCommand);
-        gp1.y().whenPressed(fancyDuckIndexCommand);
+        gp1.y.whenPressed(fancyDuckIndexCommand);
 
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 
