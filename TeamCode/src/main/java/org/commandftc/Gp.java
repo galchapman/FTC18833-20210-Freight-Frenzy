@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 /**
  * This class represents an FTC gamepad that supports the use of lambda expressions to assign commands.
  * This class defined every button on the controller, so we can use it with WPI commands.
+ * Note: This code was automatically generated using python.
  */
 public class Gp {
     private final Gamepad gp;
