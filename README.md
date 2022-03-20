@@ -69,11 +69,12 @@ The subsystem also includes the servos that control the arm height.
 ### Intake
 
 This class controls our intake, it consists of a motor, servo and a distance sensor.
-The servo controls the door in out intake.
+The servo controls the door in our intake.
+The distance sensor is used to detect when a friegth is in our intake.
 
 ### Ducks
 
-This subsystem simply indexed the ducks. That is about it all.
+This subsystem simply indexed the ducks. That's about it.
 
 ### [Vision](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/subsystems/VisionSubsystem.java)
 
