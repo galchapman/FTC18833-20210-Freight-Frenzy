@@ -43,4 +43,43 @@ In every opmode we initialize the subsystems, put the telemetry data and assayin
 
 ## Subsystems
 
-TODO: Write this section
+### DriveTrain
+
+Our drive train subsystem includes four DC Motors, and one more motor for the encoder slot.\
+It's also includes a Servo to lower the horizontal odmetry wheel,
+and two Distance sensor and one Color sensor  we planed to use to know our robot position during the teleop faze.
+This class also includes our odometry system.
+
+This includes everything that make the robot drive like the trajectory follower.
+
+Note that this is the only subsystem in our robot that could be run on it's own [thread](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/commands/drive/RoadRunnerThread.java). That is why many functions have the synchronized keyword.
+
+### Lift
+
+This subsystem control our lift.
+It's includes a DcMotor with an encoder and a limit switch to reset the lift height.
+
+### Arm
+
+Our arm could be control by two main ways. The first is by power, and the other is by angle.
+The subsystem also includes the servos that control the arm height.
+
+### Intake
+
+This class controls our intake, it consists of a motor, servo and a distance sensor.
+The servo controls the door in out intake.
+
+### Ducks
+
+This subsystem simply indexed the ducks. That is about it all.
+
+### Vision
+
+This class includes all of our vision stuff.
+Like detection of the Team element at the start of the game.
+We used [GRIP](https://wpiroboticsprojects.github.io/GRIP/#/) to create the pipeline.
+Feel free to ask me about any part of this code.
+
+### Leds
+
+Controls the leds.
