@@ -32,8 +32,8 @@ public class RedDrive extends Drive {
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 
         new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.15,
-                () -> (gp1.left_stick_y() > 0.1) ? 1 :
-                        (gp1.left_stick_y() < -0.1 ? -1 : 0), () -> 0)));
+                () -> (gamepad1.left_stick_y > 0.1) ? 1 :
+                        (gamepad1.left_stick_y < -0.1 ? -1 : 0), () -> 0)));
 
         telemetry.addData("index", ducksSubsystem::getCurrentPosition);
         telemetry.addData("index rotation", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);

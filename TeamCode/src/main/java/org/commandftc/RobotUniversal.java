@@ -11,15 +11,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
 /**
- * This is where the hwMap of the robot is stored.
+ * This is where all of the global variables for our code are stored.
  */
 public final class RobotUniversal {
     public static HardwareMap hardwareMap;
     public static Telemetry telemetry;
     public static OpMode opMode;
     public static OpModeType opModeType;
+    // Used to determine the vision filters
     public static StartingPosition startingPosition;
+    // Used for field centric arcade drive
     public static Pose2d endPosition = new Pose2d();
+    // Used for FTCDashboard
     public static Consumer<TelemetryPacket> telemetryPacketUpdater = null;
 
     public enum OpModeType {

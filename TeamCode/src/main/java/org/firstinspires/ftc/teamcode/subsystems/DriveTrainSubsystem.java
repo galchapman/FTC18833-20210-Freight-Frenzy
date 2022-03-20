@@ -156,17 +156,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
                 return Arrays.asList(getLeftVelocity(), getHorizontalVelocity());
             }
         });
-//        setLocalizer(new ThreeTrackingWheelLocalizer(Arrays.asList(
-//                        OdometryConstants.frontLeftWheelPosition,
-//                        OdometryConstants.frontRightWheelPosition,
-//                        OdometryConstants.horizontalWheelPosition
-//        )) {
-//            @NonNull
-//            @Override
-//            public List<Double> getWheelPositions() {
-//                return Arrays.asList(getFrontLeftPosition(), getFrontRightPosition(), getHorizontalPosition());
-//            }
-//        });
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
                 new Pose2d(0.05, 0.02, Math.toRadians(5)), 0.5);
@@ -204,16 +193,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
             }
         }
 
-        // make angle continues
-        double angle = getHeading();
-        double delta = angle - lastAngle;
-        if (delta > Math.PI / 2) {
-            spinCount--;
-        } else if (delta < -Math.PI / 2) {
-            spinCount++;
-        }
-        lastAngle = angle;
-
         long time = System.nanoTime();
         double velocity = getLeftVelocity();
         double current_accel = (velocity - lv) / (time - lt) * 1000000000;
@@ -235,26 +214,11 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_RearRightMotor.setZeroPowerBehavior(zeroPowerBehavior);
     }
 
-    public DcMotor.ZeroPowerBehavior getZeroPowerBehavior() {
-        return m_FrontLeftMotor.getZeroPowerBehavior();
-    }
-
     public void setDriveMode(DcMotor.RunMode mode) {
         m_FrontLeftMotor.setMode(mode);
         m_RearLeftMotor.setMode(mode);
         m_FrontRightMotor.setMode(mode);
         m_RearRightMotor.setMode(mode);
-    }
-
-    public void setDrivePIDFCoefficients(DcMotor.RunMode mode, PIDFCoefficients pidfCoefficients) {
-        m_FrontLeftMotor.setPIDFCoefficients(mode, pidfCoefficients);
-        m_RearLeftMotor.setPIDFCoefficients(mode, pidfCoefficients);
-        m_FrontRightMotor.setPIDFCoefficients(mode, pidfCoefficients);
-        m_RearRightMotor.setPIDFCoefficients(mode, pidfCoefficients);
-    }
-
-    public DcMotor.RunMode getDriveMode() {
-        return m_FrontLeftMotor.getMode();
     }
 
     @Override
@@ -263,13 +227,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         m_RearLeftMotor.setPower(0);
         m_FrontRightMotor.setPower(0);
         m_RearRightMotor.setPower(0);
-    }
-
-    public void driveForward(double power) {
-        m_FrontLeftMotor.setPower(power);
-        m_RearLeftMotor.setPower(power);
-        m_FrontRightMotor.setPower(power);
-        m_RearRightMotor.setPower(power);
     }
 
     @Override
@@ -365,10 +322,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         return m_leftOdometryEncoder.getCorrectedVelocity() * odometry_wheel_ticks_to_meters;
     }
 
-    public double getRightVelocity() {
-        return m_rightOdometryEncoder.getCorrectedVelocity() * odometry_wheel_ticks_to_meters;
-    }
-
     public double getHorizontalVelocity() {
         return m_horizontalOdometryEncoder.getCorrectedVelocity() * odometry_wheel_ticks_to_meters;
     }
@@ -384,12 +337,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     public void setPose(Pose2d pose) {
         setPoseEstimate(pose);
         angleOffset = pose.getHeading() - getRawExternalHeading();
-    }
-
-    private double lastAngle = 0;
-    private int spinCount = 0;
-    public double getContainsHeading() {
-        return lastAngle + spinCount * 2 * Math.PI;
     }
 
     @Override
@@ -417,10 +364,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
         return new TrajectoryBuilder(startPose, reversed, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
-    }
-
-    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double startHeading) {
-        return new TrajectoryBuilder(startPose, startHeading, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
     public TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
@@ -474,18 +417,10 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         }
     }
 
-    public Pose2d getLastError() {
-        return trajectorySequenceRunner.getLastPoseError();
-    }
-
     public boolean isBusy() {
         synchronized (trajectorySequenceRunner) {
             return trajectorySequenceRunner.isBusy();
         }
-    }
-
-    public boolean areDriveMotorsBusy() {
-        return m_FrontLeftMotor.isBusy() || m_RearLeftMotor.isBusy() || m_FrontRightMotor.isBusy() || m_RearRightMotor.isBusy();
     }
 
     public double getLeftDistance() {

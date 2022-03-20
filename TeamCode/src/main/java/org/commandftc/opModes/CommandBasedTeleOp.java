@@ -7,17 +7,17 @@ import org.commandftc.RobotUniversal;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+/**
+ Command based teleop.
+ */
 public abstract class CommandBasedTeleOp extends OpMode {
 
     protected Gp gp1;
     protected Gp gp2;
     private double lastTime = 0;
+    // Time between loop runs. Make sure it's stays low
     private double dt = 0;
 
-    /**
-     * DON'T OVERRIDE THIS! IT CALLS init_impl() (WHICH YOU SHOULD INSTEAD OVERRIDE)
-     * AND DOES SOMETHING ELSE!!!!!
-     */
     @Override
     public final void init() {
         RobotUniversal.setOpMode(this);

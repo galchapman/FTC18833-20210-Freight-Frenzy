@@ -7,9 +7,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class represents an FTC gamepad that supports the use of lambda expressions to assign commands.
+ * This class defined every button on the controller, so we can use it with WPI commands.
  */
 public class Gp {
-    private Gamepad gamepad;
+    private final Gamepad gamepad;
     public Gp(Gamepad gamepad) {
         this.gamepad = gamepad;
     }
@@ -65,12 +66,4 @@ public class Gp {
     public Button y() {
         return new Button(() -> gamepad.y);
     }
-
-    public double left_stick_x() { return gamepad.left_stick_x; }
-    public double left_stick_y() { return gamepad.left_stick_y; }
-    public double right_stick_x() { return gamepad.right_stick_x; }
-    public double right_stick_y() { return gamepad.right_stick_y; }
-
-    public double left_trigger() {return gamepad.left_trigger;}
-    public double right_trigger() {return gamepad.right_trigger;}
 }
