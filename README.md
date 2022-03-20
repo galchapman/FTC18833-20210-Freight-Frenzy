@@ -29,7 +29,7 @@ Just like any CommandBased FRC code our code is made of four main parts.\
 The first one is the [Subsystems](#Subsystems),
 each subsystem is responsible for controlling the robot hardware, And is used as a layer between the Commands and the hardware.
 
-The second one is commands, for each functionality of our robot we use a command that defined that behavior.
+The second one is commands, for each functionality of our robot we use a command that defines it's behavior.
 Just like all access to a hardware device is through a Subsystem every usage of a subsystem other then initialization is through a command.
 for example our [drive](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/commands/drive/TankDriveCommand.java).
 
