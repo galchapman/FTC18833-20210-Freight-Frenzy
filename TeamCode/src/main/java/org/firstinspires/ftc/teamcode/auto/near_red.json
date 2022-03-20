@@ -19,50 +19,74 @@
 			"segments": [
 				{
 					"name": "forward",
-					"distance": 0.845
+					"distance": 0.9
 				}
 			]
 
 		},
         {
-			"name": "go_to_high_or_mid",
-			"start_pos": {"x": -1.45, "y": -0.61, "heading": 90},
+			"name": "go_to_high",
+			"start_pos": {"x": -1.45, "y": -0.57, "heading": 90},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -0.88,
-					"y": -0.61
+					"x": -0.86,
+					"y": -0.57
+				}
+			]
+		},
+		{
+			"name": "go_to_mid",
+			"start_pos": {"x": -1.45, "y": -0.57, "heading": 90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "strafe",
+					"x": -0.92,
+					"y": -0.57
 				}
 			]
 		},
 		{
 			"name": "go_to_low",
-			"start_pos": {"x": -1.45, "y": -0.61, "heading": 90},
+			"start_pos": {"x": -1.45, "y": -0.57, "heading": 90},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -1.02,
+					"x": -0.98,
+					"y": -0.57
+				}
+			]
+		},
+		{
+			"name": "stick_to_the_wall_high",
+			"start_pos": {"x": -0.86, "y": -0.57, "heading": -90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "strafe",
+					"x": -1.45,
+					"y": -0.61
+				}
+			]
+		},
+		{
+			"name": "stick_to_the_wall_mid",
+			"start_pos": {"x": -0.92, "y": -0.57, "heading": -90},
+			"reversed": false,
+			"segments": [
+				{
+					"name": "strafe",
+					"x": -1.45,
 					"y": -0.61
 				}
 			]
 		},
 		{
 			"name": "stick_to_the_wall_low",
-			"start_pos": {"x": -1.02, "y": -0.61, "heading": -90},
-			"reversed": false,
-			"segments": [
-				{
-					"name": "strafe",
-					"x": -1.55,
-					"y": -0.61
-				}
-			]
-		},
-		{
-			"name": "stick_to_the_wall_high_or_mid",
-			"start_pos": {"x": -0.88, "y": -0.61, "heading": -90},
+			"start_pos": {"x": -0.98, "y": -0.57, "heading": -90},
 			"reversed": false,
 			"segments": [
 				{
@@ -74,12 +98,34 @@
 		},
 		{
 			"name": "go_to_box",
-			"start_pos": {"x": -1.55, "y": -0.61, "heading": -90},
+			"start_pos": {"x": -1.45, "y": -0.61, "heading": -90},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "forward",
 					"distance": 0.37
+				}
+			]
+		},
+		{
+			"name": "stick_to_the_wall_in_box_1",
+			"start_pos": {"x": -1.45, "y": -0.98, "heading": 0},
+			"reversed": true,
+			"segments": [
+				{
+					"name": "back",
+					"distance": 0.01
+				}
+			]
+		},
+		{
+			"name": "stick_to_the_wall_in_box_2",
+			"start_pos": {"x": -1.55, "y": -0.98, "heading": 0},
+			"reversed": true,
+			"segments": [
+				{
+					"name": "back",
+					"distance": 0.1
 				}
 			]
 		}

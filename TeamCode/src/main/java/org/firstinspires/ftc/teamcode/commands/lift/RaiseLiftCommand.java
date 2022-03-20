@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands.lift;
 
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
-import static org.commandftc.RobotUniversal.opMode;
 
 import java.util.function.DoubleSupplier;
 
@@ -20,7 +19,11 @@ public class RaiseLiftCommand extends CommandBase {
 
     @Override
     public void execute() {
-        m_liftSubsystem.setPower(m_supplier.getAsDouble());
+        double power = m_supplier.getAsDouble();
+        if (!((m_liftSubsystem.isDown() && power < 0) ||
+                (m_liftSubsystem.isUp() && power > 0))) {
+            m_liftSubsystem.setPower(m_supplier.getAsDouble());
+        }
     }
 
     @Override

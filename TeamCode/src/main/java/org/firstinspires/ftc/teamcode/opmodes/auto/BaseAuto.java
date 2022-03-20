@@ -53,7 +53,7 @@ public abstract class BaseAuto extends CommandBasedAuto {
         armSubsystem = new ArmSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         liftSubsystem = new LiftSubsystem();
-        //vision = new VisionSubsystem();
+        vision = new VisionSubsystem();
         ducksSubsystem = new DucksSubsystem();
 
         thread = new RoadRunnerThread(driveTrain);
@@ -131,9 +131,9 @@ public abstract class BaseAuto extends CommandBasedAuto {
 
     protected Command rotateDuck(double spins){
         return new FancyDuckIndexCommand(ducksSubsystem,
-                Constants.DucksConstants.maxPower,
-                Constants.DucksConstants.minPower,
-                Constants.DucksConstants.accelerationSpeed,
+                Constants.DucksConstants.maxPower - 0.4,
+                Constants.DucksConstants.minPower - 0.1,
+                Constants.DucksConstants.accelerationSpeed - 0.8,
                 spins);
     }
 }

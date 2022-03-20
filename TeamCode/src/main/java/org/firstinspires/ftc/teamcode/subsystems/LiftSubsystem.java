@@ -1,42 +1,41 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants.LiftConstants;
+import org.firstinspires.ftc.teamcode.lib.Util;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Constants.LiftConstants.lower_plate_height;
-import static org.firstinspires.ftc.teamcode.Constants.LiftConstants.sensor_height;
+import static org.firstinspires.ftc.teamcode.Constants.LiftConstants.top_height;
 
 public class LiftSubsystem extends SubsystemBase {
     private final DcMotor m_liftMotor;
-    private final DistanceSensor m_heightSensor;
-    private final int m_encoderOffset;
+    private final TouchSensor m_bottomLimitSwitch;
+    private int m_encoderOffset;
 
     public LiftSubsystem() {
         m_liftMotor = hardwareMap.dcMotor.get("LiftMotor");
-        m_heightSensor = hardwareMap.get(DistanceSensor.class, "LiftHeightSensor");
+        m_bottomLimitSwitch = hardwareMap.touchSensor.get("LiftBottomLimitSwitch");
         m_liftMotor.setPower(0);
         m_liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m_liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_liftMotor.setTargetPosition(0);
         m_liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        double sensorRead = getSensorHeight();
-
-        if (sensorRead < 0.5  ) {
-            m_encoderOffset = meters2ticks(sensorRead + sensor_height);
-        } else {
-            m_encoderOffset = meters2ticks(lower_plate_height);
-        }
+        m_encoderOffset = meters2ticks(lower_plate_height);
     }
 
-    public double getSensorHeight() {
-        return m_heightSensor.getDistance(DistanceUnit.METER);
+    @Override
+    public void periodic() {
+        if (m_bottomLimitSwitch.isPressed()) {
+            m_encoderOffset = meters2ticks(lower_plate_height) - m_liftMotor.getCurrentPosition();
+            if (m_liftMotor.getTargetPosition() < m_liftMotor.getCurrentPosition())
+                setLiftHeight(lower_plate_height);
+        }
     }
 
     public int getCurrentPosition() {
@@ -50,8 +49,16 @@ public class LiftSubsystem extends SubsystemBase {
         return ticks2meters(m_liftMotor.getCurrentPosition() + m_encoderOffset);
     }
 
+    public boolean isDown() {
+        return m_bottomLimitSwitch.isPressed();
+    }
+
+    public boolean isUp() {
+        return getHeight() > top_height;
+    }
+
     public void setLiftHeight(double height) {
-            m_liftMotor.setTargetPosition(meters2ticks(height) - m_encoderOffset);
+            m_liftMotor.setTargetPosition(meters2ticks(Util.clamp(lower_plate_height, top_height, height)) - m_encoderOffset);
     }
 
     static public int meters2ticks(double height) {
@@ -74,6 +81,7 @@ public class LiftSubsystem extends SubsystemBase {
 
     public void stop() {
         m_liftMotor.setPower(0);
+        m_liftMotor.setTargetPosition(m_liftMotor.getCurrentPosition());
     }
 
     public boolean isBusy() {

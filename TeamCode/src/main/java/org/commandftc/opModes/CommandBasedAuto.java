@@ -31,7 +31,7 @@ public abstract class CommandBasedAuto extends OpMode {
         autonomousCommand.schedule();
     }
 
-    public abstract void onStart();
+    public void onStart() {}
 
     public abstract void plan();
 

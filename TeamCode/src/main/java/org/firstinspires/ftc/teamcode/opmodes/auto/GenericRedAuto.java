@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 /**
  * This auto is used to set robot position after restart
  */
+//@Disabled
 @Autonomous(name = "Set Alliance Red", preselectTeleOp = "Red Drive", group = "Auto: red")
 public class GenericRedAuto extends BaseAuto {
 

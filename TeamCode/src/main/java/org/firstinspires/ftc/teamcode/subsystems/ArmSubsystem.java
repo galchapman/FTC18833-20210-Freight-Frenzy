@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -11,12 +12,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.commandftc.RobotUniversal.hardwareMap;
 
 public class ArmSubsystem extends SubsystemBase {
-	private final DcMotor m_motor;
+	private final DcMotorEx m_motor;
 	private final Servo m_leftServo;
 	private final Servo m_rightServo;
 
 	public ArmSubsystem() {
-		m_motor = hardwareMap.dcMotor.get("ArmMotor");
+		m_motor = (DcMotorEx) hardwareMap.dcMotor.get("ArmMotor");
 		m_leftServo = hardwareMap.servo.get("LeftIntakeArmServo");
 		m_rightServo = hardwareMap.servo.get("RightIntakeArmServo");
 		m_motor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -92,5 +93,9 @@ public class ArmSubsystem extends SubsystemBase {
 
 	public int getCurrentPosition() {
 		return m_motor.getCurrentPosition();
+	}
+
+	public double getAngleVelocity() {
+		return (double)m_motor.getVelocity() / ArmConstants.motorGear / ArmConstants.gear * 360;
 	}
 }

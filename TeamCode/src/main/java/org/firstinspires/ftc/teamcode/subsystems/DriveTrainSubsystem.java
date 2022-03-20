@@ -78,8 +78,8 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     private final BNO055IMU imu;
 
     public static PIDCoefficients FORWARD_PID = new PIDCoefficients(4, 0, 0); // 4
-    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(7, 0, 0); // 7
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0); // 5
+    public static PIDCoefficients STRAFE_PID = new PIDCoefficients(8, 0, 0); // 7
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 0); // 5
 
     private final TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -95,7 +95,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     public enum OdometryPosition {
         Up(1),
-        Down(0.45);
+        Down(0.5);
 
         private final double servo_position;
         OdometryPosition(double pos) {
@@ -152,11 +152,6 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
             }
 
             @Override
-            public Double getHeadingVelocity() {
-                return (double) imu.getAngularVelocity().zRotationRate;
-            }
-
-            @Override
             public List<Double> getWheelVelocities() {
                 return Arrays.asList(getLeftVelocity(), getHorizontalVelocity());
             }
@@ -174,7 +169,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 //        });
 
         TrajectoryFollower follower = new HolonomicPIDVAFollower(FORWARD_PID, STRAFE_PID, HEADING_PID,
-                new Pose2d(0.02, 0.02, Math.toRadians(5)), 0.5);
+                new Pose2d(0.05, 0.02, Math.toRadians(5)), 0.5);
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
         trajectoryControlled = RobotUniversal.opModeType == RobotUniversal.OpModeType.Autonomous; // check if Opmode is autonomous
@@ -200,14 +195,13 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public void periodic_impl() {
-        if (trajectoryControlled) {
-            updatePoseEstimate();
-            DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
-            if (signal != null)
-                setDriveSignal(signal);
-        } else {
-            updatePoseEstimate();
-            trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
+        synchronized (trajectorySequenceRunner) {
+            if (trajectoryControlled) {
+                updatePoseEstimate();
+                DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
+                if (signal != null)
+                    setDriveSignal(signal);
+            }
         }
 
         // make angle continues
@@ -288,10 +282,20 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public void arcadeDrive(double x, double y,double spin) {
-        m_FrontLeftMotor.setPower(x + y + spin);
-        m_RearLeftMotor.setPower(-x + y + spin);
-        m_FrontRightMotor.setPower(-x + y - spin);
-        m_RearRightMotor.setPower(x + y - spin);
+        double[] powers = new double[]{x + y + spin, -x + y + spin, -x + y - spin, x + y - spin};
+
+        double max = 1;
+        for (double power:
+             powers) {
+            if (Math.abs(power) > max) {
+                max = Math.abs(power);
+            }
+        }
+
+        m_FrontLeftMotor.setPower(powers[0] / max);
+        m_RearLeftMotor.setPower(powers[1] / max);
+        m_FrontRightMotor.setPower(powers[2] / max);
+        m_RearRightMotor.setPower(powers[3] / max);
     }
 
     public void setPowers(double frontLeft, double rearLeft, double frontRight, double rearRight) {
@@ -326,7 +330,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public int getHorizontalEncoder() {
-        return m_horizontalOdometryEncoder.getCurrentPosition();
+        return -m_horizontalOdometryEncoder.getCurrentPosition();
     }
 
     public double getLeftPosition() {
@@ -442,24 +446,32 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
         return new ProfileAccelerationConstraint(maxAccel);
     }
 
+
+
     public void turnAsync(double angle) {
-        trajectorySequenceRunner.followTrajectorySequenceAsync(
-                trajectorySequenceBuilder(getPoseEstimate())
-                        .turn(angle)
-                        .build()
-        );
+        synchronized (trajectorySequenceRunner) {
+            trajectorySequenceRunner.followTrajectorySequenceAsync(
+                    trajectorySequenceBuilder(getPoseEstimate())
+                            .turn(angle)
+                            .build()
+            );
+        }
     }
 
     public void followTrajectoryAsync(@NotNull Trajectory trajectory) {
-        trajectorySequenceRunner.followTrajectorySequenceAsync(
-                trajectorySequenceBuilder(trajectory.start())
-                        .addTrajectory(trajectory)
-                        .build()
-        );
+        synchronized (trajectorySequenceRunner) {
+            trajectorySequenceRunner.followTrajectorySequenceAsync(
+                    trajectorySequenceBuilder(trajectory.start())
+                            .addTrajectory(trajectory)
+                            .build()
+            );
+        }
     }
 
     public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
-        trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
+        synchronized (trajectorySequenceRunner) {
+            trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
+        }
     }
 
     public Pose2d getLastError() {
@@ -467,7 +479,9 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
     }
 
     public boolean isBusy() {
-        return trajectorySequenceRunner.isBusy();
+        synchronized (trajectorySequenceRunner) {
+            return trajectorySequenceRunner.isBusy();
+        }
     }
 
     public boolean areDriveMotorsBusy() {

@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
-import org.commandftc.RobotUniversal;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
@@ -33,20 +31,12 @@ public class IntakeMineralCommand extends CommandBase {
         MAX_DISTANCE = max_distance;
 
         addRequirements(m_driveTrain, m_armSubsystem, m_intake);
-
-        RobotUniversal.telemetryPacketUpdater = (packet) -> {
-            packet.put("status", status);
-            packet.put("has freight", m_intake.hasFreight());
-            packet.put("intake distance", Math.min(m_intake.getDistance(), 0.5));
-
-            FtcDashboard.getInstance().sendTelemetryPacket(packet);
-        };
     }
 
     @Override
     public void initialize() {
         forwardTrajectory = m_driveTrain.trajectoryBuilder(m_driveTrain.getPoseEstimate(),
-                DriveTrainSubsystem.getVelocityConstraint(Constants.DriveTrainConstants.MaxVelocity / 2,
+                DriveTrainSubsystem.getVelocityConstraint(Constants.DriveTrainConstants.MaxVelocity  * 0.4,
                         Constants.DriveTrainConstants.MaxAnglerVelocity,
                         Constants.DriveTrainConstants.TrackWidth))
                 .forward(MAX_DISTANCE).build();

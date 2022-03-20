@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.lib.StartingPosition;
 
+//@Disabled
 @Autonomous(name = "Near Blue", preselectTeleOp = "Blue Drive", group = "Auto: blue")
 public class NearBlueAuto extends LoadedAuto {
     @SuppressLint("SdCardPath")

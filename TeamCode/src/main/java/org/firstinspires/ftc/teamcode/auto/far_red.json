@@ -99,26 +99,26 @@
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -0.3,
+					"x": -0.25,
 					"y": -1.20
 				}
 			]
 		},
 		{
 			"name": "go_to_intake_position2",
-			"start_pos": {"x": -0.3, "y": -1.20, "heading": 0},
+			"start_pos": {"x": -0.25, "y": -1.20, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
 					"x": 0.3,
-					"y": -1.675
+					"y": -1.7
 				}
 			]
 		},
 		{
 			"name": "second_intake",
-			"start_pos": {"x": 0.3, "y": -1.675, "heading": 0},
+			"start_pos": {"x": 0.3, "y": -1.7, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
@@ -129,7 +129,7 @@
 		},
 		{
 			"name": "second_return_to_tower_part1",
-			"start_pos": {"x": 1.05, "y": -1.675, "heading": 0},
+			"start_pos": {"x": 1.05, "y": -1.7, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{
@@ -140,59 +140,36 @@
 		},
 		{
 			"name": "second_return_to_tower_part2",
-			"start_pos": {"x": 0.3, "y": -1.675, "heading": 0},
+			"start_pos": {"x": 0.3, "y": -1.7, "heading": 0},
 			"reversed": true,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": -0.3,
+					"x": -0.25,
 					"y": -1.20
 				}
 			]
 		},
 		{
 			"name": "go_to_intake_position3",
-			"start_pos": {"x": -0.3, "y": -1.20, "heading": 0},
+			"start_pos": {"x": -0.25, "y": -1.20, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "strafe",
-					"x": 0.3,
-					"y": -1.675
+					"x": 0.25,
+					"y": -1.7
 				}
 			]
 		},
 		{
 			"name": "third_intake",
-			"start_pos": {"x": 0.3, "y": -1.675, "heading": 0},
+			"start_pos": {"x": 0.3, "y": -1.7, "heading": 0},
 			"reversed": false,
 			"segments": [
 				{
 					"name": "forward",
 					"distance": 0.90
-				}
-			]
-		},
-		{
-			"name": "third_return_to_tower_part1",
-			"start_pos": {"x": 1.05, "y": -1.675, "heading": 0},
-			"reversed": true,
-			"segments": [
-				{
-					"name": "back",
-					"distance": 0.85
-				}
-			]
-		},
-		{
-			"name": "third_return_to_tower_part2",
-			"start_pos": {"x": 0.3, "y": -1.675, "heading": 0},
-			"reversed": true,
-			"segments": [
-				{
-					"name": "strafe",
-					"x": -0.3,
-					"y": -1.20
 				}
 			]
 		}

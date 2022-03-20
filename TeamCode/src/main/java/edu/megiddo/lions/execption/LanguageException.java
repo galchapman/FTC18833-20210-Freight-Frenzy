@@ -4,7 +4,7 @@ public class LanguageException extends RuntimeException {
     public final int line;
     public final int character;
 
-    protected LanguageException(String type, String error, int line, int character) {
+    public LanguageException(String type, String error, int line, int character) {
         this(':' + line + ':' + character + " " + type + ": " + error, line, character);
     }
 
