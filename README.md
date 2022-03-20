@@ -106,6 +106,12 @@ So we have a command to control that thread.
 
 Index the duck using fancy stuff like acceleration.
 
+## Triggers
+
+### Time Triggers
+
+We use triggers to chnage the LED color during a match.
+
 ## AutonomousLoader
 
 We created a custom language for our autonomous, and wrote all of them [using it](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/).
