@@ -51,7 +51,7 @@ This class also includes our odometry system.
 
 This includes everything that makes the robot drive like the trajectory follower.
 
-Note that this is the only subsystem in our robot that could be run on it's own [thread](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/commands/drive/RoadRunnerThread.java). That is why many functions have the synchronized keyword.
+Note that this is the only subsystem in our robot that could run on it's own [thread](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/commands/drive/RoadRunnerThread.java). That is why many functions have the synchronized keyword.
 
 ### Lift
 
