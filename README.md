@@ -60,7 +60,8 @@ It's includes a DcMotor with an encoder and a limit switch to reset the lifter h
 
 ### Arm
 
-Our arm could be control by two main ways. The first is by power, and the other is by angle.
+The subsystem includes the motor and servos in our arm.\
+The arm could be control by two main ways. The first is by power, and the other is by angle.
 The subsystem also includes the servos that control the arm height.
 
 ### Intake
