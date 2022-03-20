@@ -127,4 +127,4 @@ To install them we simply pushed them to the robot controller.
 Each auto was written in two files, the first was .auto and included all of the logic of the language.
 The other part was .json and it contained all of our trajectories for that auto.
 
-We are planning to publish it for the next FTC Season and we will and we will provide a link to the repository here.
+We are planning to publish it for the next FTC Season and we will provide a link to the repository here.
