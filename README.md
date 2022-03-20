@@ -1,5 +1,9 @@
 # Robot Code for Megiddo Lions 18833 in FTC Freight-Frenzy season
 
+## Our Robot
+
+![No image found](robot.jpeg)
+
 ## Project Structure
 
 ### WPILib
