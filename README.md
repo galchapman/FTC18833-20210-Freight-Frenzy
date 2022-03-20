@@ -122,7 +122,7 @@ We use an trigger to change the LED color to green and rumble the gamepad when a
 
 ## AutonomousLoader
 
-We created a custom language for our autonomous, and wrote all of them [using it](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/).
+We created a custom language for our autonomous, and [used it](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/) For our autonomous.
 To install them we simply pushed them to the robot controller.
 Each auto was written in two files, the first was .auto and included all of the logic of the language.
 The other part was .json and it contained all of our trajectories for that auto.
