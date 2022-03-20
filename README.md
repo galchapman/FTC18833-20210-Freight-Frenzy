@@ -31,7 +31,7 @@ each subsystem is responsible for controlling the robot hardware, And is used as
 
 The second one is commands, for each functionality of our robot we use a command that defines it's behavior.
 Just like all access to a hardware device is through a Subsystem every usage of a subsystem other then initialization is through a command.
-for example our [drive](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/commands/drive/TankDriveCommand.java).
+for example our [drive command](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/commands/drive/TankDriveCommand.java).
 
 The third part is our [Constants](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Constants.java),
 used to define every constants our robot uses.
