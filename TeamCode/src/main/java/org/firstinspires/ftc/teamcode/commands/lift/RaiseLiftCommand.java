@@ -20,9 +20,12 @@ public class RaiseLiftCommand extends CommandBase {
     @Override
     public void execute() {
         double power = m_supplier.getAsDouble();
+        // Stop lift from being powered on it's limits
         if (!((m_liftSubsystem.isDown() && power < 0) ||
                 (m_liftSubsystem.isUp() && power > 0))) {
             m_liftSubsystem.setPower(m_supplier.getAsDouble());
+        } else {
+            m_liftSubsystem.setPower(0);
         }
     }
 

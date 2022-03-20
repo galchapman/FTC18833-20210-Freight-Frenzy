@@ -103,3 +103,7 @@ So we can drive left or right with arcade or with a dedicated button.
 We have decided to run RoadRunner on it's own thread.
 So we have a command to control that thread.
 
+### Fancy Duck Index
+
+Index the duck using fancy stuff like acceleration.
+
