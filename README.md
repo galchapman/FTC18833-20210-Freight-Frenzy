@@ -15,7 +15,7 @@ The code for our teleop wrappers in [org.commandftc](TeamCode/src/main/java/org/
 
 We use [RoadRunner](https://learnroadrunner.com/) to control our autonomous drive, and to calculate our position using dead wheels.
 
-### Our Autonomous loader
+### [Our Autonomous loader](#AutonomousLoader)
 
 We use a custom language we developed for this purpose during this season.
 It consist of two main parts, the first is the [interpreter itself](TeamCode/src/main/java/edu/megiddo/lions/).\
@@ -107,3 +107,11 @@ So we have a command to control that thread.
 
 Index the duck using fancy stuff like acceleration.
 
+## AutonomousLoader
+
+We created a custom language for our autonomous, and wrote all of them [using it](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/auto/).
+To install them we simply pushed them to the robot controller.
+Each auto was written in two files, the first was .auto and included all of the logic of the language.
+The other part was .json and it contained all of our trajectories for that auto.
+
+We are planning to publish it for the next FTC Season and we will and we will provide a link to the repository here.
