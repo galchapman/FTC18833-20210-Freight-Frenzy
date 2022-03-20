@@ -49,14 +49,14 @@ public class VisionSubsystem extends SubsystemBase {
 
         @Override
         public Mat processFrame(Mat input) {
-
+			// Cat the image
             Mat a_sub = input.submat(AView);
             Mat b_sub = input.submat(BView);
-
+			// Filter for green
             Mat a_filtered = new Mat(), b_filtered = new Mat();
             filterGreen(a_sub, a_filtered);
             filterGreen(b_sub, b_filtered);
-
+			// Check if view has enougth pixels
             if (Core.countNonZero(b_filtered) > 1000) {
                 gameType = GameType.B;
             } else if (Core.countNonZero(a_filtered) > 1000 ^ (RobotUniversal.startingPosition == StartingPosition.FarBlue || RobotUniversal.startingPosition == StartingPosition.NearBlue)) {
@@ -64,7 +64,7 @@ public class VisionSubsystem extends SubsystemBase {
             } else {
                 gameType = GameType.C;
             }
-
+			// show the view on feedback
             Imgproc.rectangle(input, AView, new Scalar(255, 255, 0), 3);
             Imgproc.rectangle(input, BView, new Scalar(255, 0, 255), 3);
 

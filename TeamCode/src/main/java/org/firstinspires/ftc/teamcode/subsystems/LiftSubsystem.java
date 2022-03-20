@@ -31,6 +31,7 @@ public class LiftSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+		// Reset the lift height
         if (m_bottomLimitSwitch.isPressed()) {
             m_encoderOffset = meters2ticks(lower_plate_height) - m_liftMotor.getCurrentPosition();
             if (m_liftMotor.getTargetPosition() < m_liftMotor.getCurrentPosition())
