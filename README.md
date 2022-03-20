@@ -98,7 +98,7 @@ They are used to interact with Road Runner like any other command.
 
 ### The general drive commands
 
-Because our driver was used to tank drive we control the robot with a mix of tank and arcade drive.
+Because our driver is used to tank drive we control the robot with a mix of tank and arcade drive.
 So we can drive left or right with arcade or with a dedicated button.
 
 ### The Thread
