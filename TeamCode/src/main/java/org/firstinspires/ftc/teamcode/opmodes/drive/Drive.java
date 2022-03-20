@@ -8,7 +8,7 @@ import org.commandftc.opModes.CommandBasedTeleOp;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
-import org.firstinspires.ftc.teamcode.commands.arm.RotateArmPowerCommand;
+import org.firstinspires.ftc.teamcode.commands.arm.RotateArmCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmToPositionCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.SetIntakeArmPositionCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FieldCentricArcadeDriveCommand;
@@ -47,7 +47,7 @@ public abstract class Drive extends CommandBasedTeleOp
     RaiseLiftCommand raiseLiftCommand;
     SetLiftHeightCommand resetLiftCommand;
     // Arm commands
-    RotateArmPowerCommand rotateArmContinuouslyCommand;
+    RotateArmCommand rotateArmContinuouslyCommand;
     RotateArmToPositionCommand rotateArmToMiddleCommand;
     SetIntakeArmPositionCommand resetIntakeArmPositionCommand;
     // intake commands
@@ -109,7 +109,7 @@ public abstract class Drive extends CommandBasedTeleOp
         raiseLiftCommand = new RaiseLiftCommand(liftSubsystem, () -> -gamepad2.left_stick_y);
         resetLiftCommand = new SetLiftHeightCommand(liftSubsystem,0, 0.7);
 
-        rotateArmContinuouslyCommand = new RotateArmPowerCommand(armSubsystem, this::getArmRotationPower);
+        rotateArmContinuouslyCommand = new RotateArmCommand(armSubsystem, this::getArmRotationPower);
         rotateArmToMiddleCommand = new RotateArmToPositionCommand(armSubsystem,0,1);
         resetIntakeArmPositionCommand = new SetIntakeArmPositionCommand(armSubsystem,0);
 
