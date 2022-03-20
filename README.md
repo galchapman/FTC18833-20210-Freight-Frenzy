@@ -27,8 +27,7 @@ It's important to note that this part is not very stable right now and needs som
 
 Just like any CommandBased FRC code our code is made of four main parts.\
 The first one is the [Subsystems](#Subsystems),
-each subsystem is responsible for one subsystem in our robot.
-And all interactions with the hardware should be implemented in a Subsystem.
+each subsystem is responsible for controlling the robot hardware, And is used as a layer between the Commands and the hardware.
 
 The second one is commands, for each functionality of our robot we use a command that defined that behavior.
 Just like all access to a hardware device is through a Subsystem every usage of a subsystem other then initialization is through a command.
