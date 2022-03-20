@@ -6,6 +6,9 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Just like DriveRight, but this allows diagonal movement.
+ */
 public class GeneralDriveRightCommand extends CommandBase {
     private final DriveTrainSubsystem m_driveTrain;
     private final DoubleSupplier m_verticalSupplier;

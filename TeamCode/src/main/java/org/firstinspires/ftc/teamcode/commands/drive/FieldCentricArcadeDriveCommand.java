@@ -9,6 +9,9 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Just like any arcade drive but it's field centric
+ */
 public class FieldCentricArcadeDriveCommand extends CommandBase {
     private final DriveTrainSubsystem m_drive;
     private final DoubleSupplier m_xSupplier;

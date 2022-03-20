@@ -46,7 +46,7 @@ In every opmode we initialize the subsystems, put the telemetry data and assayin
 ### DriveTrain
 
 Our drive train subsystem includes four DC Motors, and one more motor for the encoder slot.\
-It's also includes a Servo to lower the horizontal odmetry wheel,
+It's also includes a Servo to lower the horizontal optometry wheel,
 and two Distance sensor and one Color sensor  we planed to use to know our robot position during the teleop faze.
 This class also includes our odometry system.
 
@@ -80,6 +80,26 @@ Like detection of the Team element at the start of the game.
 We used [GRIP](https://wpiroboticsprojects.github.io/GRIP/#/) to create the pipeline.
 Feel free to ask me about any part of this code.
 
-### Leds
+### LEDs
 
-Controls the leds.
+Controls the LEDs.
+
+## Commands
+
+Most commands are very simple so I won't list them here, but I will include a few notable exceptions.
+
+### The Trajectory commands
+
+Those commands are crucial to anyone who tries using RoadRunner and WPILib.
+They are used to use Road Runner like any other command.
+
+### The general drive commands
+
+Because our driver was used to tank drive we control the robot with a mix of tank and arcade drive.
+So we can drive left or right with arcade or with a dedicated button.
+
+### The Thread
+
+We have decided to run RoadRunner on it's own thread.
+So we have a command to control that thread.
+

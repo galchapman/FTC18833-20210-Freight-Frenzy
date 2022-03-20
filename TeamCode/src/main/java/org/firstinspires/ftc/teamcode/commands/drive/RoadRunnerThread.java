@@ -6,6 +6,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * This command is used to run a custom thread for our driveTrain.
+ */
 public class RoadRunnerThread extends CommandBase implements Runnable {
     private final DriveTrainSubsystem m_driveTrain;
     private final Thread m_thread;

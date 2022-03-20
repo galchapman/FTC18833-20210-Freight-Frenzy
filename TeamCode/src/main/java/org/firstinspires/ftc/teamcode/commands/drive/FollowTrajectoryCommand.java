@@ -6,6 +6,9 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Make driveTrain follow a trajectory
+ */
 public class FollowTrajectoryCommand extends CommandBase {
     private final DriveTrainSubsystem driveTrain;
     private final Trajectory trajectory;
