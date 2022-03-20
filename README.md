@@ -49,7 +49,7 @@ It's also includes a Servo to lower the horizontal optometry wheel,
 two Distance sensor and one Color sensor. That we planed to determine our robot position during the teleop faze.
 This class also includes our odometry system.
 
-This includes everything that make the robot drive like the trajectory follower.
+This includes everything that makes the robot drive like the trajectory follower.
 
 Note that this is the only subsystem in our robot that could be run on it's own [thread](TeamCode/src/main/java/org/firstinspires/ftc/teamcode/commands/drive/RoadRunnerThread.java). That is why many functions have the synchronized keyword.
 
