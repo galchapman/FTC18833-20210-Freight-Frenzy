@@ -38,7 +38,7 @@ used to define every constants our robot uses.
 The Constants class is divided for the subsystems so every subsystem has it's own constants class.
 
 The forth part is the opmodes themselves, kind of like the RobotContainer in FRC.
-In every opmode we initialize the subsystems, put the telemetry data and assaying the commands to buttons and triggers.
+In every opmode we initialize the subsystems, put the telemetry data and assassin the commands to buttons and triggers.
 
 ## Subsystems
 
