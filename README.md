@@ -93,8 +93,8 @@ Most commands are very simple so I won't list them here, but I will include a fe
 
 ### The Trajectory commands
 
-Those commands are crucial to anyone who tries using RoadRunner and WPILib.
-They are used to use Road Runner like any other command.
+Those commands are crucial to anyone who's trying to use RoadRunner and WPILib.
+They are used to interact with Road Runner like any other command.
 
 ### The general drive commands
 
@@ -114,11 +114,11 @@ Index the duck using fancy stuff like acceleration.
 
 ### Time Triggers
 
-We use triggers to chnage the LED color during a match.
+We use triggers to change the LED color during a match.
 
 ### Intake Trigger
 
-We use an tirgger to chnage the LED color to green and rumble the gamepad when a freigth is in our intake.
+We use an trigger to change the LED color to green and rumble the gamepad when a freigth is in our intake.
 
 ## AutonomousLoader
 
