@@ -37,7 +37,7 @@ The third part is our [Constants](TeamCode/src/main/java/org/firstinspires/ftc/t
 used to define every constants our robot uses.
 The Constants class is divided for the subsystems so every subsystem has it's own constants class.
 
-The forth part is the teleop themselves, kind of like the RobotContainer in FRC.
+The forth part is the opmodes themselves, kind of like the RobotContainer in FRC.
 In every opmode we initialize the subsystems, put the telemetry data and assaying the commands to buttons and triggers.
 
 ## Subsystems
