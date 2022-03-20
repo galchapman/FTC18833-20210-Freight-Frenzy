@@ -104,7 +104,7 @@ So we could take advantage of both drive technics.
 ### The Thread
 
 We have decided to run RoadRunner on it's own thread.
-So we have a command to control that thread.
+So we have a command to control the thread.
 
 ### Fancy Duck Index
 
