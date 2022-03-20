@@ -46,7 +46,7 @@ In every opmode we initialize the subsystems, put the telemetry data and assassi
 
 Our drive train subsystem includes four DC Motors, and one more motor for the encoder slot.\
 It's also includes a Servo to lower the horizontal optometry wheel,
-and two Distance sensor and one Color sensor  we planed to use to know our robot position during the teleop faze.
+two Distance sensor and one Color sensor  we planed to use to know our robot position during the teleop faze.
 This class also includes our odometry system.
 
 This includes everything that make the robot drive like the trajectory follower.
