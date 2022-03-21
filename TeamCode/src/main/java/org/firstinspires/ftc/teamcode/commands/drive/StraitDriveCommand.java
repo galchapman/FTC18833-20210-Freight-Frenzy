@@ -6,6 +6,9 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Drive forward with only one supplier.
+ */
 public class StraitDriveCommand extends CommandBase {
     private final TankDrive m_drive;
     private final DoubleSupplier m_supplier;

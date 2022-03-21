@@ -24,20 +24,15 @@ public class BlueDrive extends Drive {
         GoToSippingHubCommand.setTarget(0.395, 70, 0.57);
         arcadeDriveCommand = new FieldCentricArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_x, Math.toDegrees(90));
 
-        gp1.x().whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(90))));
+        gp1.x.whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(90))));
 
         fancyDuckIndexCommand = new FancyDuckIndexCommand(ducksSubsystem, Constants.DucksConstants.maxPower, Constants.DucksConstants.minPower, Constants.DucksConstants.accelerationSpeed, Constants.DucksConstants.blueSpin);
 
-//        driveTrain.setDefaultCommand(arcadeDriveCommand);
-
-        gp1.y().whenPressed(fancyDuckIndexCommand);
+        gp1.y.whenPressed(fancyDuckIndexCommand);
 
         new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> 0.15,
-                () -> (gp1.left_stick_y() > 0.1) ? 1 :
-                        (gp1.left_stick_y() < -0.1 ? -1 : 0), () -> 0, this::getDriveSpeed)));
-
-//        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whenActive(new AlignRobotCommand(driveTrain, () -> gamepad1.left_stick_y, 0.15, Math.toRadians(90)));
-//        new Trigger(() -> gamepad1.a && gamepad1.left_trigger > 0).whenActive(new AlignRobotCommand(driveTrain, () -> gamepad1.left_stick_x, -0.15, 0));
+                () -> (gamepad1.left_stick_y > 0.1) ? 1 :
+                        (gamepad1.left_stick_y < -0.1 ? -1 : 0), () -> 0)));
 
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 

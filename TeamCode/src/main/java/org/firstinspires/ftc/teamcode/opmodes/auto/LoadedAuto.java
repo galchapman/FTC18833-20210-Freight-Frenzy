@@ -54,7 +54,6 @@ public abstract class LoadedAuto extends BaseAuto {
         autoLoader.interpreter.registerCommand("wait", new SingleArgCommand(WaitCommand::new));
         autoLoader.interpreter.registerCommand("ducks", new SingleArgCommand(this::rotateDuck));
         autoLoader.interpreter.registerCommand("turn", new SingleArgCommand(this::turn));
-        autoLoader.interpreter.registerCommand("forward", new SingleArgCommand(this::forward));
         autoLoader.interpreter.registerCommand("intake", new SingleArgCommand(this::intake));
         autoLoader.interpreter.registerCommand("set", new SetCommand());
         autoLoader.interpreter.registerCommand("@set", new StaticSetCommand<>());

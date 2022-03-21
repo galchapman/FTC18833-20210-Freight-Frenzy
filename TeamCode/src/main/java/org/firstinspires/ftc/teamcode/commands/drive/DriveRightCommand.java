@@ -6,6 +6,9 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Simple mecanum movement
+ */
 public class DriveRightCommand extends CommandBase {
     private final HorizontalDrive m_drive;
     private final DoubleSupplier m_powerSupplier;

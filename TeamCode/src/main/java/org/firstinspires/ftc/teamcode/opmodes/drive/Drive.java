@@ -8,7 +8,7 @@ import org.commandftc.opModes.CommandBasedTeleOp;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
 import org.firstinspires.ftc.teamcode.commands.SetRobotArmsPosition;
-import org.firstinspires.ftc.teamcode.commands.arm.RotateArmPowerCommand;
+import org.firstinspires.ftc.teamcode.commands.arm.RotateArmCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.RotateArmToPositionCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.SetIntakeArmPositionCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FieldCentricArcadeDriveCommand;
@@ -47,7 +47,7 @@ public abstract class Drive extends CommandBasedTeleOp
     RaiseLiftCommand raiseLiftCommand;
     SetLiftHeightCommand resetLiftCommand;
     // Arm commands
-    RotateArmPowerCommand rotateArmContinuouslyCommand;
+    RotateArmCommand rotateArmContinuouslyCommand;
     RotateArmToPositionCommand rotateArmToMiddleCommand;
     SetIntakeArmPositionCommand resetIntakeArmPositionCommand;
     // intake commands
@@ -100,6 +100,8 @@ public abstract class Drive extends CommandBasedTeleOp
 
         armSubsystem.setVerticalPosition(0.6);
 
+        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+
         tankDriveCommand = new TankDriveCommand(driveTrain, () -> -gamepad1.left_stick_y * getDriveSpeed(), () -> -gamepad1.right_stick_y * getDriveSpeed());
         driveLeftCommand = new GeneralDriveLeftCommand(driveTrain, () -> -gamepad1.left_stick_y);
         driveRightCommand = new GeneralDriveRightCommand(driveTrain, () -> -gamepad1.right_stick_y);
@@ -107,7 +109,7 @@ public abstract class Drive extends CommandBasedTeleOp
         raiseLiftCommand = new RaiseLiftCommand(liftSubsystem, () -> -gamepad2.left_stick_y);
         resetLiftCommand = new SetLiftHeightCommand(liftSubsystem,0, 0.7);
 
-        rotateArmContinuouslyCommand = new RotateArmPowerCommand(armSubsystem, this::getArmRotationPower);
+        rotateArmContinuouslyCommand = new RotateArmCommand(armSubsystem, this::getArmRotationPower);
         rotateArmToMiddleCommand = new RotateArmToPositionCommand(armSubsystem,0,1);
         resetIntakeArmPositionCommand = new SetIntakeArmPositionCommand(armSubsystem,0);
 
@@ -122,30 +124,33 @@ public abstract class Drive extends CommandBasedTeleOp
 
         // DriveTrain commands
         driveTrain.setDefaultCommand(tankDriveCommand);
-//        gp1.x().whileHeld(arcadeDriveCommand);
-        gp1.dpad_left().whileHeld(driveLeftCommand);
-        gp1.left_bumper().whileHeld(driveLeftCommand);
-        gp1.dpad_right().whileHeld(driveRightCommand);
-        //gp1.right_bumper().whileHeld(driveRightCommand);
+        gp1.dpad_left.whileHeld(driveLeftCommand);
+        gp1.left_bumper.whileHeld(driveLeftCommand);
+        gp1.dpad_right.whileHeld(driveRightCommand);
         new Trigger(() -> gamepad1.right_bumper && !gamepad1.a).whileActiveOnce(driveRightCommand);
         // Lift commands
         liftSubsystem.setDefaultCommand(raiseLiftCommand);
         // Arm command
         armSubsystem.setDefaultCommand(rotateArmContinuouslyCommand);
 
-        gp2.left_bumper().whileHeld(() -> armSubsystem.setVerticalPosition(Math.min(armSubsystem.getVerticalPosition()+0.03, 1)));
-        gp2.right_bumper().whileHeld(() -> armSubsystem.setVerticalPosition(Math.max(armSubsystem.getVerticalPosition()-0.03, 0)));
+        gp2.left_bumper.whileHeld(() -> armSubsystem.setVerticalPosition(Math.min(armSubsystem.getVerticalPosition()+0.03, 1)));
+        gp2.right_bumper.whileHeld(() -> armSubsystem.setVerticalPosition(Math.max(armSubsystem.getVerticalPosition()-0.03, 0)));
 
-        gp2.b().whenActive(() -> armSubsystem.setVerticalPosition(1), armSubsystem);
-        gp2.a().and(new Trigger(this::canLowerArm)).whenActive(() -> armSubsystem.setVerticalPosition(0), armSubsystem);
-        gp2.x().whenActive(() -> armSubsystem.setVerticalPosition(0.4), armSubsystem);
+        gp2.b.whenActive(() -> armSubsystem.setVerticalPosition(1), armSubsystem);
+        gp2.a.and(new Trigger(this::canLowerArm)).whenActive(() -> armSubsystem.setVerticalPosition(0), armSubsystem);
+        gp2.x.whenActive(() -> armSubsystem.setVerticalPosition(0.4), armSubsystem);
 
-        gp2.right_stick_button().whenPressed(GoToIntakePositionCommand);
-        gp2.left_stick_button().whenPressed(GoToScoringPositionCommand.withInterrupt(() -> gamepad2.right_trigger > 0.2 || gamepad2.left_trigger > 0.2));
-        gp2.dpad_up().whenPressed(GoToSippingHubCommand);
+        gp2.right_stick_button.whenPressed(GoToIntakePositionCommand);
+        gp2.left_stick_button.whenPressed(GoToScoringPositionCommand.withInterrupt(() -> gamepad2.right_trigger > 0.2 || gamepad2.left_trigger > 0.2));
+        gp2.dpad_up.whenPressed(GoToSippingHubCommand);
         // Intake commands
         intakeSubsystem.setDefaultCommand(intakeCommand);
-        gp2.y().whenPressed(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.2)));
+        gp2.y.whenPressed(new InstantCommand(() -> intakeSubsystem.toggleDoor()).andThen(new IntakeCommand(intakeSubsystem, -0.2).withTimeout(0.2)));
+
+        // Triggers
+        // Indicate to drivers when a freight enters the robot
+        new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0 && getRuntime() - lastRumble > 1))
+                .whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500); lastRumble=getRuntime();});
 
         // Telemetry
         // No need for anything but update in loop because use of suppliers
@@ -157,22 +162,8 @@ public abstract class Drive extends CommandBasedTeleOp
         telemetry.addData("lift height offset", LiftSubsystem.ticks2meters(liftSubsystem.getEncoderOffset()));
         telemetry.addData("LineColorSensorBrightness", driveTrain::getLineColorSensorBrightness);
         telemetry.addData("intake height", armSubsystem::getVerticalPosition);
-
-        new Trigger(intakeSubsystem::hasFreight).and(new Trigger(() -> armSubsystem.getVerticalPosition() == 0 && getRuntime() - lastRumble > 1)).whenActive(() -> {gamepad2.rumble(200); gamepad1.rumble(500); lastRumble=getRuntime();});
-
-        telemetry.update();
-//        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
-
-//        telemetry.addData("external heading", () -> Math.toRadians(driveTrain.getExternalHeading()));
         telemetry.addData("l pos", driveTrain::getLeftPosition);
         telemetry.addData("r pos", driveTrain::getRightPosition);
-//        telemetry.addData("h pos", driveTrain::getHorizontalPosition);
-
-        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED_ORANGE);
-//        telemetry.addData("pattern", () -> ledSubsystem.getPattern().name());
-//        gp1.dpad_up().whenPressed(() -> ledSubsystem.next());
-//        gp1.dpad_down().whenPressed(() -> ledSubsystem.previous());
-
         telemetry.addData("left distance", driveTrain::getLeftDistance);
         telemetry.addData("right distance", driveTrain::getRightDistance);
 
@@ -192,7 +183,6 @@ public abstract class Drive extends CommandBasedTeleOp
         }.withTimeout(0.5));
 
 
-        ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA);
         new Trigger(() -> getRuntime() > 75).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED));
         new Trigger(() -> getRuntime() > 110).whenActive(() -> ledSubsystem.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE));
     }

@@ -8,9 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DuckRoller.FancyDuckIndexCommand;
-import org.firstinspires.ftc.teamcode.commands.drive.AlignRobotCommand;
+import org.firstinspires.ftc.teamcode.commands.drive.ArcadeDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.drive.FieldCentricArcadeDriveCommand;
-import org.firstinspires.ftc.teamcode.subsystems.DriveTrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -25,27 +24,22 @@ public class RedDrive extends Drive {
         fancyDuckIndexCommand = new FancyDuckIndexCommand(ducksSubsystem, Constants.DucksConstants.maxPower, Constants.DucksConstants.minPower, Constants.DucksConstants.accelerationSpeed, Constants.DucksConstants.redSpin);
         arcadeDriveCommand = new FieldCentricArcadeDriveCommand(driveTrain, () -> gamepad1.left_stick_y, () -> gamepad1.left_stick_x, () -> -gamepad1.right_stick_y, Math.toDegrees(-90));
 
-        gp1.x().whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(-90))));
+        gp1.x.whenPressed(() -> driveTrain.setPose(new Pose2d(0, 0, Math.toRadians(-90))));
 
         driveTrain.setDefaultCommand(tankDriveCommand);
-        gp1.y().whenPressed(fancyDuckIndexCommand);
+        gp1.y.whenPressed(fancyDuckIndexCommand);
 
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 
-//        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.15,
-//                () -> (gp1.left_stick_y() > 0.1) ? 1 :
-//                        (gp1.left_stick_y() < -0.1 ? -1 : 0), () -> 0)));
-
-        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whenActive(new AlignRobotCommand(driveTrain, () -> gamepad1.left_stick_y, -0.15, Math.toRadians(90)));
+        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> -0.15,
+                () -> (gamepad1.left_stick_y > 0.1) ? 1 :
+                        (gamepad1.left_stick_y < -0.1 ? -1 : 0), () -> 0)));
 
         telemetry.addData("index", ducksSubsystem::getCurrentPosition);
         telemetry.addData("index rotation", () -> ducksSubsystem.getCurrentPosition() / Constants.DucksConstants.ticks_per_rotation);
 
         new Trigger(() -> driveTrain.getLineColorSensorBrightness() > 200)
                 .whileActiveContinuous(() -> gamepad1.rumble(500));
-
-        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
-        new Trigger(() -> getRuntime() > 75 ).whenActive(() -> driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Up));
     }
 
     @Override
@@ -55,10 +49,5 @@ public class RedDrive extends Drive {
         packet.put("velocity", driveTrain.accel);
         packet.put("intake distance", intakeSubsystem.getDistance());
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
-    }
-
-    @Override
-    public void start() {
-        driveTrain.setOdometryPosition(DriveTrainSubsystem.OdometryPosition.Down);
     }
 }

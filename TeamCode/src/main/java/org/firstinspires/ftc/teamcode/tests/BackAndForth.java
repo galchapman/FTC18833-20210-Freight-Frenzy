@@ -39,7 +39,7 @@ public class BackAndForth extends CommandBasedTeleOp {
         driveTrain.setDefaultCommand(new TankDriveCommand(driveTrain,
                 () -> -gamepad1.left_stick_y, () -> -gamepad1.right_stick_y));
 
-        gp1.x().whenHeld(new FollowTrajectoryCommand(driveTrain, forwardTrajectory));//.andThen(new FollowTrajectoryCommand(driveTrain, backwardTrajectory)));
+        gp1.x.whenHeld(new FollowTrajectoryCommand(driveTrain, forwardTrajectory));//.andThen(new FollowTrajectoryCommand(driveTrain, backwardTrajectory)));
 
         telemetry.addData("isBusy", driveTrain::isBusy);
         telemetry.addData("dt", this::dt);

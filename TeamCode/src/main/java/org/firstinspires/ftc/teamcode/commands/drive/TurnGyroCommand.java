@@ -7,12 +7,15 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Use the built in IMU to turn.
+ * Very useful for testing
+ */
 public class TurnGyroCommand extends CommandBase {
     private final TankDrive m_drive;
     private final DoubleSupplier m_angleSupplier;
     private final double m_target;
     private final double m_power;
-    private double lastAngle;
     private double lastRawAngle;
     private int spinCount;
     private double error;
@@ -29,14 +32,6 @@ public class TurnGyroCommand extends CommandBase {
 
     public double getError() {
         return error;
-    }
-
-    public int getSpinCount() {
-        return spinCount;
-    }
-
-    public double lastAngle() {
-        return lastAngle;
     }
 
     private void spin(double power) {
@@ -57,7 +52,7 @@ public class TurnGyroCommand extends CommandBase {
         double angle = m_angleSupplier.getAsDouble();
         delta = angle - lastRawAngle;
         lastRawAngle = angle;
-
+        // Fix clamping of the angle
         if (delta > Math.PI / 2) {
             spinCount--;
         } else if (delta < -Math.PI / 2) {
@@ -68,8 +63,6 @@ public class TurnGyroCommand extends CommandBase {
         error = target - angle;
 
         spin(Math.abs(error) > 0.05 ? m_power * Util.clamp(-1, 1, error * 2) : 0.4);
-
-        lastAngle = angle;
     }
 
     @Override

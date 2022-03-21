@@ -16,10 +16,7 @@ import java.util.concurrent.TimeUnit;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
- * Base class for user defined linear operation modes (op modes).
- * <p>
- * This class derives from OpMode, but you should not override the methods from
- * OpMode.
+ * Just like LinearOpMode, but the CommandScheduler is running in the background
  */
 public abstract class LinearOpModeWithCommands extends OpMode {
 

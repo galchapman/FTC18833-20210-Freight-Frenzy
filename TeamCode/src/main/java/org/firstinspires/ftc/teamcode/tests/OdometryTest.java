@@ -55,14 +55,14 @@ public class OdometryTest extends CommandBasedTeleOp {
                 new TurnGyroCommand(driveTrain, driveTrain::getHeading, -Math.toRadians(360) * 5, 0.7)
         );
 
-        gp1.y().whenPressed(fastTest);
-        gp1.x().whenPressed(slowTest);
+        gp1.y.whenPressed(fastTest);
+        gp1.x.whenPressed(slowTest);
 
-        gp1.left_stick_button().whileHeld(new StraitDriveCommand(driveTrain, () -> -gamepad1.left_stick_y));
-        gp1.right_stick_button().whileHeld(new StraitDriveCommand(driveTrain, () -> -gamepad1.right_stick_y));
+        gp1.left_stick_button.whileHeld(new StraitDriveCommand(driveTrain, () -> -gamepad1.left_stick_y));
+        gp1.right_stick_button.whileHeld(new StraitDriveCommand(driveTrain, () -> -gamepad1.right_stick_y));
 
-        gp1.left_bumper().whileHeld(new GeneralDriveLeftCommand(driveTrain, () -> -gamepad1.left_stick_y));
-        gp1.right_bumper().whileHeld(new GeneralDriveRightCommand(driveTrain, () -> -gamepad1.right_stick_y));
+        gp1.left_bumper.whileHeld(new GeneralDriveLeftCommand(driveTrain, () -> -gamepad1.left_stick_y));
+        gp1.right_bumper.whileHeld(new GeneralDriveRightCommand(driveTrain, () -> -gamepad1.right_stick_y));
 
         RobotUniversal.telemetryPacketUpdater = (packet) -> {
             packet.put("left", driveTrain.getLeftPosition());

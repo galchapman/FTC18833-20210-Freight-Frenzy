@@ -61,9 +61,9 @@ public class VisionSubsystem extends SubsystemBase {
             telemetry.addData("A view", Core.countNonZero(a_filtered));
             telemetry.addData("B view", Core.countNonZero(b_filtered));
             telemetry.update();
-            if (Core.countNonZero(b_filtered) > 5000) {
+            if (Core.countNonZero(b_filtered) > 1000) {
                 gameType = GameType.B;
-            } else if (Core.countNonZero(a_filtered) > 5000 ^ (RobotUniversal.startingPosition == StartingPosition.FarBlue || RobotUniversal.startingPosition == StartingPosition.NearBlue)) {
+            } else if (Core.countNonZero(a_filtered) > 1000 ^ (RobotUniversal.startingPosition == StartingPosition.FarBlue || RobotUniversal.startingPosition == StartingPosition.NearBlue)) {
                 gameType = GameType.A;
             } else {
                 gameType = GameType.C;

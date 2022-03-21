@@ -7,12 +7,14 @@ import org.commandftc.RobotUniversal;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+/**
+ Command based auto.
+ Loads a command and schedule it.
+ It's exit when the command is finished
+ */
 public abstract class CommandBasedAuto extends OpMode {
     private Command autonomousCommand;
-    /**
-     * DON'T OVERRIDE THIS! IT CALLS init_impl() (WHICH YOU SHOULD INSTEAD OVERRIDE)
-     * AND DOES SOMETHING ELSE!!!!!
-     */
+
     @Override
     public final void init() {
         RobotUniversal.setOpMode(this);
