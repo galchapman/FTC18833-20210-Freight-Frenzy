@@ -86,7 +86,7 @@ public class SetRobotArmsPosition extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(() -> armSubsystem.setVerticalPosition(1)),
                 new WaitCommand(0.2),
-                command.withInterrupt(() -> Math.abs(liftSubsystem.getHeight() - m_setLiftHeightCommand.m_height) < 0.1)
+                command.withInterrupt(() -> Math.abs(liftSubsystem.getHeight() - m_setLiftHeightCommand.m_height) < 0.1).alongWith(new WaitCommand(0.4))
         );
 
         if (!Double.isNaN(m_targetIntakePosition)) {

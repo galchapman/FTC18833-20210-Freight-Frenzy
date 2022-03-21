@@ -282,6 +282,10 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
 
     @Override
     public void arcadeDrive(double x, double y,double spin) {
+        arcadeDrive(x, y, spin, 1);
+    }
+
+    public void arcadeDrive(double x, double y,double spin, double max_power) {
         double[] powers = new double[]{x + y + spin, -x + y + spin, -x + y - spin, x + y - spin};
 
         double max = 1;
@@ -291,6 +295,7 @@ public class DriveTrainSubsystem extends MecanumDrive implements TankDrive, Arca
                 max = Math.abs(power);
             }
         }
+        max /= max_power;
 
         m_FrontLeftMotor.setPower(powers[0] / max);
         m_RearLeftMotor.setPower(powers[1] / max);

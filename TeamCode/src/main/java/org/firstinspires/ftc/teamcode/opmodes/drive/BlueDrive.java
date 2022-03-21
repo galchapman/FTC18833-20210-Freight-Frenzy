@@ -34,7 +34,10 @@ public class BlueDrive extends Drive {
 
         new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whileActiveContinuous((new ArcadeDriveCommand(driveTrain,() -> 0.15,
                 () -> (gp1.left_stick_y() > 0.1) ? 1 :
-                        (gp1.left_stick_y() < -0.1 ? -1 : 0), () -> 0)));
+                        (gp1.left_stick_y() < -0.1 ? -1 : 0), () -> 0, this::getDriveSpeed)));
+
+//        new Trigger(() -> gamepad1.a && gamepad1.right_bumper).whenActive(new AlignRobotCommand(driveTrain, () -> gamepad1.left_stick_y, 0.15, Math.toRadians(90)));
+//        new Trigger(() -> gamepad1.a && gamepad1.left_trigger > 0).whenActive(new AlignRobotCommand(driveTrain, () -> gamepad1.left_stick_x, -0.15, 0));
 
         new Trigger(() -> gamepad1.a && !gamepad1.right_bumper).whileActiveContinuous(arcadeDriveCommand);
 

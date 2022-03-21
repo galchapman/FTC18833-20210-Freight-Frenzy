@@ -77,7 +77,7 @@ public final class Constants {
         public static final double ticks_per_rotation =
                 MotorConstants.RevHDHexMotor.ticks_per_revolution * 12
                         * biggerWheelDiameter / wheelDiameter;
-        public static final double maxPower = 0.85;
+        public static final double maxPower = 0.75;
         public static final double minPower = 0.3;
         public static final double accelerationSpeed = 1.5;
         public static final double blueSpin = -1.7;
@@ -102,7 +102,7 @@ public final class Constants {
         public static double HueThresholdHigh = 95;
         public static double SaturationThresholdLow = 77;
         public static double SaturationThresholdHigh = 255;
-        public static double ValueThresholdLow = 37;
+        public static double ValueThresholdLow = 60;
         public static double ValueThresholdHigh = 255;
     }
 

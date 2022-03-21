@@ -20,6 +20,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.commandftc.RobotUniversal.hardwareMap;
+import static org.commandftc.RobotUniversal.telemetry;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.FarBlueBRect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.FarBlueCRect;
 import static org.firstinspires.ftc.teamcode.Constants.VisionConstants.FarRedARect;
@@ -57,9 +58,12 @@ public class VisionSubsystem extends SubsystemBase {
             filterGreen(a_sub, a_filtered);
             filterGreen(b_sub, b_filtered);
 
-            if (Core.countNonZero(b_filtered) > 1000) {
+            telemetry.addData("A view", Core.countNonZero(a_filtered));
+            telemetry.addData("B view", Core.countNonZero(b_filtered));
+            telemetry.update();
+            if (Core.countNonZero(b_filtered) > 5000) {
                 gameType = GameType.B;
-            } else if (Core.countNonZero(a_filtered) > 1000 ^ (RobotUniversal.startingPosition == StartingPosition.FarBlue || RobotUniversal.startingPosition == StartingPosition.NearBlue)) {
+            } else if (Core.countNonZero(a_filtered) > 5000 ^ (RobotUniversal.startingPosition == StartingPosition.FarBlue || RobotUniversal.startingPosition == StartingPosition.NearBlue)) {
                 gameType = GameType.A;
             } else {
                 gameType = GameType.C;

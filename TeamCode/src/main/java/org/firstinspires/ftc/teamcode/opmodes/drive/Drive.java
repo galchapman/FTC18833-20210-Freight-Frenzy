@@ -59,7 +59,7 @@ public abstract class Drive extends CommandBasedTeleOp
     SetRobotArmsPosition GoToScoringPositionCommand;
     SetRobotArmsPosition GoToSippingHubCommand;
 
-    private double getDriveSpeed() {
+    protected double getDriveSpeed() {
         if (gamepad1.left_trigger > 0)          return 0.5;
         else if (gamepad1.right_trigger > 0)    return 0.75;
         else                                    return 1;
